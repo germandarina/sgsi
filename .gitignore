@@ -1,0 +1,6 @@
+main_local.php
+console_local.php
+protected/vendor/*
+protected/runtime/*
+assets/
+.idea
