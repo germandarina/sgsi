@@ -11,7 +11,7 @@ Yii::setPathOfAlias('vendor', 'protected/vendor');
 YII::setPathOfAlias('components.gii.bootstrap.BootstrapCode', 'protected/components/gii/bootstrap/BootstrapCode');
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
-    'name' => 'Entrenar-T',
+    'name' => 'DIME-SGSI',
 
     // preloading 'log' component
     //'preload' => array('log', 'booster'),

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title><?php echo ucwords(strtolower(CHtml::encode($this->pageTitle))); ?></title>
     <link href="<?= $themeUrl ?>/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="shortcut icon" href="<?php echo Yii::app()->request->baseUrl; ?>/images/ladyeva_logo_ico.jpg" type="image/x-icon" />
+    <link rel="shortcut icon" href="<?php echo Yii::app()->request->baseUrl; ?>/images/logo-dime.png" type="image/x-icon" />
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Font Awesome Icons -->
     <link href="<?= $themeUrl ?>/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"

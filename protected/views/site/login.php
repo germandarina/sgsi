@@ -4,7 +4,7 @@
 	</div><!-- /.login-logo -->
 	<div class="login-box-body">
 		<p class="login-box-msg">
-			<?php echo CHtml::image(Yii::app()->baseUrl.'/images/logo-entrenart.png', 'Entrenar-T',array(
+			<?php echo CHtml::image(Yii::app()->baseUrl.'/images/logo-dime.png', 'DIME-SGSI',array(
 				'style' => 'width:200px;')); ?>
 		</p>
 		<?php
