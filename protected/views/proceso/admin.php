@@ -34,7 +34,11 @@
 			'id',
 		'nombre',
 		'descripcion',
-		'area_id',
+		array(
+			'name'=>'area_id',
+			'header'=>'Area',
+			'value'=>'$data->area->nombre',
+		),
 		'creaUserStamp',
 		'creaTimeStamp',
 		/*
@@ -43,6 +47,7 @@
 		*/
 	array(
 	'class'=>'booster.widgets.TbButtonColumn',
+		'template'=>'{update}{delete}'
 	),
 	),
 	)); ?>

@@ -9,12 +9,18 @@
 
     <?php echo $form->errorSummary($model); ?>
 
-            <?php echo $form->textFieldGroup($model,'nombre',array('class'=>'col-sm-5','maxlength'=>50)); ?>
-            <?php echo $form->textFieldGroup($model,'descripcion',array('class'=>'col-sm-5','maxlength'=>200)); ?>
-            <?php echo $form->textFieldGroup($model,'creaUserStamp',array('class'=>'col-sm-5','maxlength'=>50)); ?>
-            <?php echo $form->textFieldGroup($model,'creaTimeStamp',array('class'=>'col-sm-5')); ?>
-            <?php echo $form->textFieldGroup($model,'modUserStamp',array('class'=>'col-sm-5','maxlength'=>50)); ?>
-            <?php echo $form->textFieldGroup($model,'modTimeStamp',array('class'=>'col-sm-5')); ?>
+    <div class="row">
+        <div class="col-sm-6">
+            <?php echo $form->textFieldGroup($model,'nombre',array('class'=>'col-sm-12','maxlength'=>50)); ?>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <?php echo $form->labelEx($model,'descripcion',array('class'=>'col-sm-3')); ?>
+            <?php echo $form->textArea($model,'descripcion',array('class'=>'col-sm-9','rows'=>6, 'cols'=>75)); ?>
+        </div>
+    </div>
     
     <div class="box-footer">
         <?php $this->widget('booster.widgets.TbButton', array(
@@ -24,12 +30,13 @@
 			'size'=>'small'
 		)); ?>
 
-        <?php $this->widget('bootstrap.widgets.TbButton', array(
-			//'buttonType'=>'submit',
-			'label'=> 'Cancelar',
-			'size' => 'small',
-			'htmlOptions' => array('onclick' => 'javascript:history.go(-1)')
-		)); ?>
+        <?php $this->widget('booster.widgets.TbButton', array(
+            //'buttonType'=>'submit',
+            'label' => 'Volver',
+            'size' => 'small',
+            'buttonType' => 'link',
+            'url' => $this->createUrl("admin"),
+        )); ?>
     </div>
     <?php $this->endWidget(); ?>
 

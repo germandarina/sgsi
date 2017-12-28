@@ -2,7 +2,7 @@
 
 <div class="box">
 	<div class="box-header">
-		<h3 clas="box-title">Admin Personals</h3>
+		<h3 clas="box-title">Admin Personal</h3>
 		<?php $this->widget(
 			'booster.widgets.TbButtonGroup',
 			array(
@@ -36,7 +36,11 @@
 		'nombre',
 		'dni',
 		'telefono',
-		'area_id',
+		array(
+			'name'=>'area_id',
+			'header'=>'Area',
+			'value'=>'$data->area->nombre',
+		),
 		/*
 		'creaUserStamp',
 		'creaTimeStamp',
@@ -45,6 +49,7 @@
 		*/
 	array(
 	'class'=>'booster.widgets.TbButtonColumn',
+		'template'=>'{update}{delete}'
 	),
 	),
 	)); ?>

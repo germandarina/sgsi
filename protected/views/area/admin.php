@@ -31,17 +31,14 @@
 	'selectableRows' => 1,
 	'filter' => $model,
 	'columns'=>array(
-			'id',
+		'id',
 		'nombre',
 		'descripcion',
 		'creaUserStamp',
 		'creaTimeStamp',
-		'modUserStamp',
-		/*
-		'modTimeStamp',
-		*/
 	array(
 	'class'=>'booster.widgets.TbButtonColumn',
+		'template'=>'{update}{delete}'
 	),
 	),
 	)); ?>

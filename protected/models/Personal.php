@@ -100,11 +100,15 @@ class Personal extends CustomCActiveRecord
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('dni',$this->dni,true);
 		$criteria->compare('telefono',$this->telefono,true);
-		$criteria->compare('area_id',$this->area_id);
+        if($this->area_id != ""){
+            $criteria->together = true;
+            $criteria->with = array('area');
+            $criteria->compare('area.nombre',$this->area_id,true);
+        };
 		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
-		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
-		$criteria->compare('modUserStamp',$this->modUserStamp,true);
-		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
+//		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
+//		$criteria->compare('modUserStamp',$this->modUserStamp,true);
+//		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
