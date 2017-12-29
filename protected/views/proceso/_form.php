@@ -34,7 +34,7 @@
                             'minimumResultsForSearch' => 10,
                             'placeholder' => '--Seleccione--'
                         ],
-                        //'htmlOptions' => ['onChange'=>'chequearPersona()'],
+                        'htmlOptions' => ['onChange'=>'getProcesos()'],
                     ],
                 ]
             );

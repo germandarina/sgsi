@@ -41,6 +41,11 @@
 			'header'=>'Area',
 			'value'=>'$data->area->nombre',
 		),
+		array(
+			'name'=>'proceso_id',
+			'header'=>'Proceso',
+			'value'=>'$data->proceso->nombre',
+		),
 		/*
 		'creaUserStamp',
 		'creaTimeStamp',

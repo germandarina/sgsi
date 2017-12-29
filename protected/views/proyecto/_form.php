@@ -9,14 +9,59 @@
 
     <?php echo $form->errorSummary($model); ?>
 
+    <div class="row">
+        <div class="col-sm-6">
             <?php echo $form->textFieldGroup($model,'nombre',array('class'=>'col-sm-5','maxlength'=>50)); ?>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
             <?php echo $form->textFieldGroup($model,'descripcion',array('class'=>'col-sm-5','maxlength'=>200)); ?>
-            <?php echo $form->datepickerGroup($model,'fecha',array('options'=>array(),'htmlOptions'=>array('class'=>'col-sm-5')),array('prepend'=>'<i class="fa fa-calendar"></i>')); ?>
-            <?php echo $form->textFieldGroup($model,'creaUserStamp',array('class'=>'col-sm-5','maxlength'=>50)); ?>
-            <?php echo $form->textFieldGroup($model,'creaTimeStamp',array('class'=>'col-sm-5')); ?>
-            <?php echo $form->textFieldGroup($model,'modUserStamp',array('class'=>'col-sm-5','maxlength'=>50)); ?>
-            <?php echo $form->textFieldGroup($model,'modTimeStamp',array('class'=>'col-sm-5')); ?>
-    
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <?php echo $form->datepickerGroup($model, 'fecha', [
+                'widgetOptions' => [
+                    'options' => ['language' => 'es',
+                        'format' => 'dd/mm/yyyy',
+                        'autoclose' => true,
+                        'startDate' => ($model->fecha),
+                        'endDate' => ($model->fecha),
+                    ],
+                    'htmlOptions' => ['readonly' => 'readonly']
+                ],
+                'wrapperHtmlOptions' => ['class' => 'col-sm-9 input-group-sm'],
+                'prepend' => '<i class="fa fa-calendar"></i>'
+            ]); ?>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <?php echo $form->select2Group(
+                $model, 'areas',
+                [
+                    'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                    'widgetOptions' => [
+                        'asDropDownList' => true,
+                        'data' => CHtml::listData(Area::model()->findAll(), 'id', 'nombre'),
+                        'options' => [
+                            'minimumResultsForSearch' => 10,
+                            'placeholder' => '--Seleccione--'
+                        ],
+                        'htmlOptions' => ['multiple'=>'multiple'],
+                    ],
+                ]
+            );
+            ?>
+        </div>
+    </div>
+
+
     <div class="box-footer">
         <?php $this->widget('booster.widgets.TbButton', array(
 			'buttonType'=>'submit',
@@ -25,12 +70,13 @@
 			'size'=>'small'
 		)); ?>
 
-        <?php $this->widget('bootstrap.widgets.TbButton', array(
-			//'buttonType'=>'submit',
-			'label'=> 'Cancelar',
-			'size' => 'small',
-			'htmlOptions' => array('onclick' => 'javascript:history.go(-1)')
-		)); ?>
+        <?php $this->widget('booster.widgets.TbButton', array(
+            //'buttonType'=>'submit',
+            'label' => 'Volver',
+            'size' => 'small',
+            'buttonType' => 'link',
+            'url' => $this->createUrl("admin"),
+        )); ?>
     </div>
     <?php $this->endWidget(); ?>
 

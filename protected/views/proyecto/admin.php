@@ -37,12 +37,10 @@
 		'fecha',
 		'creaUserStamp',
 		'creaTimeStamp',
-		/*
-		'modUserStamp',
-		'modTimeStamp',
-		*/
+
 	array(
 	'class'=>'booster.widgets.TbButtonColumn',
+		'template'=>'{update}{delete}'
 	),
 	),
 	)); ?>

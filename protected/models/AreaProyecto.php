@@ -1,16 +1,12 @@
 <?php
 
 /**
- * This is the model class for table "personal".
+ * This is the model class for table "area_proyecto".
  *
- * The followings are the available columns in table 'personal':
+ * The followings are the available columns in table 'area_proyecto':
  * @property integer $id
- * @property string $apellido
- * @property string $nombre
- * @property string $dni
- * @property string $telefono
  * @property integer $area_id
- * @property integer $proceso_id
+ * @property integer $proyecto_id
  * @property string $creaUserStamp
  * @property string $creaTimeStamp
  * @property string $modUserStamp
@@ -18,16 +14,16 @@
  *
  * The followings are the available model relations:
  * @property Area $area
- * @property Proceso $proceso
+ * @property Proyecto $proyecto
  */
-class Personal extends CustomCActiveRecord
+class AreaProyecto extends CustomCActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'personal';
+		return 'area_proyecto';
 	}
 
 	/**
@@ -38,13 +34,12 @@ class Personal extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('apellido, nombre, dni, telefono, area_id, proceso_id', 'required'),
-			array('area_id,proceso_id', 'numerical', 'integerOnly'=>true),
-			array('apellido, nombre, dni, telefono, creaUserStamp, modUserStamp', 'length', 'max'=>50),
+			array('id, area_id, proyecto_id', 'numerical', 'integerOnly'=>true),
+			array('creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, apellido, proceso_id,nombre, dni, telefono, area_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('id, area_id, proyecto_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,9 +52,8 @@ class Personal extends CustomCActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'area' => array(self::BELONGS_TO, 'Area', 'area_id'),
-            'proceso' => array(self::BELONGS_TO, 'Proceso', 'proceso_id'),
-
-        );
+			'proyecto' => array(self::BELONGS_TO, 'Proyecto', 'proyecto_id'),
+		);
 	}
 
 	/**
@@ -69,12 +63,8 @@ class Personal extends CustomCActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'apellido' => 'Apellido',
-			'nombre' => 'Nombre',
-			'dni' => 'Dni',
-			'telefono' => 'Telefono',
 			'area_id' => 'Area',
-            'proceso_id' => 'Proceso',
+			'proyecto_id' => 'Proyecto',
 			'creaUserStamp' => 'Crea User Stamp',
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
@@ -101,24 +91,12 @@ class Personal extends CustomCActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('apellido',$this->apellido,true);
-		$criteria->compare('nombre',$this->nombre,true);
-		$criteria->compare('dni',$this->dni,true);
-		$criteria->compare('telefono',$this->telefono,true);
-        $criteria->together = true;
-
-        if($this->area_id != ""){
-            $criteria->with = array('area');
-            $criteria->compare('area.nombre',$this->area_id,true);
-        };
-        if($this->proceso_id != ""){
-            $criteria->with = array('proceso');
-            $criteria->compare('proceso.nombre',$this->proceso_id,true);
-        };
+		$criteria->compare('area_id',$this->area_id);
+		$criteria->compare('proyecto_id',$this->proyecto_id);
 		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
-//		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
-//		$criteria->compare('modUserStamp',$this->modUserStamp,true);
-//		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
+		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
+		$criteria->compare('modUserStamp',$this->modUserStamp,true);
+		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -129,7 +107,7 @@ class Personal extends CustomCActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Personal the static model class
+	 * @return AreaProyecto the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

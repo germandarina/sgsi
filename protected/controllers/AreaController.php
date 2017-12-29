@@ -31,7 +31,7 @@ class AreaController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','delete'),
+                'actions' => array('create', 'update', 'admin','delete','getProcesos'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -163,6 +163,17 @@ class AreaController extends Controller
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'area-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
+        }
+    }
+    public function actionGetProcesos(){
+        if(isset($_POST['area_id'])){
+            $procesos = Proceso::model()->findAllByAttributes(array('area_id'=>$_POST['area_id']));
+            if(!empty($procesos)){
+                $datos = ['procesos'=>$procesos];
+            }else{
+                $datos = ['procesos'=>''];
+            }
+            echo CJSON::encode($datos);
         }
     }
 }

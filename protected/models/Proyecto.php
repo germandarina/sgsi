@@ -18,6 +18,7 @@ class Proyecto extends CustomCActiveRecord
 	/**
 	 * @return string the associated database table name
 	 */
+	public $areas = array();
 	public function tableName()
 	{
 		return 'proyecto';
@@ -31,13 +32,13 @@ class Proyecto extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nombre, descripcion, fecha', 'required'),
+			array('nombre, descripcion,areas ,fecha', 'required'),
 			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('descripcion', 'length', 'max'=>200),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, nombre, descripcion, fecha, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('areas,id, nombre, descripcion, fecha, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
