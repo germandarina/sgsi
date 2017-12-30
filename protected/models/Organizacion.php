@@ -1,31 +1,25 @@
 <?php
 
 /**
- * This is the model class for table "area".
+ * This is the model class for table "organizacion".
  *
- * The followings are the available columns in table 'area':
+ * The followings are the available columns in table 'organizacion':
  * @property integer $id
  * @property string $nombre
- * @property string $descripcion
- * @property integer $organizacion_id
+ * @property string $direccion
  * @property string $creaUserStamp
  * @property string $creaTimeStamp
  * @property string $modUserStamp
  * @property string $modTimeStamp
- *
- * The followings are the available model relations:
- * @property Personal[] $personals
- * @property Proceso[] $procesos
- *  @property Organizacion $organizacion
  */
-class Area extends CustomCActiveRecord
+class Organizacion extends CustomCActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'area';
+		return 'organizacion';
 	}
 
 	/**
@@ -36,13 +30,13 @@ class Area extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nombre, descripcion, organizacion_id', 'required'),
-			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>50),
-			array('descripcion', 'length', 'max'=>200),
+			array('nombre, direccion', 'required'),
+			array('nombre, direccion', 'length', 'max'=>100),
+			array('creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id,organizacion_id, nombre, descripcion, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('id, nombre, direccion, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,11 +48,7 @@ class Area extends CustomCActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'personals' => array(self::HAS_MANY, 'Personal', 'area_id'),
-			'procesos' => array(self::HAS_MANY, 'Proceso', 'area_id'),
-            'organizacion' => array(self::BELONGS_TO, 'Organizacion', 'organizacion_id'),
-
-        );
+		);
 	}
 
 	/**
@@ -69,12 +59,11 @@ class Area extends CustomCActiveRecord
 		return array(
 			'id' => 'ID',
 			'nombre' => 'Nombre',
-			'descripcion' => 'Descripcion',
+			'direccion' => 'Direccion',
 			'creaUserStamp' => 'Crea User Stamp',
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
-            'organizacion_id'=>'Organizacion',
 		);
 	}
 
@@ -98,13 +87,9 @@ class Area extends CustomCActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('nombre',$this->nombre,true);
-		$criteria->compare('descripcion',$this->descripcion,true);
+		$criteria->compare('direccion',$this->direccion,true);
 		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
 		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
-        if($this->organizacion_id != ""){
-            $criteria->with = array('organizacion');
-            $criteria->compare('organizacion.nombre',$this->organizacion_id,true);
-        };
 //		$criteria->compare('modUserStamp',$this->modUserStamp,true);
 //		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
 
@@ -117,7 +102,7 @@ class Area extends CustomCActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Area the static model class
+	 * @return Organizacion the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

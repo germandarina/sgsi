@@ -21,7 +21,26 @@
             <?php echo $form->textArea($model,'descripcion',array('class'=>'col-sm-9','rows'=>6, 'cols'=>75)); ?>
         </div>
     </div>
-    
+    <div class="row">
+        <div class="col-sm-6">
+            <?php echo $form->select2Group(
+                $model, 'organizacion_id',
+                [
+                    'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                    'widgetOptions' => [
+                        'asDropDownList' => true,
+                        'data' => CHtml::listData(Organizacion::model()->findAll(), 'id', 'nombre'),
+                        'options' => [
+                            'minimumResultsForSearch' => 10,
+                            'placeholder' => '--Seleccione--'
+                        ],
+//                        'htmlOptions' => ['onChange'=>'getProcesos()'],
+                    ],
+                ]
+            );
+            ?>
+        </div>
+    </div>
     <div class="box-footer">
         <?php $this->widget('booster.widgets.TbButton', array(
 			'buttonType'=>'submit',
