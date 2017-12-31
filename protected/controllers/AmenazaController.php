@@ -1,6 +1,6 @@
 <?php
 
-class TipoActivoController extends Controller
+class AmenazaController extends Controller
 {
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -31,11 +31,11 @@ class TipoActivoController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete'),
+                'actions' => array('create', 'update', 'admin','delete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin'),
+                'actions' => array('admin', ),
                 'users' => array('admin'),
             ),
             array('deny',  // deny all users
@@ -61,13 +61,16 @@ class TipoActivoController extends Controller
      */
     public function actionCreate()
     {
-        $model = new TipoActivo;
+        $model = new Amenaza;
 
-        if (isset($_POST['TipoActivo'])) {
-            $model->attributes = $_POST['TipoActivo'];
+// Uncomment the following line if AJAX validation is needed
+// $this->performAjaxValidation($model);
+
+        if (isset($_POST['Amenaza'])) {
+            $model->attributes = $_POST['Amenaza'];
             if ($model->save()) {
-                Yii::app()->user->setNotification('success','Tipo de Activo creado con exito');
-                $this->redirect(array('view', 'id' => $model->id));
+                Yii::app()->user->setNotification('success','Amenaza creada con exito');
+                $this->redirect(array('admin'));
             }
         }
 
@@ -88,10 +91,12 @@ class TipoActivoController extends Controller
 // Uncomment the following line if AJAX validation is needed
 // $this->performAjaxValidation($model);
 
-        if (isset($_POST['TipoActivo'])) {
-            $model->attributes = $_POST['TipoActivo'];
-            if ($model->save())
+        if (isset($_POST['Amenaza'])) {
+            $model->attributes = $_POST['Amenaza'];
+            if ($model->save()) {
+                Yii::app()->user->setNotification('success','Amenaza creada con exito');
                 $this->redirect(array('admin'));
+            }
         }
 
         $this->render('update', array(
@@ -122,7 +127,7 @@ class TipoActivoController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new CActiveDataProvider('TipoActivo');
+        $dataProvider = new CActiveDataProvider('Amenaza');
         $this->render('index', array(
             'dataProvider' => $dataProvider,
         ));
@@ -133,10 +138,10 @@ class TipoActivoController extends Controller
      */
     public function actionAdmin()
     {
-        $model = new TipoActivo('search');
+        $model = new Amenaza('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['TipoActivo']))
-            $model->attributes = $_GET['TipoActivo'];
+        if (isset($_GET['Amenaza']))
+            $model->attributes = $_GET['Amenaza'];
 
         $this->render('admin', array(
             'model' => $model,
@@ -150,7 +155,7 @@ class TipoActivoController extends Controller
      */
     public function loadModel($id)
     {
-        $model = TipoActivo::model()->findByPk($id);
+        $model = Amenaza::model()->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;
@@ -162,7 +167,7 @@ class TipoActivoController extends Controller
      */
     protected function performAjaxValidation($model)
     {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'tipo-activo-form') {
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'amenaza-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

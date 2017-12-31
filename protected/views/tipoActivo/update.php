@@ -10,7 +10,7 @@ $this->widget(
 <div class="box">
 
 	<div class="box-header with-border">
-		<h3>Editar TipoActivo</h3>
+		<h3>Editar Tipo de Activo</h3>
 	</div>
 
 	<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

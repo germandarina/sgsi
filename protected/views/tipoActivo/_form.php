@@ -16,26 +16,23 @@
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <?php echo $form->textFieldGroup($model,'descripcion',array('class'=>'col-sm-5','maxlength'=>50)); ?>
-
+                <?php echo $form->labelEx($model,'descripcion',array('class'=>'col-sm-3')); ?>
+                <?php echo $form->textArea($model,'descripcion',array('class'=>'col-sm-9','rows'=>6, 'cols'=>75)); ?>
             </div>
         </div>
+        <br>
         <div class="row">
             <div class="col-sm-3">
-                <?php echo $form->label($model,'confidencialidad',array('class'=>'col-sm-9')); ?>
-                <?php echo $form->checkBox($model,'confidencialidad',array('class'=>'col-sm-3')); ?>
+                <?php echo $form->checkBoxGroup($model,'confidencialidad',array('class'=>'col-sm-3')); ?>
             </div>
             <div class="col-sm-3">
-                <?php echo $form->label($model,'integridad',array('class'=>'col-sm-9')); ?>
-                <?php echo $form->checkBox($model,'integridad',array('class'=>'col-sm-3')); ?>
+                <?php echo $form->checkBoxGroup($model,'integridad',array('class'=>'col-sm-3')); ?>
             </div>
             <div class="col-sm-3">
-                <?php echo $form->label($model,'disponibilidad',array('class'=>'col-sm-9')); ?>
-                <?php echo $form->checkBox($model,'disponibilidad',array('class'=>'col-sm-3')); ?>
+                <?php echo $form->checkBoxGroup($model,'disponibilidad',array('class'=>'col-sm-3')); ?>
             </div>
             <div class="col-sm-3">
-                <?php echo $form->label($model,'trazabilidad',array('class'=>'col-sm-9')); ?>
-                <?php echo $form->checkBox($model,'trazabilidad',array('class'=>'col-sm-3')); ?>
+                <?php echo $form->checkBoxGroup($model,'trazabilidad',array('class'=>'col-sm-3')); ?>
             </div>
         </div>
 

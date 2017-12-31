@@ -2,7 +2,7 @@
 
 <div class="box">
 	<div class="box-header">
-		<h3 clas="box-title">Admin Tipo de Activos</h3>
+		<h3 clas="box-title">Admin Amenazas</h3>
 		<?php $this->widget(
 			'booster.widgets.TbButtonGroup',
 			array(
@@ -12,7 +12,7 @@
 					array(
 						'label' => 'Acciones',
 						'items' => array(
-							array('label' => 'Crear', 'url' => Yii::app()->createUrl('TipoActivo/create')),
+							array('label' => 'Crear', 'url' => Yii::app()->createUrl('Amenaza/create')),
 						)
 					),
 				),
@@ -20,7 +20,7 @@
 		); ?>	</div>
 
 	<?php $this->widget('booster.widgets.TbExtendedGridView',array(
-	'id'=>'tipo-activo-grid',
+	'id'=>'amenaza-grid',
 	'fixedHeader' => false,
 	'headerOffset' => 10,
 	// 40px is the height of the main navigation at bootstrap
@@ -34,30 +34,10 @@
 		'id',
 		'nombre',
 		'descripcion',
-		array(
-			'name'=>'confidencialidad',
-			'header'=>'Confidencialidad',
-			'value'=>'TipoActivo::$valores[$data->confidencialidad]',
-			'filter'=>TipoActivo::$valores,
-		),
-		array(
-			'name'=>'integridad',
-			'header'=>'Integridad',
-			'value'=>'TipoActivo::$valores[$data->integridad]',
-			'filter'=>TipoActivo::$valores,
-		),
-		array(
-			'name'=>'disponibilidad',
-			'header'=>'Disponibilidad',
-			'value'=>'TipoActivo::$valores[$data->disponibilidad]',
-			'filter'=>TipoActivo::$valores,
-		),
-		array(
-			'name'=>'trazabilidad',
-			'header'=>'Trazabilidad',
-			'value'=>'TipoActivo::$valores[$data->trazabilidad]',
-			'filter'=>TipoActivo::$valores,
-		),
+		'confidencialidad',
+		'integridad',
+		'disponibilidad',
+		'trazabilidad',
 		'creaUserStamp',
 		'creaTimeStamp',
 	array(

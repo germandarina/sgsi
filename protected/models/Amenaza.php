@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "tipo_activo".
+ * This is the model class for table "amenaza".
  *
- * The followings are the available columns in table 'tipo_activo':
+ * The followings are the available columns in table 'amenaza':
  * @property integer $id
  * @property string $nombre
  * @property string $descripcion
@@ -16,13 +16,13 @@
  * @property string $modUserStamp
  * @property string $modTimeStamp
  */
-class TipoActivo extends CActiveRecord
+class Amenaza extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 
-	const VALOR_SI = 1;
+    const VALOR_SI = 1;
     const VALOR_NO = 0;
 
     public static $valores = array(
@@ -32,7 +32,7 @@ class TipoActivo extends CActiveRecord
 
 	public function tableName()
 	{
-		return 'tipo_activo';
+		return 'amenaza';
 	}
 
 	/**
@@ -123,7 +123,7 @@ class TipoActivo extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return TipoActivo the static model class
+	 * @return Amenaza the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
