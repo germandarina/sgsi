@@ -1,6 +1,6 @@
 <div class="box-body">
     <?php $form=$this->beginWidget('booster.widgets.TbActiveForm',array(
-	'id'=>'amenaza-form',
+	'id'=>'control-form',
 	'enableAjaxValidation'=>false,
 	'type' => 'horizontal'
 )); ?>
@@ -16,19 +16,27 @@
     </div>
     <div class="row">
         <div class="col-sm-6">
-            <?php echo $form->labelEx($model,'descripcion',array('class'=>'col-sm-3')); ?>
-            <?php echo $form->textArea($model,'descripcion',array('class'=>'col-sm-9','rows'=>6, 'cols'=>75)); ?>
+            <?php echo $form->textFieldGroup($model,'numeracion',array('class'=>'col-sm-5','maxlength'=>50)); ?>
+
         </div>
     </div>
     <div class="row">
         <div class="col-sm-6">
+                <?php echo $form->labelEx($model,'descripcion',array('class'=>'col-sm-3')); ?>
+                <?php echo $form->textArea($model,'descripcion',array('class'=>'col-sm-9','rows'=>6, 'cols'=>75)); ?>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
             <?php echo $form->select2Group(
-                $model, 'tipo_activo_id',
+                $model, 'vulnerabilidad_id',
                 [
                     'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
                     'widgetOptions' => [
                         'asDropDownList' => true,
-                        'data' => CHtml::listData(TipoActivo::model()->findAll(), 'id', 'nombre'),
+                        'data' => CHtml::listData(Vulnerabilidad::model()->findAll(), 'id', 'nombre'),
                         'options' => [
                             'minimumResultsForSearch' => 10,
                             'placeholder' => '--Seleccione--'
@@ -40,22 +48,7 @@
             ?>
         </div>
     </div>
-    <br>
-    <div class="row">
-        <div class="col-sm-3">
-            <?php echo $form->checkBoxGroup($model,'confidencialidad',array('class'=>'col-sm-3')); ?>
-        </div>
-        <div class="col-sm-3">
-            <?php echo $form->checkBoxGroup($model,'integridad',array('class'=>'col-sm-3')); ?>
-        </div>
-        <div class="col-sm-3">
-            <?php echo $form->checkBoxGroup($model,'disponibilidad',array('class'=>'col-sm-3')); ?>
-        </div>
-        <div class="col-sm-3">
-            <?php echo $form->checkBoxGroup($model,'trazabilidad',array('class'=>'col-sm-3')); ?>
-        </div>
-    </div>
-    
+
     <div class="box-footer">
         <?php $this->widget('booster.widgets.TbButton', array(
 			'buttonType'=>'submit',

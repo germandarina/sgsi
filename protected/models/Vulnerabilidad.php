@@ -1,39 +1,30 @@
 <?php
 
 /**
- * This is the model class for table "amenaza".
+ * This is the model class for table "vulnerabilidad".
  *
- * The followings are the available columns in table 'amenaza':
+ * The followings are the available columns in table 'vulnerabilidad':
  * @property integer $id
  * @property string $nombre
  * @property string $descripcion
- * @property integer $confidencialidad
- * @property integer $integridad
- * @property integer $disponibilidad
- * @property integer $trazabilidad
- * @property integer $tipo_activo_id
+ * @property integer $amenaza_id
  * @property string $creaUserStamp
  * @property string $creaTimeStamp
  * @property string $modUserStamp
  * @property string $modTimeStamp
+ *
+ * The followings are the available model relations:
+ * @property Control[] $controls
+ * @property Amenaza $amenaza
  */
-class Amenaza extends CustomCActiveRecord
+class Vulnerabilidad extends CustomCActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
-
-    const VALOR_SI = 1;
-    const VALOR_NO = 0;
-
-    public static $valores = array(
-        self::VALOR_NO => 'No',
-        self::VALOR_SI => 'Si',
-    );
-
 	public function tableName()
 	{
-		return 'amenaza';
+		return 'vulnerabilidad';
 	}
 
 	/**
@@ -44,13 +35,14 @@ class Amenaza extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('tipo_activo_id,nombre, descripcion, confidencialidad, integridad, disponibilidad, trazabilidad', 'required'),
-			array('confidencialidad, integridad, disponibilidad, trazabilidad', 'numerical', 'integerOnly'=>true),
-			array('nombre, descripcion, creaUserStamp, modUserStamp', 'length', 'max'=>50),
+			array('nombre, descripcion, amenaza_id', 'required'),
+			array('amenaza_id', 'numerical', 'integerOnly'=>true),
+			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>50),
+			array('descripcion', 'length', 'max'=>200),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, tipo_activo_id,nombre, descripcion, confidencialidad, integridad, disponibilidad, trazabilidad, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('id, nombre, descripcion, amenaza_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -62,9 +54,9 @@ class Amenaza extends CustomCActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-            'tipoActivo' => array(self::BELONGS_TO, 'TipoActivo', 'tipo_activo_id'),
-
-        );
+			'controls' => array(self::HAS_MANY, 'Control', 'vulnerabilidad_id'),
+			'amenaza' => array(self::BELONGS_TO, 'Amenaza', 'amenaza_id'),
+		);
 	}
 
 	/**
@@ -76,15 +68,11 @@ class Amenaza extends CustomCActiveRecord
 			'id' => 'ID',
 			'nombre' => 'Nombre',
 			'descripcion' => 'Descripcion',
-			'confidencialidad' => 'Confidencialidad',
-			'integridad' => 'Integridad',
-			'disponibilidad' => 'Disponibilidad',
-			'trazabilidad' => 'Trazabilidad',
+			'amenaza_id' => 'Amenaza',
 			'creaUserStamp' => 'Crea User Stamp',
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
-            'tipo_activo_id'=>'Tipo Activo',
 		);
 	}
 
@@ -109,18 +97,11 @@ class Amenaza extends CustomCActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('descripcion',$this->descripcion,true);
-		$criteria->compare('confidencialidad',$this->confidencialidad);
-		$criteria->compare('integridad',$this->integridad);
-		$criteria->compare('disponibilidad',$this->disponibilidad);
-		$criteria->compare('trazabilidad',$this->trazabilidad);
+		$criteria->compare('amenaza_id',$this->amenaza_id);
 		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
 		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
-//		$criteria->compare('modUserStamp',$this->modUserStamp,true);
-//		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
-        if($this->tipo_activo_id != ""){
-            $criteria->with = array('tipoActivo');
-            $criteria->compare('tipoActivo.nombre',$this->tipo_activo_id,true);
-        };
+		$criteria->compare('modUserStamp',$this->modUserStamp,true);
+		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -131,7 +112,7 @@ class Amenaza extends CustomCActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Amenaza the static model class
+	 * @return Vulnerabilidad the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
