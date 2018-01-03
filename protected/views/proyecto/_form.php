@@ -26,7 +26,7 @@
         <div class="col-sm-6">
             <?php echo $form->datepickerGroup($model, 'fecha', [
                 'widgetOptions' => [
-                    'options' => ['language' => 'es',
+                    'options' => [
                         'format' => 'dd/mm/yyyy',
                         'autoclose' => true,
                         'startDate' => ($model->fecha),

@@ -67,7 +67,7 @@ class ControlController extends Controller
             $model->attributes = $_POST['Control'];
             if ($model->save()) {
                 Yii::app()->user->setNotification('success','Control creado con exito');
-                $this->redirect(array('admin'));            }
+                $this->redirect(array('update',array('id'=>$model->id)));            }
         }
 
         $this->render('create', array(
@@ -83,6 +83,8 @@ class ControlController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->loadModel($id);
+        $controlValor = new ControlValor();
+        $controlValor->control_id = $model->id;
 
         if (isset($_POST['Control'])) {
             $model->attributes = $_POST['Control'];
@@ -92,7 +94,7 @@ class ControlController extends Controller
         }
 
         $this->render('update', array(
-            'model' => $model,
+            'model' => $model,'controlValor'=>$controlValor
         ));
     }
 
