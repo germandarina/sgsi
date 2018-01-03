@@ -1,11 +1,19 @@
+<style>
+	.login-page, .register-page {
+		background-image: url(<?= Yii::app()->baseUrl.'/images/fondo2.jpg' ?>) !important;
+	}
+</style>
+|
 <div class="login-box">
 	<div class="login-logo">
 
 	</div><!-- /.login-logo -->
 	<div class="login-box-body">
 		<p class="login-box-msg">
-			<?php echo CHtml::image(Yii::app()->baseUrl.'/images/logo-dime.png', 'DIME-SGSI',array(
-				'style' => 'width:200px;')); ?>
+			<img src="<?= Yii::app()->baseUrl.'/images/logo-dime.png' ?>"
+				 class="img-responsive" >
+<!--			--><?php //echo CHtml::image(Yii::app()->baseUrl.'/images/logo-dime.png', 'DIME-SGSI',array(
+//				'style' => 'width:200px;')); ?>
 		</p>
 		<?php
 		$form = $this->beginWidget(

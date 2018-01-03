@@ -15,7 +15,7 @@ class m180103_021345_create_table_control_valor extends CDbMigration
                                     `modTimeStamp` TIMESTAMP NULL,
                                     PRIMARY KEY (`id`),
                                     INDEX `control_id` (`control_id`),
-                                    CONSTRAINT `fk_control_valor_control_id` FOREIGN KEY (`id`) REFERENCES `control` (`id`)
+                                    CONSTRAINT `fk_control_valor_control_id` FOREIGN KEY (`control_id`) REFERENCES `control` (`id`)
                                 )
                                 COLLATE='utf8_spanish2_ci'
                                 ENGINE=InnoDB

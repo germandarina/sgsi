@@ -52,7 +52,7 @@ class ControlValor extends CustomCActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'id0' => array(self::BELONGS_TO, 'Control', 'id'),
+			'control' => array(self::BELONGS_TO, 'Control', 'control_id'),
 		);
 	}
 

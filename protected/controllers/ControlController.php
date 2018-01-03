@@ -31,7 +31,8 @@ class ControlController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','delete'),
+                'actions' => array('create', 'update', 'admin','delete','getControlValor','eliminarControlValor'
+                                   ,'guardarControlValor'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -164,6 +165,54 @@ class ControlController extends Controller
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'control-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
+        }
+    }
+
+    public function actionGetControlValor(){
+        if(isset($_POST['control_valor_id'])){
+            $controlValor = ControlValor::model()->findByPk($_POST['control_valor_id']);
+            if(!is_null($controlValor)){
+                $controlValor->fecha = Utilities::ViewDateFormat($controlValor->fecha);
+                $datos =['controlValor'=>$controlValor];
+                echo CJSON::encode($datos);
+            }
+        }
+    }
+
+    public function actionEliminarControlValor(){
+        if(isset($_POST['control_valor_id'])){
+            $controlValor = ControlValor::model()->findByPk($_POST['control_valor_id']);
+            if(!$controlValor->delete()){
+                $datos =['error'=>1];
+                echo CJSON::encode($datos);
+                die();
+            }else{
+                $datos =['error'=>0];
+                echo CJSON::encode($datos);
+                die();
+            }
+        }
+    }
+
+    public function actionGuardarControlValor(){
+        if(isset($_POST['control_id'])){
+            if(empty($_POST['control_valor_id'])){
+                $controlValor = new ControlValor();
+            }else{
+                $controlValor = ControlValor::model()->findByPk($_POST['control_valor_id']);
+            }
+            $controlValor->control_id = $_POST['control_id'];
+            $controlValor->valor = $_POST['valor'];
+            $controlValor->fecha = Utilities::MysqlDateFormat($_POST['fecha']);
+            if(!$controlValor->save()){
+                $datos =['error'=>1];
+                echo CJSON::encode($datos);
+                die();
+            }else{
+                $datos =['error'=>0];
+                echo CJSON::encode($datos);
+                die();
+            }
         }
     }
 }

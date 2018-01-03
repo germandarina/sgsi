@@ -1,8 +1,92 @@
 <script>
     function levantarModal() {
+        $("#ControlValor_fecha").val("");
+        $("#ControlValor_valor").val(0);
+        $("#ControlValor_valor").attr('min',0);
         $("#modalFormDetalle").modal("show");
     }
+    function mostrarValor(control_valor_id) {
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo CController::createUrl('control/getControlValor')?>",
+            data: {'control_valor_id': control_valor_id},
+            dataType: 'Text',
+            success: function (data) {
+                var datos = jQuery.parseJSON(data);
+                var control_valor = datos.controlValor;
+                $("#ControlValor_valor").attr('min',0);
+                $("#ControlValor_fecha").val(control_valor.fecha);
+                $("#ControlValor_valor").val(control_valor.valor);
+                $("#modalFormDetalle").modal("show");
+            }
+        });
+    }
+
+    function eliminarDetalle(control_valor_id) {
+
+        Lobibox.confirm({
+            title: 'Confirmar',
+            msg : 'Esta seguro de eliminar el valor?',
+            callback: function (lobibox,type) {
+                if(type == 'yes'){
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo CController::createUrl('control/eliminarControlValor')?>",
+                        data: {'control_valor_id': control_valor_id},
+                        dataType: 'Text',
+                        success: function (data) {
+                            var datos = jQuery.parseJSON(data);
+                            if(datos.error == 1){
+                                 Lobibox.notify('error',{msg: "Error al eliminar, intentelo de nuevo."});
+                            }else{
+                                Lobibox.notify('success',{msg: "Se elimino correctamente"});
+                            }
+                            $.fn.yiiGridView.update('control-valor-grid');
+                        }
+                    });
+                }else{
+                    return false;
+                }
+            }
+        });
+
+    }
+    function guardarValores() {
+        var fecha = $("#ControlValor_fecha").val();
+        var valor = $("#ControlValor_valor").val();
+        if(fecha == "" || valor == ""){
+            return Lobibox.notify('error',{msg: "Debe completar el formulario"})
+        }
+        var control_id = $("#control_id").val();
+        var control_valor_id = $("#control_valor_id").val();
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo CController::createUrl('control/guardarControlValor')?>",
+            data: { 'fecha': fecha,
+                    'valor': valor,
+                    'control_id':control_id,
+                    'control_valor_id':control_valor_id
+                },
+            dataType: 'Text',
+            success: function (data) {
+                var datos = jQuery.parseJSON(data);
+                if(datos.error == 1){
+                    Lobibox.notify('error',{msg: "Error al guardar, intentelo de nuevo."});
+                }else{
+                    Lobibox.notify('success',{msg: "Se guardo correctamente"});
+                    $("#modalFormDetalle").modal("hide");
+                }
+                $.fn.yiiGridView.update('control-valor-grid');
+
+            }
+        });
+    }
 </script>
+<style>
+    a.linkCredito {
+        cursor: pointer;
+    }
+</style>
 <div class="box-body">
     <?php $form=$this->beginWidget('booster.widgets.TbActiveForm',array(
 	'id'=>'control-form',
@@ -52,7 +136,8 @@
             ?>
         </div>
     </div>
-    <div class="panel box box-solid box-success">
+    <?php if(!$model->isNewRecord) { ?>
+    <div class="panel box box-solid box-primary">
         <div class="box-header with-border">
             <h4 class="box-title">
                 Valores Control
@@ -65,7 +150,7 @@
         </div>
         <div class="box-body">
             <div class="box-header with-border">
-                <?php if(!$model->isNewRecord) {
+                <?php
                     $this->widget('booster.widgets.TbButton', array(
                         'label' => 'Agregar Valor ( + )',
                         'context' => 'primary',
@@ -75,7 +160,7 @@
                     ));
 
                     $this->widget('booster.widgets.TbExtendedGridView', array(
-                        'id' => 'control-grid',
+                        'id' => 'control-valor-grid',
                         'fixedHeader' => false,
                         'headerOffset' => 10,
                         // 40px is the height of the main navigation at bootstrap
@@ -86,21 +171,26 @@
                         'selectableRows' => 1,
                         //'filter' => $model,
                         'columns' => array(
-                            'fecha',
+                            array(
+                                'name'=>'fecha',
+                                'header'=>'Fecha',
+                                'value'=>'Utilities::ViewDateFormat($data->fecha)',
+                            ),
                             'valor',
                             'creaUserStamp',
                             'creaTimeStamp',
-                            array(
-                                'class' => 'booster.widgets.TbButtonColumn',
-                                'template' => '{update}{delete}'
-                            ),
+                            [
+                                'header' => 'Acciones',
+                                'type' => 'raw',
+                                'value' => '"<a onclick=\"mostrarValor($data->id) \" title=\"Presione para ver\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-eye-open\"></i></a>&nbsp;&nbsp;<a onclick=\"eliminarDetalle($data->id) \" title=\"Presione para eliminar\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-trash\"></i></a>"',
+                            ]
                         ),
                     ));
-                } ?>
+                ?>
             </div>
         </div>
     </div>
-
+    <?php } ?>
     <div class="box-footer">
         <?php $this->widget('booster.widgets.TbButton', array(
 			'buttonType'=>'submit',
@@ -120,6 +210,7 @@
     <?php $this->endWidget(); ?>
 
 </div>
+<?php if(!$model->isNewRecord) { ?>
 <div class="modal fade" id="modalFormDetalle" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -131,10 +222,11 @@
             </div>
             <div class="modal-footer">
                 <button type="button" onclick="js:guardarValores()" class="btn btn-success" id="botonModal">
-                    Agregar Detalle
+                    Agregar Valor
                 </button>
                 <button type="button" data-dismiss="modal" class="btn btn-default">Cerrar</button>
             </div>
         </div>
     </div>
 </div>
+<?php }?>

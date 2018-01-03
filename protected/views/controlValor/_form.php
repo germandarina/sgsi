@@ -9,21 +9,23 @@
 
     <?php echo $form->errorSummary($controlValor); ?>
 
-            <?php echo $form->datepickerGroup($controlValor, 'fecha', [
-                'widgetOptions' => [
-                    'options' => ['language' => 'es',
-                        'format' => 'dd/mm/yyyy',
-                        'autoclose' => true,
-                        'startDate' => ($controlValor->fecha),
-                        'endDate' => ($controlValor->fecha),
-                    ],
-                    'htmlOptions' => ['readonly' => 'readonly']
-                ],
-                'wrapperHtmlOptions' => ['class' => 'col-sm-9 input-group-sm'],
-                'prepend' => '<i class="fa fa-calendar"></i>'
-            ]); ?>
+    <input type="hidden" name="control_id" id="control_id" value="<?=$model->id?>">
+    <input type="hidden" name="control_valor_id" id="control_valor_id" value="<?= $controlValor->id?>">
+    <?php echo $form->datepickerGroup($controlValor, 'fecha', [
+        'widgetOptions' => [
+            'options' => ['language' => 'es',
+                'format' => 'dd/mm/yyyy',
+                'autoclose' => true,
+                'startDate' => ($controlValor->fecha),
+                'endDate' => ($controlValor->fecha),
+            ],
+            'htmlOptions' => ['readonly' => 'readonly']
+        ],
+        'wrapperHtmlOptions' => ['class' => 'col-sm-9 input-group-sm'],
+        'prepend' => '<i class="fa fa-calendar"></i>'
+    ]); ?>
 
-            <?php echo $form->numberFieldGroup($controlValor,'valor',array('class'=>'col-sm-5',)); ?>
+    <?php echo $form->numberFieldGroup($controlValor,'valor',array('class'=>'col-sm-5',)); ?>
 <!--            --><?php //echo $form->textFieldGroup($controlValor,'control_id',array('class'=>'col-sm-5')); ?>
 <!--            --><?php //echo $form->textFieldGroup($controlValor,'creaUserStamp',array('class'=>'col-sm-5','maxlength'=>50)); ?>
 <!--            --><?php //echo $form->textFieldGroup($controlValor,'creaTimeStamp',array('class'=>'col-sm-5')); ?>
