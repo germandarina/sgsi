@@ -31,7 +31,6 @@
 	'selectableRows' => 1,
 	'filter' => $model,
 	'columns'=>array(
-		'id',
 		'nombre',
 		'descripcion',
 		array(
