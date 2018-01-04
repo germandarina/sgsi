@@ -5,7 +5,7 @@
             getProcesos();
             setTimeout(function(){
                 $("#Personal_proceso_id").select2('val', area_id);
-            }, 1200);
+            }, 500);
         }
     });
     function getProcesos() {
@@ -41,25 +41,6 @@
     <p class="help-block">Campos con <span class="required">*</span> son requeridos.</p>
 
     <?php echo $form->errorSummary($model); ?>
-    <div class="row">
-        <div class="col-sm-6">
-            <?php echo $form->textFieldGroup($model,'apellido',array('class'=>'col-sm-5','maxlength'=>50)); ?>
-        </div>
-        <div class="col-sm-6">
-            <?php echo $form->textFieldGroup($model,'nombre',array('class'=>'col-sm-5','maxlength'=>50)); ?>
-
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <?php echo $form->textFieldGroup($model,'dni',array('class'=>'col-sm-5','maxlength'=>50)); ?>
-
-        </div>
-        <div class="col-sm-6">
-            <?php echo $form->textFieldGroup($model,'telefono',array('class'=>'col-sm-5','maxlength'=>50)); ?>
-
-        </div>
-    </div>
     <div class="row">
         <div class="col-sm-6">
             <?php echo $form->select2Group(
@@ -98,6 +79,26 @@
             ?>
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <?php echo $form->textFieldGroup($model,'apellido',array('class'=>'col-sm-5','maxlength'=>50)); ?>
+        </div>
+        <div class="col-sm-6">
+            <?php echo $form->textFieldGroup($model,'nombre',array('class'=>'col-sm-5','maxlength'=>50)); ?>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <?php echo $form->textFieldGroup($model,'dni',array('class'=>'col-sm-5','maxlength'=>50)); ?>
+
+        </div>
+        <div class="col-sm-6">
+            <?php echo $form->textFieldGroup($model,'telefono',array('class'=>'col-sm-5','maxlength'=>50)); ?>
+
+        </div>
+    </div>
+
 
     <div class="box-footer">
         <?php $this->widget('booster.widgets.TbButton', array(
