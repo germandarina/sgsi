@@ -3,7 +3,7 @@
 $this->widget(
 	'booster.widgets.TbBreadcrumbs',
 	array(
-		'links' => array('Analisises' => array('admin'), 'Actualizar'),
+		'links' => array('Analisis' => array('admin'), 'Actualizar'),
 	)
 );
  ?>

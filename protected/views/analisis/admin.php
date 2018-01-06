@@ -2,7 +2,7 @@
 
 <div class="box">
 	<div class="box-header">
-		<h3 clas="box-title">Admin Analisises</h3>
+		<h3 clas="box-title">Admin Analisis</h3>
 		<?php $this->widget(
 			'booster.widgets.TbButtonGroup',
 			array(
@@ -31,19 +31,23 @@
 	'selectableRows' => 1,
 	'filter' => $model,
 	'columns'=>array(
-			'id',
 		'nombre',
 		'descripcion',
-		'fecha',
-		'personal_id',
+		array(
+			'name'=>'fecha',
+			'header'=>'Fecha',
+			'value'=>'Utilities::ViewDateFormat($data->fecha)',
+		),
+		array(
+			'name'=>'personal_id',
+			'header'=>'Personal',
+			'value'=>'$data->getPersonal()',
+		),
 		'creaUserStamp',
-		/*
 		'creaTimeStamp',
-		'modUserStamp',
-		'modTimeStamp',
-		*/
 	array(
 	'class'=>'booster.widgets.TbButtonColumn',
+		'template'=>'{update}{delete}'
 	),
 	),
 	)); ?>

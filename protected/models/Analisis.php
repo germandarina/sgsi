@@ -121,4 +121,9 @@ class Analisis extends CustomCActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	public function getPersonal(){
+        return $this->personal->apellido.' , '.$this->personal->nombre;
+
+    }
 }
