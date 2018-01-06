@@ -137,61 +137,61 @@
     </div>
 
     <br>
-    <?php if(!$model->isNewRecord) { ?>
-    <div class="panel box box-solid box-primary">
-        <div class="box-header with-border">
-            <h4 class="box-title">
-                Valores Control
-            </h4>
-            <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                    <i class="fa fa-minus"></i>
-                </button>
-            </div>
-        </div>
-        <div class="box-body">
-            <div class="box-header with-border">
-                <?php
-                    $this->widget('booster.widgets.TbButton', array(
-                        'label' => 'Agregar Valor ( + )',
-                        'context' => 'primary',
-                        'size' => 'small',
-                        'id' => "botonModal",
-                        'htmlOptions' => array('onclick' => 'js:levantarModal()', 'class' => "btn btn-success"),
-                    ));
-
-                    $this->widget('booster.widgets.TbExtendedGridView', array(
-                        'id' => 'control-valor-grid',
-                        'fixedHeader' => false,
-                        'headerOffset' => 10,
-                        // 40px is the height of the main navigation at bootstrap
-                        'type' => 'striped hover condensed',
-                        'dataProvider' => $controlValor->search(),
-                        'responsiveTable' => true,
-                        'template' => "{summary}\n{items}\n{pager}",
-                        'selectableRows' => 1,
-                        //'filter' => $model,
-                        'columns' => array(
-                            array(
-                                'name'=>'fecha',
-                                'header'=>'Fecha',
-                                'value'=>'Utilities::ViewDateFormat($data->fecha)',
-                            ),
-                            'valor',
-                            'creaUserStamp',
-                            'creaTimeStamp',
-                            [
-                                'header' => 'Acciones',
-                                'type' => 'raw',
-                                'value' => '"<a onclick=\"mostrarValor($data->id) \" title=\"Presione para ver\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-eye-open\"></i></a>&nbsp;&nbsp;<a onclick=\"eliminarDetalle($data->id) \" title=\"Presione para eliminar\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-trash\"></i></a>"',
-                            ]
-                        ),
-                    ));
-                ?>
-            </div>
-        </div>
-    </div>
-    <?php } ?>
+<!--    --><?php //if(!$model->isNewRecord) { ?>
+<!--    <div class="panel box box-solid box-primary">-->
+<!--        <div class="box-header with-border">-->
+<!--            <h4 class="box-title">-->
+<!--                Valores Control-->
+<!--            </h4>-->
+<!--            <div class="box-tools pull-right">-->
+<!--                <button type="button" class="btn btn-box-tool" data-widget="collapse">-->
+<!--                    <i class="fa fa-minus"></i>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="box-body">-->
+<!--            <div class="box-header with-border">-->
+<!--                --><?php
+//                    $this->widget('booster.widgets.TbButton', array(
+//                        'label' => 'Agregar Valor ( + )',
+//                        'context' => 'primary',
+//                        'size' => 'small',
+//                        'id' => "botonModal",
+//                        'htmlOptions' => array('onclick' => 'js:levantarModal()', 'class' => "btn btn-success"),
+//                    ));
+//
+//                    $this->widget('booster.widgets.TbExtendedGridView', array(
+//                        'id' => 'control-valor-grid',
+//                        'fixedHeader' => false,
+//                        'headerOffset' => 10,
+//                        // 40px is the height of the main navigation at bootstrap
+//                        'type' => 'striped hover condensed',
+//                        'dataProvider' => $controlValor->search(),
+//                        'responsiveTable' => true,
+//                        'template' => "{summary}\n{items}\n{pager}",
+//                        'selectableRows' => 1,
+//                        //'filter' => $model,
+//                        'columns' => array(
+//                            array(
+//                                'name'=>'fecha',
+//                                'header'=>'Fecha',
+//                                'value'=>'Utilities::ViewDateFormat($data->fecha)',
+//                            ),
+//                            'valor',
+//                            'creaUserStamp',
+//                            'creaTimeStamp',
+//                            [
+//                                'header' => 'Acciones',
+//                                'type' => 'raw',
+//                                'value' => '"<a onclick=\"mostrarValor($data->id) \" title=\"Presione para ver\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-eye-open\"></i></a>&nbsp;&nbsp;<a onclick=\"eliminarDetalle($data->id) \" title=\"Presione para eliminar\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-trash\"></i></a>"',
+//                            ]
+//                        ),
+//                    ));
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    --><?php //} ?>
     <div class="box-footer">
         <?php $this->widget('booster.widgets.TbButton', array(
 			'buttonType'=>'submit',
@@ -211,23 +211,23 @@
     <?php $this->endWidget(); ?>
 
 </div>
-<?php if(!$model->isNewRecord) { ?>
-<div class="modal fade" id="modalFormDetalle" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="cabeceraModal">Nuevo Valor</h4>
-            </div>
-            <div class="modal-body" id="cuerpoDetalleCredito">
-                <?php echo $this->renderPartial('/controlValor/_form', array('model' => $model, 'controlValor' => $controlValor,)); ?>
-            </div>
-            <div class="modal-footer">
-                <button type="button" onclick="js:guardarValores()" class="btn btn-success" id="botonModal">
-                    Agregar Valor
-                </button>
-                <button type="button" data-dismiss="modal" class="btn btn-default">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-<?php }?>
+<?php //if(!$model->isNewRecord) { ?>
+<!--<div class="modal fade" id="modalFormDetalle" tabindex="-1" role="dialog" aria-hidden="true">-->
+<!--    <div class="modal-dialog">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h4 class="modal-title" id="cabeceraModal">Nuevo Valor</h4>-->
+<!--            </div>-->
+<!--            <div class="modal-body" id="cuerpoDetalleCredito">-->
+<!--                --><?php //echo $this->renderPartial('/controlValor/_form', array('model' => $model, 'controlValor' => $controlValor,)); ?>
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" onclick="js:guardarValores()" class="btn btn-success" id="botonModal">-->
+<!--                    Agregar Valor-->
+<!--                </button>-->
+<!--                <button type="button" data-dismiss="modal" class="btn btn-default">Cerrar</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<?php //}?>

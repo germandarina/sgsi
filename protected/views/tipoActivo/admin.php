@@ -33,30 +33,79 @@
 	'columns'=>array(
 		'nombre',
 		'descripcion',
-		array(
-			'name'=>'confidencialidad',
-			'header'=>'Confidencialidad',
-			'value'=>'TipoActivo::$valores[$data->confidencialidad]',
+		[
+			'header' => 'Confidencialidad',
+			'type' => 'raw',
+			'value'=>function($data){
+				if($data->confidencialidad == TipoActivo::VALOR_SI){
+					return "<a onclick=\" \" title=\"Presione para ver\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-ok\"></i></a>";
+				}else{
+					return '';
+				}
+			},
 			'filter'=>TipoActivo::$valores,
-		),
-		array(
-			'name'=>'integridad',
-			'header'=>'Integridad',
-			'value'=>'TipoActivo::$valores[$data->integridad]',
+		],
+
+		[
+			'header' => 'Integridad',
+			'type' => 'raw',
+			'value'=>function($data){
+				if($data->integridad == TipoActivo::VALOR_SI){
+					return "<a onclick=\" \" title=\"Presione para ver\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-ok\"></i></a>";
+				}else{
+					return '';
+				}
+			},
 			'filter'=>TipoActivo::$valores,
-		),
-		array(
-			'name'=>'disponibilidad',
-			'header'=>'Disponibilidad',
-			'value'=>'TipoActivo::$valores[$data->disponibilidad]',
+		],
+		[
+			'header' => 'Disponibilidad',
+			'type' => 'raw',
+			'value'=>function($data){
+				if($data->disponibilidad == TipoActivo::VALOR_SI){
+					return "<a onclick=\" \" title=\"Presione para ver\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-ok\"></i></a>";
+				}else{
+					return '';
+				}
+			},
 			'filter'=>TipoActivo::$valores,
-		),
-		array(
-			'name'=>'trazabilidad',
-			'header'=>'Trazabilidad',
-			'value'=>'TipoActivo::$valores[$data->trazabilidad]',
+		],
+		[
+			'header' => 'Trazabilidad',
+			'type' => 'raw',
+			'value'=>function($data){
+				if($data->trazabilidad == TipoActivo::VALOR_SI){
+					return "<a onclick=\" \" title=\"Presione para ver\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-ok\"></i></a>";
+				}else{
+					return '';
+				}
+			},
 			'filter'=>TipoActivo::$valores,
-		),
+		],
+		//		array(
+//			'name'=>'confidencialidad',
+//			'header'=>'Confidencialidad',
+//			'value'=>'TipoActivo::$valores[$data->confidencialidad]',
+//			'filter'=>TipoActivo::$valores,
+//		),
+//		array(
+//			'name'=>'integridad',
+//			'header'=>'Integridad',
+//			'value'=>'TipoActivo::$valores[$data->integridad]',
+//			'filter'=>TipoActivo::$valores,
+//		),
+//		array(
+//			'name'=>'disponibilidad',
+//			'header'=>'Disponibilidad',
+//			'value'=>'TipoActivo::$valores[$data->disponibilidad]',
+//			'filter'=>TipoActivo::$valores,
+//		),
+//		array(
+//			'name'=>'trazabilidad',
+//			'header'=>'Trazabilidad',
+//			'value'=>'TipoActivo::$valores[$data->trazabilidad]',
+//			'filter'=>TipoActivo::$valores,
+//		),
 		'creaUserStamp',
 		'creaTimeStamp',
 	array(

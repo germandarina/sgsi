@@ -31,10 +31,13 @@
 	'selectableRows' => 1,
 	'filter' => $model,
 	'columns'=>array(
-			'id',
 		'nombre',
 		'descripcion',
-		'fecha',
+		array(
+			'name'=>'fecha',
+			'header'=>'Fecha',
+			'value'=>'Utilities::ViewDateFormat($data->fecha)',
+		),
 		'creaUserStamp',
 		'creaTimeStamp',
 

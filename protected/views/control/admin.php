@@ -31,9 +31,9 @@
 	'selectableRows' => 1,
 	'filter' => $model,
 	'columns'=>array(
+		'numeracion',
 		'nombre',
 		'descripcion',
-		'numeracion',
 		array(
 			'name'=>'vulnerabilidad_id',
 			'header'=>'Vulnerabilidad',
