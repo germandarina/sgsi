@@ -8,15 +8,36 @@
     <p class="help-block">Campos con <span class="required">*</span> son requeridos.</p>
 
     <?php echo $form->errorSummary($model); ?>
-
-            <?php echo $form->textFieldGroup($model,'nombre',array('class'=>'col-sm-5','maxlength'=>50)); ?>
-            <?php echo $form->textFieldGroup($model,'criterio',array('class'=>'col-sm-5','maxlength'=>200)); ?>
-            <?php echo $form->textFieldGroup($model,'tipo_activo_id',array('class'=>'col-sm-5')); ?>
-            <?php echo $form->textFieldGroup($model,'creaUserStamp',array('class'=>'col-sm-5','maxlength'=>50)); ?>
-            <?php echo $form->textFieldGroup($model,'creaTimeStamp',array('class'=>'col-sm-5')); ?>
-            <?php echo $form->textFieldGroup($model,'modUserStamp',array('class'=>'col-sm-5','maxlength'=>50)); ?>
-            <?php echo $form->textFieldGroup($model,'modTimeStamp',array('class'=>'col-sm-5')); ?>
-    
+            <div class="row">
+                <div class="col-sm-6">
+                    <?php echo $form->textFieldGroup($model,'nombre',array('class'=>'col-sm-5','maxlength'=>50)); ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <?php echo $form->textFieldGroup($model,'criterio',array('class'=>'col-sm-5','maxlength'=>200)); ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <?php echo $form->select2Group(
+                        $model, 'tipo_activo_id',
+                        [
+                            'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                            'widgetOptions' => [
+                                'asDropDownList' => true,
+                                'data' => CHtml::listData(TipoActivo::model()->findAll(), 'id', 'nombre'),
+                                'options' => [
+                                    'minimumResultsForSearch' => 10,
+                                    'placeholder' => '--Seleccione--'
+                                ],
+//                        'htmlOptions' => ['onChange'=>'getProcesos()'],
+                            ],
+                        ]
+                    );
+                    ?>
+                </div>
+            </div>
     <div class="box-footer">
         <?php $this->widget('booster.widgets.TbButton', array(
 			'buttonType'=>'submit',

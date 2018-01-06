@@ -35,6 +35,7 @@ class Grupo extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
+		    array('tipo_activo_id,nombre,criterio','required'),
 			array('tipo_activo_id', 'numerical', 'integerOnly'=>true),
 			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('criterio', 'length', 'max'=>200),
@@ -99,8 +100,8 @@ class Grupo extends CustomCActiveRecord
 		$criteria->compare('tipo_activo_id',$this->tipo_activo_id);
 		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
 		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
-		$criteria->compare('modUserStamp',$this->modUserStamp,true);
-		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
+//		$criteria->compare('modUserStamp',$this->modUserStamp,true);
+//		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

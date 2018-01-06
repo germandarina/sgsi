@@ -25,7 +25,7 @@ class Activo extends CustomCActiveRecord
 	/**
 	 * @return string the associated database table name
 	 */
-	public $areas;
+	public $areas = [];
 	public function tableName()
 	{
 		return 'activo';

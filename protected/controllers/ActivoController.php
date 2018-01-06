@@ -31,11 +31,11 @@ class ActivoController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin'),
+                'actions' => array('create', 'update', 'admin','delete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
+                'actions' => array('admin', ),
                 'users' => array('admin'),
             ),
             array('deny',  // deny all users
@@ -102,14 +102,41 @@ class ActivoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->loadModel($id);
-
-// Uncomment the following line if AJAX validation is needed
-// $this->performAjaxValidation($model);
-
+        $activos_areas = ActivoArea::model()->findAllByAttributes(array('activo_id'=>$model->id));
+        foreach ($activos_areas as $relacion){
+            $model->areas[] = $relacion->area_id;
+        }
         if (isset($_POST['Activo'])) {
-            $model->attributes = $_POST['Activo'];
-            if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $model->attributes = $_POST['Activo'];
+                if (!$model->save()) {
+                    throw new Exception("Error al actualizar activo");
+                }
+                foreach ($activos_areas as $relacion){
+                    if(!$relacion->delete()){
+                        throw new Exception("Error al eliminar relacion vieja");
+                    }
+                }
+
+                if(isset($_POST['Activo']['areas']) && !empty($_POST['Activo']['areas'])){
+                    foreach ($_POST['Activo']['areas'] as $area_id){
+                        $activo_area = new ActivoArea();
+                        $activo_area->activo_id = $model->id;
+                        $activo_area->area_id = $area_id;
+                        if(!$activo_area->save()){
+                            throw new Exception("Error al crear relacion activo area");
+                        }
+                    }
+                }
+                $transaction->commit();
+                Yii::app()->user->setNotification('success','Activo actualizado con exito');
+                $this->redirect(array('admin'));
+            }catch (Exception $exception){
+                $transaction->rollBack();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
+            }
+
         }
 
         $this->render('update', array(

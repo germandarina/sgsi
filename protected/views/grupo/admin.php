@@ -31,10 +31,14 @@
 	'selectableRows' => 1,
 	'filter' => $model,
 	'columns'=>array(
-			'id',
 		'nombre',
 		'criterio',
-		'tipo_activo_id',
+		array(
+			'name'=>'tipo_activo_id',
+			'header'=>'Tipo Activo',
+			'value'=>'$data->tipoActivo->nombre',
+			'filter'=>CHtml::listData(TipoActivo::model()->findAll(),'id','nombre'),
+		),
 		'creaUserStamp',
 		'creaTimeStamp',
 		/*
@@ -43,6 +47,7 @@
 		*/
 	array(
 	'class'=>'booster.widgets.TbButtonColumn',
+		'template'=>'{update}{delete}'
 	),
 	),
 	)); ?>
