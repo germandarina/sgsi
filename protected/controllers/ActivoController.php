@@ -1,6 +1,6 @@
 <?php
 
-class AreaController extends Controller
+class ActivoController extends Controller
 {
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -31,11 +31,11 @@ class AreaController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','delete','getProcesos','getPersonal'),
+                'actions' => array('create', 'update', 'admin'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', ),
+                'actions' => array('admin', 'delete'),
                 'users' => array('admin'),
             ),
             array('deny',  // deny all users
@@ -61,13 +61,32 @@ class AreaController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Area;
-        if (isset($_POST['Area'])) {
-            $model->attributes = $_POST['Area'];
-            if ($model->save()) {
-                Yii::app()->user->setNotification('success', 'El area fue creada con exito');
+        $model = new Activo;
+        if (isset($_POST['Activo'])) {
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $model->attributes = $_POST['Activo'];
+                if (!$model->save()) {
+                    throw new Exception("Error al crear activo");
+                }
+                if(isset($_POST['Activo']['areas']) && !empty($_POST['Activo']['areas'])){
+                    foreach ($_POST['Activo']['areas'] as $area_id){
+                          $activo_area = new ActivoArea();
+                          $activo_area->activo_id = $model->id;
+                          $activo_area->area_id = $area_id;
+                          if(!$activo_area->save()){
+                            throw new Exception("Error al crear relacion activo area");
+                          }
+                    }
+                }
+                $transaction->commit();
+                Yii::app()->user->setNotification('success','Activo creado con exito');
                 $this->redirect(array('create'));
+            }catch (Exception $exception){
+                $transaction->rollBack();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
+
         }
 
         $this->render('create', array(
@@ -84,12 +103,13 @@ class AreaController extends Controller
     {
         $model = $this->loadModel($id);
 
-        if (isset($_POST['Area'])) {
-            $model->attributes = $_POST['Area'];
-            if ($model->save()) {
-                Yii::app()->user->setNotification('success', 'El area fue actualizada con exito');
-                $this->redirect(array('admin'));
-            }
+// Uncomment the following line if AJAX validation is needed
+// $this->performAjaxValidation($model);
+
+        if (isset($_POST['Activo'])) {
+            $model->attributes = $_POST['Activo'];
+            if ($model->save())
+                $this->redirect(array('view', 'id' => $model->id));
         }
 
         $this->render('update', array(
@@ -120,7 +140,7 @@ class AreaController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new CActiveDataProvider('Area');
+        $dataProvider = new CActiveDataProvider('Activo');
         $this->render('index', array(
             'dataProvider' => $dataProvider,
         ));
@@ -131,10 +151,10 @@ class AreaController extends Controller
      */
     public function actionAdmin()
     {
-        $model = new Area('search');
+        $model = new Activo('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Area']))
-            $model->attributes = $_GET['Area'];
+        if (isset($_GET['Activo']))
+            $model->attributes = $_GET['Activo'];
 
         $this->render('admin', array(
             'model' => $model,
@@ -148,7 +168,7 @@ class AreaController extends Controller
      */
     public function loadModel($id)
     {
-        $model = Area::model()->findByPk($id);
+        $model = Activo::model()->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;
@@ -160,36 +180,9 @@ class AreaController extends Controller
      */
     protected function performAjaxValidation($model)
     {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'area-form') {
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'activo-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
-        }
-    }
-    public function actionGetProcesos(){
-        if(isset($_POST['area_id'])){
-            $procesos = Proceso::model()->findAllByAttributes(array('area_id'=>$_POST['area_id']));
-            if(!empty($procesos)){
-                $datos = ['procesos'=>$procesos];
-            }else{
-                $datos = ['procesos'=>''];
-            }
-            echo CJSON::encode($datos);
-        }
-    }
-
-    public function actionGetPersonal(){
-        if(isset($_POST['areas'])){
-           $arrayPersonal = [];
-           foreach ($_POST['areas'] as $area_id){
-              $personal = Personal::model()->findAllByAttributes(array('area_id'=>$area_id));
-              if(!empty($personal)){
-                foreach ($personal as $persona){
-                    $arrayPersonal[] = $persona;
-                }
-              }
-           }
-           $datos = ['personal'=>$arrayPersonal];
-           echo CJSON::encode($datos);
         }
     }
 }
