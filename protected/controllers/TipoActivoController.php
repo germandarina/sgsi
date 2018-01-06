@@ -31,7 +31,7 @@ class TipoActivoController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete'),
+                'actions' => array('create', 'update', 'admin', 'delete','verRelaciones'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -166,5 +166,12 @@ class TipoActivoController extends Controller
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
+    }
+    public function actionVerRelaciones($id){
+        $model = TipoActivo::model()->findByPk($id);
+        $amenazas = $model->amenazas;
+        $this->render('verRelaciones', array(
+            'model' => $model,'amenazas'=>$amenazas
+        ));
     }
 }

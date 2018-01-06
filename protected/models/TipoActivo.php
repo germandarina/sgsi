@@ -61,7 +61,9 @@ class TipoActivo extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-		);
+            'amenazas' => array(self::HAS_MANY, 'Amenaza', 'tipo_activo_id'),
+
+        );
 	}
 
 	/**

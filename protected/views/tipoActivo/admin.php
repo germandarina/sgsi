@@ -112,6 +112,36 @@
 	'class'=>'booster.widgets.TbButtonColumn',
 		'template'=>'{update}{delete}'
 	),
+	array(
+		'class' => 'booster.widgets.TbButtonColumn',
+		'template' => '{relaciones}',
+		'header' => 'Relaciones',
+		'buttons' => array(
+			'relaciones' => array(
+				'label' => 'Ver Relaciones',
+				'icon'=>'fa fa-code-fork',
+				//'imageUrl' => Yii::app()->request->baseUrl . '/images/recibo.png',
+				'url' => 'Yii::app()->createUrl("/tipoActivo/verRelaciones", array("id"=>$data->id))',
+//				'options' => array(
+//					'class' => 'imagenRecibo',
+//					//'style' => 'padding-left: 8px;',
+//				),
+//				'visible' => function ($row, $data) use ($esArqueo) {
+//					/*if($esArqueo) {
+//						return false;
+//					}
+//				*/
+//					return ($data->estado == OrdenPedido::ESTADO_PAGADA && $data->realizarNotaCredito == 1) ? true : false;
+//				},
+			),
+		),
+		'htmlOptions' => array('style' => 'width:2%;text-align:center;')
+	),
+//	[
+//		'header' => 'Relaciones',
+//		'type' => 'raw',
+//		'value' => '"<a onclick=\"mostrarDetalleOrdenCompra($data->id) \" title=\"Ver Relaciones\" class=\"linkCredito\"><i class=\"fa fa-code-fork\" aria-hidden=\"true\"></i></a>"',
+//	]
 	),
 	)); ?>
 </div>

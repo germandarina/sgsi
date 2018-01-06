@@ -63,6 +63,8 @@ class Amenaza extends CustomCActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
             'tipoActivo' => array(self::BELONGS_TO, 'TipoActivo', 'tipo_activo_id'),
+            'vulnerabilidades' => array(self::HAS_MANY, 'Vulnerabilidad', 'amenaza_id'),
+
 
         );
 	}

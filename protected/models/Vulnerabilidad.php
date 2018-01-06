@@ -54,7 +54,7 @@ class Vulnerabilidad extends CustomCActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'controls' => array(self::HAS_MANY, 'Control', 'vulnerabilidad_id'),
+			'controles' => array(self::HAS_MANY, 'Control', 'vulnerabilidad_id'),
 			'amenaza' => array(self::BELONGS_TO, 'Amenaza', 'amenaza_id'),
 		);
 	}
