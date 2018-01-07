@@ -1,86 +1,86 @@
 <script>
-    function levantarModal() {
-        $("#ControlValor_fecha").val("");
-        $("#ControlValor_valor").val(0);
-        $("#ControlValor_valor").attr('min',0);
-        $("#modalFormDetalle").modal("show");
-    }
-    function mostrarValor(control_valor_id) {
-        $.ajax({
-            type: 'POST',
-            url: "<?php echo CController::createUrl('control/getControlValor')?>",
-            data: {'control_valor_id': control_valor_id},
-            dataType: 'Text',
-            success: function (data) {
-                var datos = jQuery.parseJSON(data);
-                var control_valor = datos.controlValor;
-                $("#ControlValor_valor").attr('min',0);
-                $("#ControlValor_fecha").val(control_valor.fecha);
-                $("#ControlValor_valor").val(control_valor.valor);
-                $("#modalFormDetalle").modal("show");
-            }
-        });
-    }
-
-    function eliminarDetalle(control_valor_id) {
-
-        Lobibox.confirm({
-            title: 'Confirmar',
-            msg : 'Esta seguro de eliminar el valor?',
-            callback: function (lobibox,type) {
-                if(type == 'yes'){
-                    $.ajax({
-                        type: 'POST',
-                        url: "<?php echo CController::createUrl('control/eliminarControlValor')?>",
-                        data: {'control_valor_id': control_valor_id},
-                        dataType: 'Text',
-                        success: function (data) {
-                            var datos = jQuery.parseJSON(data);
-                            if(datos.error == 1){
-                                 Lobibox.notify('error',{msg: "Error al eliminar, intentelo de nuevo."});
-                            }else{
-                                Lobibox.notify('success',{msg: "Se elimino correctamente"});
-                            }
-                            $.fn.yiiGridView.update('control-valor-grid');
-                        }
-                    });
-                }else{
-                    return false;
-                }
-            }
-        });
-
-    }
-    function guardarValores() {
-        var fecha = $("#ControlValor_fecha").val();
-        var valor = $("#ControlValor_valor").val();
-        if(fecha == "" || valor == ""){
-            return Lobibox.notify('error',{msg: "Debe completar el formulario"})
-        }
-        var control_id = $("#control_id").val();
-        var control_valor_id = $("#control_valor_id").val();
-        $.ajax({
-            type: 'POST',
-            url: "<?php echo CController::createUrl('control/guardarControlValor')?>",
-            data: { 'fecha': fecha,
-                    'valor': valor,
-                    'control_id':control_id,
-                    'control_valor_id':control_valor_id
-                },
-            dataType: 'Text',
-            success: function (data) {
-                var datos = jQuery.parseJSON(data);
-                if(datos.error == 1){
-                    Lobibox.notify('error',{msg: "Error al guardar, intentelo de nuevo."});
-                }else{
-                    Lobibox.notify('success',{msg: "Se guardo correctamente"});
-                    $("#modalFormDetalle").modal("hide");
-                }
-                $.fn.yiiGridView.update('control-valor-grid');
-
-            }
-        });
-    }
+//    function levantarModal() {
+//        $("#ControlValor_fecha").val("");
+//        $("#ControlValor_valor").val(0);
+//        $("#ControlValor_valor").attr('min',0);
+//        $("#modalFormDetalle").modal("show");
+//    }
+//    function mostrarValor(control_valor_id) {
+//        $.ajax({
+//            type: 'POST',
+//            url: "<?php //echo CController::createUrl('control/getControlValor')?>//",
+//            data: {'control_valor_id': control_valor_id},
+//            dataType: 'Text',
+//            success: function (data) {
+//                var datos = jQuery.parseJSON(data);
+//                var control_valor = datos.controlValor;
+//                $("#ControlValor_valor").attr('min',0);
+//                $("#ControlValor_fecha").val(control_valor.fecha);
+//                $("#ControlValor_valor").val(control_valor.valor);
+//                $("#modalFormDetalle").modal("show");
+//            }
+//        });
+//    }
+//
+//    function eliminarDetalle(control_valor_id) {
+//
+//        Lobibox.confirm({
+//            title: 'Confirmar',
+//            msg : 'Esta seguro de eliminar el valor?',
+//            callback: function (lobibox,type) {
+//                if(type == 'yes'){
+//                    $.ajax({
+//                        type: 'POST',
+//                        url: "<?php //echo CController::createUrl('control/eliminarControlValor')?>//",
+//                        data: {'control_valor_id': control_valor_id},
+//                        dataType: 'Text',
+//                        success: function (data) {
+//                            var datos = jQuery.parseJSON(data);
+//                            if(datos.error == 1){
+//                                 Lobibox.notify('error',{msg: "Error al eliminar, intentelo de nuevo."});
+//                            }else{
+//                                Lobibox.notify('success',{msg: "Se elimino correctamente"});
+//                            }
+//                            $.fn.yiiGridView.update('control-valor-grid');
+//                        }
+//                    });
+//                }else{
+//                    return false;
+//                }
+//            }
+//        });
+//
+//    }
+//    function guardarValores() {
+//        var fecha = $("#ControlValor_fecha").val();
+//        var valor = $("#ControlValor_valor").val();
+//        if(fecha == "" || valor == ""){
+//            return Lobibox.notify('error',{msg: "Debe completar el formulario"})
+//        }
+//        var control_id = $("#control_id").val();
+//        var control_valor_id = $("#control_valor_id").val();
+//        $.ajax({
+//            type: 'POST',
+//            url: "<?php //echo CController::createUrl('control/guardarControlValor')?>//",
+//            data: { 'fecha': fecha,
+//                    'valor': valor,
+//                    'control_id':control_id,
+//                    'control_valor_id':control_valor_id
+//                },
+//            dataType: 'Text',
+//            success: function (data) {
+//                var datos = jQuery.parseJSON(data);
+//                if(datos.error == 1){
+//                    Lobibox.notify('error',{msg: "Error al guardar, intentelo de nuevo."});
+//                }else{
+//                    Lobibox.notify('success',{msg: "Se guardo correctamente"});
+//                    $("#modalFormDetalle").modal("hide");
+//                }
+//                $.fn.yiiGridView.update('control-valor-grid');
+//
+//            }
+//        });
+//    }
 </script>
 <style>
     a.linkCredito {

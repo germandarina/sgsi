@@ -31,7 +31,7 @@ class ActivoController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','delete'),
+                'actions' => array('create', 'update', 'admin','delete','getActivosPorTipo'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -210,6 +210,15 @@ class ActivoController extends Controller
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'activo-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
+        }
+    }
+
+    public function actionGetActivosPorTipo(){
+        if($_POST['grupo_id']){
+            $grupo = Grupo::model()->findByPk($_POST['grupo_id']);
+            $activos = Activo::model()->findAllByAttributes(array('tipo_activo_id'=>$grupo->tipo_activo_id));
+            $datos = array('activos'=>$activos);
+            echo CJSON::encode($datos);
         }
     }
 }

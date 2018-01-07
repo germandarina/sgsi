@@ -118,7 +118,7 @@
         <div class="pull-right hidden-xs">
             <b>Version</b> 2.0
         </div>
-        <strong>Copyright &copy; 2015 <a href="http://3bytes.com.ar">3Bytes</a>.</strong> Todos los derechos reservados.
+        <strong>Copyright &copy; 2018 </strong> Todos los derechos reservados.
     </footer>
 
     <!-- Control Sidebar -->

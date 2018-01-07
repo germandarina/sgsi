@@ -31,7 +31,7 @@ class AnalisisController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin'),
+                'actions' => array('create', 'update', 'admin','crearGrupoActivo'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -85,6 +85,9 @@ class AnalisisController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->loadModel($id);
+        $grupo_activo = new GrupoActivo();
+        $grupo_activo->analisis_id = $model->id;
+
         $model->fecha = Utilities::ViewDateFormat($model->fecha);
         if (isset($_POST['Analisis'])) {
             $model->attributes = $_POST['Analisis'];
@@ -96,7 +99,7 @@ class AnalisisController extends Controller
         }
 
         $this->render('update', array(
-            'model' => $model,
+            'model' => $model,'grupo_activo'=>$grupo_activo
         ));
     }
 
@@ -166,6 +169,60 @@ class AnalisisController extends Controller
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'analisis-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
+        }
+    }
+
+    public function actionCrearGrupoActivo(){
+        if(isset($_POST['analisis_id'])){
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $analisis = Analisis::model()->findByPk($_POST['analisis_id']);
+                $grupo_seleccionado = Grupo::model()->findByPk($_POST['grupo_id']);
+                $grupo_activo_existente = GrupoActivo::model()->findByAttributes(array('analisis_id'=>$analisis->id));
+                if(!is_null($grupo_activo_existente)){
+                    $grupo = Grupo::model()->findByPk($grupo_activo_existente->grupo_id);
+                    if($grupo->tipo_activo_id != $grupo_seleccionado->tipo_activo_id){
+                        throw new Exception("El activo seleccionado debe pertenecer al mismo tipo de activo");
+                    }
+                }
+                $grupo_activo = new GrupoActivo();
+                $grupo_activo->analisis_id = $analisis->id;
+                $grupo_activo->grupo_id = $grupo_seleccionado->id;
+                $grupo_activo->activo_id = $_POST['activo_id'];
+                $grupo_activo->confidencialidad = $_POST['confidencialidad'];
+                $grupo_activo->trazabilidad = $_POST['trazabilidad'];
+                $grupo_activo->disponibilidad = $_POST['disponibilidad'];
+                $grupo_activo->integridad = $_POST['integridad'];
+                $arrayValores = array($_POST['confidencialidad'],$_POST['trazabilidad'],$_POST['disponibilidad'],$_POST['integridad']);
+                $grupo_activo->valor = max($arrayValores);
+                if(!$grupo_activo->save()){
+                    throw new Exception("Error al crear grupo activo");
+                }
+                $grupo_activo_log_existente = GrupoActivoLog::model()->findByAttributes(array('grupo_activo_id'=>$grupo_activo->id));
+                if(!is_null($grupo_activo_log_existente)){
+                    $valor_anterior = $grupo_activo_log_existente->valor_nuevo;
+                }else{
+                    $valor_anterior = 0;
+                }
+                $grupo_activo_log = new GrupoActivoLog();
+                $grupo_activo_log->grupo_activo_id = $grupo_activo->id;
+                $grupo_activo_log->valor_anterior = $valor_anterior;
+                $grupo_activo_log->valor_nuevo = $grupo_activo->valor;
+                if(!$grupo_activo->save()){
+                    throw new Exception("Error al guardar log de grupo activo");
+                }
+
+                $transaction->commit();
+                $datos = array('error'=>0,'msj'=>"Grupo Activo creado con exito");
+                echo CJSON::encode($datos);
+            }catch (Exception $exception){
+                $transaction->rollBack();
+                $datos = array('error'=>1,'msj'=>$exception->getMessage());
+                echo CJSON::encode($datos);
+            }
+
+
+
         }
     }
 }
