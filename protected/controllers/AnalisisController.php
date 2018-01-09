@@ -87,7 +87,8 @@ class AnalisisController extends Controller
         $model = $this->loadModel($id);
         $grupo_activo = new GrupoActivo();
         $grupo_activo->analisis_id = $model->id;
-
+        $dependencia = new Dependencia();
+        $dependencia->analisis_id = $model->id;
         $model->fecha = Utilities::ViewDateFormat($model->fecha);
         if (isset($_POST['Analisis'])) {
             $model->attributes = $_POST['Analisis'];
@@ -99,7 +100,7 @@ class AnalisisController extends Controller
         }
 
         $this->render('update', array(
-            'model' => $model,'grupo_activo'=>$grupo_activo
+            'model' => $model,'grupo_activo'=>$grupo_activo,'dependencia'=>$dependencia
         ));
     }
 

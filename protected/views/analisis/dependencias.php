@@ -1,5 +1,5 @@
 <script>
-    function levantarModalAsociaciones() {
+    function levantarModalDependencias() {
        $("#GrupoActivo_grupo_id").val("");
        $("#GrupoActivo_confidencialidad").val("");
        $("#GrupoActivo_confidencialidad").attr('min',0);
@@ -9,7 +9,7 @@
        $("#GrupoActivo_integridad").attr('min',0);
        $("#GrupoActivo_disponibilidad").val("");
        $("#GrupoActivo_disponibilidad").attr('min',0);
-       $("#modalAsociaciones").modal('show');
+       $("#modalDependencias").modal('show');
     }
     
     function getActivos() {
@@ -33,7 +33,7 @@
             }
         });
     }
-    function guardarAsociacion() {
+    function guardarDependencia() {
         var grupo_id = $("#GrupoActivo_grupo_id").val();
         var activo_id = $("#GrupoActivo_activo_id").val();
         var confidencialidad = $("#GrupoActivo_confidencialidad").val();
@@ -69,77 +69,28 @@
 
 <div class="box-header">
     <?php $this->widget('booster.widgets.TbButton', array(
-        'label'=> 'Asociaciones ( + )',
+        'label'=> 'Dependencias ( + )',
         'context'=>'success',
         'size' => 'small',
         'id'=>"botonModal",
-        'htmlOptions' => array('onclick' => 'js:levantarModalAsociaciones()')
+        'htmlOptions' => array('onclick' => 'js:levantarModalDependencias()')
     ));
     ?>
 </div>
 
-<?php
-    $this->widget('booster.widgets.TbExtendedGridView',array(
-    'id'=>'asociaciones-grid',
-    'fixedHeader' => false,
-    'headerOffset' => 10,
-    // 40px is the height of the main navigation at bootstrap
-    'type' => 'striped hover condensed',
-    'dataProvider' => $grupo_activo->search(),
-    'responsiveTable' => true,
-    'template' => "{summary}\n{items}\n{pager}",
-    'selectableRows' => 1,
-    //'filter' => $grupo_activo,
-    'columns'=>array(
-        array(
-            'name'=>'activo_id',
-            'header'=>'Activo',
-            'value'=>'$data->activo->nombre',
-        ),
-        array(
-            'name'=>'activo_id',
-            'header'=>'Descripcion',
-            'value'=>'$data->activo->descripcion',
-        ),
-        array(
-            'name'=>'activo_id',
-            'header'=>'Personal',
-            'value'=>'$data->activo->getPersonal()',
-        ),
-        array( 'name'=>'grupo_id',
-            'header'=>'Grupo',
-            'value'=>'$data->grupo->nombre',
-        ),
-        array(
-            'name'=>'grupo_id',
-            'header'=>'Tipo Activo',
-            'value'=>'$data->grupo->tipoActivo->nombre',
-        ),
-        'confidencialidad',
-        'integridad',
-        'disponibilidad',
-        'trazabilidad',
-        'valor',
-        array(
-            'class'=>'booster.widgets.TbButtonColumn',
-            'template'=>'{delete}'
-        ),
-    ),
-)); ?>
 
-
-<div class="modal fade" id="modalAsociaciones" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modalDependencias" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="cabeceraModal">Nueva Asociacion</h4>
+                <h4 class="modal-title" id="cabeceraModal">Nueva Dependencia</h4>
             </div>
             <div class="modal-body" id="cuerpoDetalleCredito">
-                <?php echo $this->renderPartial('_formAsociaciones', array('model' => $model, 'grupo_activo' => $grupo_activo,)); ?>
+                <?php echo $this->renderPartial('_formDependencias', array('model' => $model, 'dependencia' => $dependencia,)); ?>
             </div>
             <div class="modal-footer">
-                <button type="button" onclick="js:guardarAsociacion()" class="btn btn-success" id="botonModal">
-                    Agregar Asociacion
+                <button type="button" onclick="js:guardarDependencia()" class="btn btn-success" id="botonModal">
+                    Agregar Dependencia
                 </button>
                 <button type="button" data-dismiss="modal" class="btn btn-default">Cerrar</button>
             </div>
