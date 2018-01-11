@@ -33,7 +33,7 @@
     <div class="row">
         <div class="col-sm-12">
             <?php echo $form->select2Group(
-                $dependencia, 'activo_hijo_id',
+                $dependencia, 'activo_id',
                 [
                     'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
                     'widgetOptions' => [

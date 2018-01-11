@@ -5,8 +5,8 @@
  *
  * The followings are the available columns in table 'dependencia':
  * @property integer $id
+ * @property integer $activo_id
  * @property integer $activo_padre_id
- * @property integer $activo_hijo_id
  * @property integer $analisis_id
  * @property string $creaUserStamp
  * @property string $creaTimeStamp
@@ -14,8 +14,9 @@
  * @property string $modTimeStamp
  *
  * The followings are the available model relations:
+ * @property Activo $activo
  * @property Activo $activoPadre
- * @property Activo $activoHijo
+ * @property Analisis $analisis
  */
 class Dependencia extends CustomCActiveRecord
 {
@@ -35,13 +36,13 @@ class Dependencia extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('activo_padre_id, activo_hijo_id, analisis_id', 'required'),
-			array('activo_padre_id, activo_hijo_id, analisis_id', 'numerical', 'integerOnly'=>true),
+			array('activo_id, analisis_id', 'required'),
+			array('activo_id, activo_padre_id, analisis_id', 'numerical', 'integerOnly'=>true),
 			array('creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, activo_padre_id, activo_hijo_id, analisis_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('id, activo_id, activo_padre_id, analisis_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -53,8 +54,10 @@ class Dependencia extends CustomCActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'activo' => array(self::BELONGS_TO, 'Activo', 'activo_id'),
 			'activoPadre' => array(self::BELONGS_TO, 'Activo', 'activo_padre_id'),
-			'activoHijo' => array(self::BELONGS_TO, 'Activo', 'activo_hijo_id'),
+			'analisis' => array(self::BELONGS_TO, 'Analisis', 'analisis_id'),
+            'hijos' => array(self::HAS_MANY, 'Activo', 'activo_padre_id'),
 		);
 	}
 
@@ -65,8 +68,8 @@ class Dependencia extends CustomCActiveRecord
 	{
 		return array(
 			'id' => 'ID',
+			'activo_id' => 'Activo',
 			'activo_padre_id' => 'Activo Padre',
-			'activo_hijo_id' => 'Activo Hijo',
 			'analisis_id' => 'Analisis',
 			'creaUserStamp' => 'Crea User Stamp',
 			'creaTimeStamp' => 'Crea Time Stamp',
@@ -94,8 +97,8 @@ class Dependencia extends CustomCActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
+		$criteria->compare('activo_id',$this->activo_id);
 		$criteria->compare('activo_padre_id',$this->activo_padre_id);
-		$criteria->compare('activo_hijo_id',$this->activo_hijo_id);
 		$criteria->compare('analisis_id',$this->analisis_id);
 		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
 		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);

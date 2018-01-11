@@ -120,10 +120,10 @@
         'disponibilidad',
         'trazabilidad',
         'valor',
-        array(
-            'class'=>'booster.widgets.TbButtonColumn',
-            'template'=>'{delete}'
-        ),
+//        array(
+//            'class'=>'booster.widgets.TbButtonColumn',
+//            'template'=>'{delete}'
+//        ),
     ),
 )); ?>
 

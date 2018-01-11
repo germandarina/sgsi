@@ -138,34 +138,28 @@ class Activo extends CustomCActiveRecord
     }
 
     public function getPadresDisponibles($analisis_id){
-       $queryPadres = " select a.id, a.nombre
+       $queryPadres = " select a.id, concat(a.nombre, ' - ',ta.nombre) as nombre
                             from activo a
+                            inner join tipo_activo ta on ta.id = a.tipo_activo_id
                             inner join grupo_activo ga on  ga.activo_id = a.id
                             inner join analisis an on an.id = ga.analisis_id
-                            left join dependencia d on d.activo_padre_id = ga.activo_id
-                            where d.id is null 
-                            or 
-                            ga.activo_id not in (select activo_padre_id
-                                                        from dependencia
-                                                        where analisis_id = ".$analisis_id.")
-                        and an.id = ".$analisis_id." ";
+                            left join dependencia d on d.activo_id = ga.activo_id
+                            where (d.id is null or d.activo_padre_id is not null) 
+                            and an.id = ".$analisis_id." ";
        $command = Yii::app()->db->createCommand($queryPadres);
        $padres = $command->queryAll($queryPadres);
        return $padres;
     }
 
     public function getHijosDisponibles($analisis_id){
-        $queryHijos = "select *
-                        from activo a
-                        inner join grupo_activo ga on  ga.activo_id = a.id
-                        inner join analisis an on an.id = ga.analisis_id
-                        left join dependencia d on (d.activo_hijo_id = ga.activo_id )
-                        where d.id is not null 
-                        and 
-                        ga.activo_id not in (select activo_padre_id
-                                                    from dependencia
-                                                    where analisis_id = ".$analisis_id.")
-                        and  an.id = ".$analisis_id." ";
+        $queryHijos = " select a.id, concat(a.nombre, ' - ',ta.nombre) as nombre
+                            from activo a
+                            inner join tipo_activo ta on ta.id = a.tipo_activo_id
+                            inner join grupo_activo ga on  ga.activo_id = a.id
+                            inner join analisis an on an.id = ga.analisis_id
+                            left join dependencia d on (d.activo_id = ga.activo_id )
+                            where d.id is null                    
+                            and  an.id = ".$analisis_id." ";
         $command = Yii::app()->db->createCommand($queryHijos);
         $hijos = $command->queryAll($queryHijos);
         return $hijos;

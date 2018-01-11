@@ -31,7 +31,7 @@ class AnalisisController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','crearGrupoActivo'),
+                'actions' => array('create', 'update', 'admin','crearGrupoActivo','crearDependencia'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -89,6 +89,7 @@ class AnalisisController extends Controller
         $grupo_activo->analisis_id = $model->id;
         $dependencia = new Dependencia();
         $dependencia->analisis_id = $model->id;
+        $dependenciasPadres = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>NULL));
         $model->fecha = Utilities::ViewDateFormat($model->fecha);
         if (isset($_POST['Analisis'])) {
             $model->attributes = $_POST['Analisis'];
@@ -100,7 +101,7 @@ class AnalisisController extends Controller
         }
 
         $this->render('update', array(
-            'model' => $model,'grupo_activo'=>$grupo_activo,'dependencia'=>$dependencia
+            'model' => $model,'grupo_activo'=>$grupo_activo,'dependencia'=>$dependencia,'dependenciasPadres'=>$dependenciasPadres
         ));
     }
 
@@ -179,13 +180,13 @@ class AnalisisController extends Controller
                 $transaction = Yii::app()->db->beginTransaction();
                 $analisis = Analisis::model()->findByPk($_POST['analisis_id']);
                 $grupo_seleccionado = Grupo::model()->findByPk($_POST['grupo_id']);
-                $grupo_activo_existente = GrupoActivo::model()->findByAttributes(array('analisis_id'=>$analisis->id));
-                if(!is_null($grupo_activo_existente)){
-                    $grupo = Grupo::model()->findByPk($grupo_activo_existente->grupo_id);
-                    if($grupo->tipo_activo_id != $grupo_seleccionado->tipo_activo_id){
-                        throw new Exception("El activo seleccionado debe pertenecer al mismo tipo de activo");
-                    }
-                }
+//                $grupo_activo_existente = GrupoActivo::model()->findByAttributes(array('analisis_id'=>$analisis->id));
+//                if(!is_null($grupo_activo_existente)){
+//                    $grupo = Grupo::model()->findByPk($grupo_activo_existente->grupo_id);
+//                    if($grupo->tipo_activo_id != $grupo_seleccionado->tipo_activo_id){
+//                        throw new Exception("El activo seleccionado debe pertenecer al mismo tipo de activo");
+//                    }
+//                }
                 $grupo_activo = new GrupoActivo();
                 $grupo_activo->analisis_id = $analisis->id;
                 $grupo_activo->grupo_id = $grupo_seleccionado->id;
@@ -209,7 +210,7 @@ class AnalisisController extends Controller
                 $grupo_activo_log->grupo_activo_id = $grupo_activo->id;
                 $grupo_activo_log->valor_anterior = $valor_anterior;
                 $grupo_activo_log->valor_nuevo = $grupo_activo->valor;
-                if(!$grupo_activo->save()){
+                if(!$grupo_activo_log->save()){
                     throw new Exception("Error al guardar log de grupo activo");
                 }
 
@@ -224,6 +225,85 @@ class AnalisisController extends Controller
 
 
 
+        }
+    }
+
+    public function actionCrearDependencia(){
+        if($_POST['analisis_id']){
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $arrayValoresHijos = [];
+                $arrayIdHijos = [];
+                $grupo_activo_padre = GrupoActivo::model()->findByAttributes(array('activo_id'=>$_POST['activo_padre_id'],'analisis_id'=>$_POST['analisis_id']));
+
+                $dependenciaPadreExistente = Dependencia::model()->findByAttributes(array('activo_id'=>$_POST['activo_padre_id'],
+                                                                                            'analisis_id'=>$_POST['analisis_id']));
+                if(is_null($dependenciaPadreExistente)){
+                    $dependenciaPadre = new Dependencia();
+                    $dependenciaPadre->analisis_id = $_POST['analisis_id'];
+                    $dependenciaPadre->activo_id = $_POST['activo_padre_id'];
+                    $dependenciaPadre->activo_padre_id = NULL;
+                    if(!$dependenciaPadre->save()){
+                        throw new Exception("Error al crear dependencia");
+                    }
+                }
+
+                foreach ($_POST['activo_id'] as $hijo_id){
+                    $dependenciaHija = new Dependencia();
+                    $dependenciaHija->analisis_id = $_POST['analisis_id'];
+                    $dependenciaHija->activo_id = $hijo_id;
+                    $dependenciaHija->activo_padre_id = $_POST['activo_padre_id'];
+                    if(!$dependenciaHija->save()){
+                        throw new Exception("Error al crear dependencia");
+                    }
+                    $grupo_activo_hijo = GrupoActivo::model()->findByAttributes(array('activo_id'=>$hijo_id,'analisis_id'=>$_POST['analisis_id']));
+                    if($grupo_activo_hijo->valor < $grupo_activo_padre->valor){
+                        $arrayValoresHijos[] = $grupo_activo_hijo->valor;
+                        $arrayIdHijos[] = $grupo_activo_hijo->activo_id;
+                    }
+                }
+                if(!empty($arrayValoresHijos)){
+                    $menor_valor = min($arrayValoresHijos);
+                    $grupos_activos = GrupoActivo::model()->findAllByAttributes(array('analisis_id'=>$_POST['analisis_id'],'valor'=>$menor_valor));
+                    foreach ($grupos_activos as $gp){
+                        foreach ($_POST['activo_id'] as $hijo_id){
+                            if($gp->activo_id == $hijo_id){
+                                $gp->valor = $grupo_activo_padre->valor;
+                                if(!$gp->save()){
+                                    throw new Exception("Error al actualizar valor de dependencia");
+                                }
+                                $grupo_activo_log = new GrupoActivoLog();
+                                $grupo_activo_log->grupo_activo_id = $gp->id;
+                                $grupo_activo_log->valor_anterior = $menor_valor;
+                                $grupo_activo_log->valor_nuevo = $gp->valor;
+                                if(!$grupo_activo_log->save()){
+                                    throw new Exception("Error al guardar log de grupo activo");
+                                }
+                            }
+                        }
+                    }
+
+                    $valor_anterior_padre = $grupo_activo_padre->valor;
+                    $grupo_activo_padre->valor = $menor_valor;
+                    if(!$grupo_activo_padre->save()){
+                        throw new Exception("Error al actualizar valor de dependencia");
+                    }
+                    $grupo_activo_log = new GrupoActivoLog();
+                    $grupo_activo_log->grupo_activo_id = $grupo_activo_padre->id;
+                    $grupo_activo_log->valor_anterior = $valor_anterior_padre;
+                    $grupo_activo_log->valor_nuevo = $grupo_activo_padre->valor;
+                    if(!$grupo_activo_log->save()){
+                        throw new Exception("Error al guardar log de grupo activo");
+                    }
+                }
+                $transaction->commit();
+                $datos = ['error'=>0,'msj'=>'Dependencias creadas con exito'];
+                echo CJSON::encode($datos);
+            }catch (Exception $exception){
+                $transaction->rollBack();
+                $datos = ['error'=>1,'msj'=>$exception->getMessage()];
+                echo CJSON::encode($datos);
+            }
         }
     }
 }

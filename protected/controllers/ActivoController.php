@@ -31,7 +31,7 @@ class ActivoController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','delete','getActivosPorTipo'),
+                'actions' => array('create', 'update', 'admin','delete','getActivosPorTipo','getPadresEHijos'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -219,6 +219,16 @@ class ActivoController extends Controller
             $activos = Activo::model()->findAllByAttributes(array('tipo_activo_id'=>$grupo->tipo_activo_id));
             $datos = array('activos'=>$activos);
             echo CJSON::encode($datos);
+            die();
+        }
+    }
+    public function actionGetPadresEHijos(){
+        if(isset($_POST['analisis_id'])){
+            $padres = Activo::model()->getPadresDisponibles($_POST['analisis_id']);
+            $hijos = Activo::model()->getHijosDisponibles($_POST['analisis_id']);
+            $datos = ['hijos'=>$hijos,'padres'=>$padres];
+            echo CJSON::encode($datos);
+            die();
         }
     }
 }

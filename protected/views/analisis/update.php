@@ -30,7 +30,7 @@ $this->widget(
 							'active' => true,
 						),
                         array('label' => 'Dependencias',
-                            'content' => $this->renderPartial('dependencias', array('model'=>$model,'dependencia'=>$dependencia), true),
+                            'content' => $this->renderPartial('dependencias', array('model'=>$model,'dependencia'=>$dependencia,'dependenciasPadres'=>$dependenciasPadres), true),
                         ),
 					),
 				)
