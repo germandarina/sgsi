@@ -34,6 +34,11 @@
 		'nombre',
 		'descripcion',
 		[
+			'header'=>'Tipo Activo',
+			'name'=>'tipo_activo_id',
+			'value'=>'$data->tipoActivo->nombre',
+		],
+		[
 			'header' => 'Confidencialidad',
 			'type' => 'raw',
 			'value'=>function($data){

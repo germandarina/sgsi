@@ -31,7 +31,7 @@ class AnalisisController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','crearGrupoActivo','crearDependencia'),
+                'actions' => array('create', 'update', 'admin','crearGrupoActivo','crearDependencia','verValoracion'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -91,6 +91,11 @@ class AnalisisController extends Controller
         $dependencia->analisis_id = $model->id;
         $dependenciasPadres = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>NULL));
         $model->fecha = Utilities::ViewDateFormat($model->fecha);
+        if(isset($_GET['GrupoActivo'])){
+            $grupo_activo->amenaza_nombre = $_GET['GrupoActivo']['amenaza_nombre'];
+            $grupo_activo->grupo_nombre = $_GET['GrupoActivo']['grupo_nombre'];
+            $grupo_activo->tipo_activo_nombre = $_GET['GrupoActivo']['tipo_activo_nombre'];
+        }
         if (isset($_POST['Analisis'])) {
             $model->attributes = $_POST['Analisis'];
             $model->fecha = Utilities::MysqlDateFormat($model->fecha);
@@ -179,8 +184,15 @@ class AnalisisController extends Controller
             try{
                 $transaction = Yii::app()->db->beginTransaction();
                 $analisis = Analisis::model()->findByPk($_POST['analisis_id']);
-                $grupo_seleccionado = Grupo::model()->findByPk($_POST['grupo_id']);
-//                $grupo_activo_existente = GrupoActivo::model()->findByAttributes(array('analisis_id'=>$analisis->id));
+                if(!empty($_POST['grupo_id'])){
+                    $grupo_id = $_POST['grupo_id'];
+                }else{
+                    $grupo_id =NULL;
+                }
+                $grupo_activo_existente = GrupoActivo::model()->findByAttributes(array('analisis_id'=>$analisis->id,'activo_id'=>$_POST['activo_id']));
+                if(!is_null($grupo_activo_existente)){
+                    throw new Exception("El activo seleccionado ya se encuentra asociado.");
+                }
 //                if(!is_null($grupo_activo_existente)){
 //                    $grupo = Grupo::model()->findByPk($grupo_activo_existente->grupo_id);
 //                    if($grupo->tipo_activo_id != $grupo_seleccionado->tipo_activo_id){
@@ -189,7 +201,7 @@ class AnalisisController extends Controller
 //                }
                 $grupo_activo = new GrupoActivo();
                 $grupo_activo->analisis_id = $analisis->id;
-                $grupo_activo->grupo_id = $grupo_seleccionado->id;
+                $grupo_activo->grupo_id = $grupo_id;
                 $grupo_activo->activo_id = $_POST['activo_id'];
                 $grupo_activo->confidencialidad = $_POST['confidencialidad'];
                 $grupo_activo->trazabilidad = $_POST['trazabilidad'];
@@ -307,5 +319,17 @@ class AnalisisController extends Controller
                 echo CJSON::encode($datos);
             }
         }
+    }
+
+    public function actionVerValoracion($id){
+        $vulnerabilidad = new Vulnerabilidad();
+        $vulnerabilidad->amenaza_id =$id;
+
+        if (isset($_GET['Vulnerabilidad']))
+            $vulnerabilidad->attributes = $_GET['Vulnerabilidad'];
+
+        $this->render('verValoracion', array(
+            'vulnerabilidad' => $vulnerabilidad,
+        ));
     }
 }

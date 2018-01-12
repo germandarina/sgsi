@@ -32,6 +32,9 @@ $this->widget(
                         array('label' => 'Dependencias',
                             'content' => $this->renderPartial('dependencias', array('model'=>$model,'dependencia'=>$dependencia,'dependenciasPadres'=>$dependenciasPadres), true),
                         ),
+						array('label' => 'Valoración de Amenazas, Vulnerabilidades y Controles',
+							'content' => $this->renderPartial('valoraciones', array('model'=>$model,'grupo_activo'=>$grupo_activo), true),
+						),
 					),
 				)
 			);

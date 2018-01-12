@@ -28,6 +28,10 @@ class GrupoActivo extends CustomCActiveRecord
 	/**
 	 * @return string the associated database table name
 	 */
+	public $amenaza_nombre;
+    public $grupo_nombre;
+    public $tipo_activo_nombre;
+    public $amenaza_id;
 	public function tableName()
 	{
 		return 'grupo_activo';
@@ -41,13 +45,13 @@ class GrupoActivo extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('valor,activo_id, grupo_id, analisis_id, confidencialidad, integridad, disponibilidad, trazabilidad', 'required'),
+			array('valor,activo_id, analisis_id, confidencialidad, integridad, disponibilidad, trazabilidad', 'required'),
 			array('activo_id, grupo_id, analisis_id, confidencialidad, integridad, disponibilidad, trazabilidad', 'numerical', 'integerOnly'=>true),
 			array('creaUserStamp, modUserStamp', 'length', 'max'=>50),
-			array('creaTimeStamp, modTimeStamp', 'safe'),
+			array('amenaza_nombre,grupo_nombre,activo_nombre,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, valor,activo_id, grupo_id, analisis_id, confidencialidad, integridad, disponibilidad, trazabilidad, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('amenaza_id,amenaza_nombre,grupo_nombre,tipo_activo_nombre,id, valor,activo_id, grupo_id, analisis_id, confidencialidad, integridad, disponibilidad, trazabilidad, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -104,25 +108,44 @@ class GrupoActivo extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('activo_id',$this->activo_id);
-		$criteria->compare('grupo_id',$this->grupo_id);
-		$criteria->compare('analisis_id',$this->analisis_id);
-		$criteria->compare('confidencialidad',$this->confidencialidad);
-		$criteria->compare('integridad',$this->integridad);
-		$criteria->compare('disponibilidad',$this->disponibilidad);
-		$criteria->compare('trazabilidad',$this->trazabilidad);
-		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
-		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
-		$criteria->compare('modUserStamp',$this->modUserStamp,true);
-		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
-
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.activo_id',$this->activo_id);
+		$criteria->compare('t.grupo_id',$this->grupo_id);
+		$criteria->compare('t.analisis_id',$this->analisis_id);
+		$criteria->compare('t.confidencialidad',$this->confidencialidad);
+		$criteria->compare('t.integridad',$this->integridad);
+		$criteria->compare('t.disponibilidad',$this->disponibilidad);
+		$criteria->compare('t.trazabilidad',$this->trazabilidad);
+        $criteria->join = " left join grupo g  on g.id = t.grupo_id ";
+        $criteria->order = " g.id, g.tipo_activo_id ";
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
 
+	public function searchValoraciones(){
+
+        $criteria=new CDbCriteria;
+        $criteria->select = " am.id as amenaza_id, am.nombre as amenaza_nombre , am.tipo_activo_id as tipo_activo_id, ta.nombre as tipo_activo_nombre,
+                             g.id as grupo_id, g.nombre as grupo_nombre   ";
+        if(!is_null($this->amenaza_nombre)){
+            $criteria->addCondition(" am.nombre like '%".$this->amenaza_nombre."%'  ");
+        }
+        if(!is_null($this->grupo_nombre)){
+            $criteria->addCondition(" g.nombre like '%".$this->grupo_nombre."%'  ");
+        }
+        if(!is_null($this->tipo_activo_nombre)){
+            $criteria->addCondition(" ta.nombre like '%".$this->tipo_activo_nombre."%'  ");
+        }
+        $criteria->join = " left join grupo g  on g.id = t.grupo_id 
+                            inner join activo a on t.activo_id
+                            inner join tipo_activo ta on ta.id = a.tipo_activo_id
+                            inner join amenaza am on am.tipo_activo_id = ta.id ";
+        $criteria->order = " ta.id asc ";
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,
+        ));
+    }
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -133,4 +156,10 @@ class GrupoActivo extends CustomCActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	public function getActivos(){
+//        $activo = $this->activo;
+//        $tipoActivo = $activo->tipoActivo;
+//        $
+    }
 }

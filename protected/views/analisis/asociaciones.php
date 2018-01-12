@@ -108,12 +108,26 @@
         ),
         array( 'name'=>'grupo_id',
             'header'=>'Grupo',
-            'value'=>'$data->grupo->nombre',
+            'value'=>function($data){
+                $grupo = $data->grupo;
+                if(is_null($grupo)){
+                    return '---';
+                }else{
+                    return $grupo->nombre;
+                }
+            },
         ),
         array(
             'name'=>'grupo_id',
             'header'=>'Tipo Activo',
-            'value'=>'$data->grupo->tipoActivo->nombre',
+            'value'=>function($data){
+                $grupo = $data->activo->tipoActivo->nombre;
+                if(is_null($grupo)){
+                    return '---';
+                }else{
+                    return $grupo;
+                }
+            },
         ),
         'confidencialidad',
         'integridad',
