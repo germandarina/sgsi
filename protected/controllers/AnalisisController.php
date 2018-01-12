@@ -297,7 +297,9 @@ class AnalisisController extends Controller
                     }
                 }
                 $transaction->commit();
-                $datos = ['error'=>0,'msj'=>'Dependencias creadas con exito'];
+                $dependenciasPadres = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>NULL));
+                $html = $this->renderPartial('dependenciasPadres', array('dependenciasPadres'=>$dependenciasPadres), true);
+                $datos = ['error'=>0,'msj'=>'Dependencias creadas con exito','html'=>$html];
                 echo CJSON::encode($datos);
             }catch (Exception $exception){
                 $transaction->rollBack();

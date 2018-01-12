@@ -142,10 +142,13 @@ class Activo extends CustomCActiveRecord
                             from activo a
                             inner join tipo_activo ta on ta.id = a.tipo_activo_id
                             inner join grupo_activo ga on  ga.activo_id = a.id
-                            inner join analisis an on an.id = ga.analisis_id
-                            left join dependencia d on d.activo_id = ga.activo_id
-                            where (d.id is null or d.activo_padre_id is not null) 
-                            and an.id = ".$analisis_id." ";
+                            left join (
+                            select d.activo_padre_id
+                            from dependencia d
+                            inner join analisis a on a.id=d.analisis_id
+                            where a.id = ".$analisis_id." and d.activo_padre_id is not null
+                            )consulta on consulta.activo_padre_id = a.id
+                            where consulta.activo_padre_id is null ";
        $command = Yii::app()->db->createCommand($queryPadres);
        $padres = $command->queryAll($queryPadres);
        return $padres;
