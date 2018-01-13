@@ -32,11 +32,25 @@ $this->widget('booster.widgets.TbExtendedGridView', array(
 			'header' => 'Descripcion',
 			'value' => '$data->descripcion',
 		),
+		array( 'name'=>'fecha_valor_control',
+			'header'=>'Fecha Valoracion',
+			'value'=>function($data)use($analisis_id,$grupo_id){
+				return $data->getFechaValorControl($analisis_id,$grupo_id);
+			},
+			'filter'=>false,
+		),
+		array( 'name'=>'valor_control',
+			'header'=>'Valor Control',
+			'value'=>function($data)use($analisis_id,$grupo_id){
+				return $data->getValorControl($analisis_id,$grupo_id);
+			},
+			'filter'=>false,
+		),
         [
             'header' => 'Accion',
             'type' => 'raw',
             'value' => '"<a onclick=\"valorarControl($data->id) \" title=\"Presione para Valorar\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-pencil\"></i></a>"',
-            'htmlOptions'=>['style'=>'width:5%;']
+            'htmlOptions'=>['style'=>'width:5%;'],
         ]
 	),
 ));

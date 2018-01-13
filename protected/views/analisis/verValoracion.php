@@ -20,12 +20,14 @@
        var valor_control = $("#rating").val();
        var control_id = $("#control_id").val();
        var analisis_id = $("#analisis_id").val();
+       var grupo_id = $("#grupo_id").val();
        $.ajax({
             type: 'POST',
             url: "<?php echo CController::createUrl('analisis/guardarValorControl')?>",
             data: { 'valor_control': valor_control,
                     'control_id': control_id,
-                    'analisis_id': analisis_id
+                    'analisis_id': analisis_id,
+                    'grupo_id':grupo_id
                 },
             dataType: 'Text',
             success: function (data) {
@@ -90,13 +92,27 @@
 			'class' => 'booster.widgets.TbRelationalColumn',
 			'name' => 'id',
 			'type'=>'raw',
-			'url' => $this->createUrl('analisis/gridControles'),
+			'url' => $this->createUrl('analisis/gridControles',array('analisis_id'=>$analisis->id,'grupo_id'=>$grupo->id)),
 			'value' => '"<span class = \"fa fa-plus-square\"></span>"',
 			'filter'=>false,
 		)
 	), array(
 		'nombre',
 		'descripcion',
+        array( 'name'=>'fecha_valor_vulnerabilidad',
+            'header'=>'Fecha Valoracion',
+            'value'=>function($data)use($analisis,$grupo){
+                return $data->getFechaValorVulnerabilidad($analisis->id,$grupo->id);
+            },
+            'filter'=>false,
+        ),
+        array( 'name'=>'valor_vulnerabilidad',
+            'header'=>'Valor Vulnerabilidad',
+            'value'=>function($data)use($analisis,$grupo){
+                return $data->getValorVulnerabilidad($analisis->id,$grupo->id);
+            },
+            'filter'=>false,
+        ),
 	)),
 	)); ?>
 </div>
@@ -109,7 +125,7 @@
 				<h4 class="modal-title" id="cabeceraModal">Nueva Valoracion</h4>
 			</div>
 			<div class="modal-body" id="cuerpoDetalleCredito">
-				<?php echo $this->renderPartial('_formValoracion', array('analisis'=>$analisis)); ?>
+				<?php echo $this->renderPartial('_formValoracion', array('analisis'=>$analisis,'grupo'=>$grupo)); ?>
 			</div>
 			<div class="modal-footer">
 				<button type="button" onclick="js:guardarValoracion()" class="btn btn-success" id="botonModal">

@@ -13,10 +13,12 @@
  * @property string $creaTimeStamp
  * @property string $modUserStamp
  * @property string $modTimeStamp
+ * @property integer $grupo_id
  *
  * The followings are the available model relations:
  * @property Analisis $analisis
  * @property Control $control
+ * @property Grupo $grupo
  */
 class AnalisisControl extends CustomCActiveRecord
 {
@@ -37,13 +39,13 @@ class AnalisisControl extends CustomCActiveRecord
 		// will receive user inputs.
 		return array(
 			array('fecha', 'required'),
-			array('analisis_id, control_id, valor', 'numerical', 'integerOnly'=>true),
+			array('grupo_id,analisis_id, control_id, valor', 'numerical', 'integerOnly'=>true),
 			array('fecha', 'length', 'max'=>200),
 			array('creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, analisis_id, control_id, valor, fecha, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('grupo_id,id, analisis_id, control_id, valor, fecha, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,7 +59,8 @@ class AnalisisControl extends CustomCActiveRecord
 		return array(
 			'analisis' => array(self::BELONGS_TO, 'Analisis', 'analisis_id'),
 			'control' => array(self::BELONGS_TO, 'Control', 'control_id'),
-		);
+            'grupo' => array(self::BELONGS_TO, 'Grupo', 'grupo_id'),
+        );
 	}
 
 	/**
@@ -75,7 +78,8 @@ class AnalisisControl extends CustomCActiveRecord
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
-		);
+            'grupo_id'=>'Grupo ',
+        );
 	}
 
 	/**

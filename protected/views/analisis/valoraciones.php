@@ -26,6 +26,16 @@ $this->widget('booster.widgets.TbExtendedGridView',array(
             'header'=>'Grupo',
             'value'=>'$data->grupo_nombre'
         ),
+        array( 'name'=>'fecha_valor_amenaza',
+            'header'=>'Fecha Valoracion',
+            'value'=>'$data->getFechaValorAmenaza()',
+            'filter'=>false,
+        ),
+        array( 'name'=>'valor_amenaza',
+            'header'=>'Valor Amenaza',
+            'value'=>'$data->getValorAmenaza()',
+            'filter'=>false,
+        ),
         array(
             'class' => 'booster.widgets.TbButtonColumn',
             'template' => '{valoracion}',

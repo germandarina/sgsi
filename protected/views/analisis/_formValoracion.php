@@ -1,5 +1,6 @@
 <div class="box-body">
     <input type="hidden" name="analisis_id" id="analisis_id" value="<?= $analisis->id?>">
+    <input type="hidden" name="grupo_id" id="grupo_id" value="<?= $grupo->id?>">
     <input type="hidden" name="control_id" id="control_id">
     <div class="col-sm-1">
 

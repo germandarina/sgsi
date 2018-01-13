@@ -32,6 +32,9 @@ class GrupoActivo extends CustomCActiveRecord
     public $grupo_nombre;
     public $tipo_activo_nombre;
     public $amenaza_id;
+    public $fecha_valor_amenaza;
+    public $valor_amenaza;
+
 	public function tableName()
 	{
 		return 'grupo_activo';
@@ -157,9 +160,25 @@ class GrupoActivo extends CustomCActiveRecord
 		return parent::model($className);
 	}
 
-	public function getActivos(){
-//        $activo = $this->activo;
-//        $tipoActivo = $activo->tipoActivo;
-//        $
+	public function getFechaValorAmenaza(){
+        $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(array( 'amenaza_id' => $this->amenaza_id,
+                                                                              'analisis_id' => $this->analisis_id,
+                                                                              'grupo_id' => $this->grupo_id ),array('order'=>'id desc'));
+        if(!is_null($analisis_amenaza)){
+            return Utilities::ViewDateFormat($analisis_amenaza->fecha);
+        }else{
+            return "";
+        }
+    }
+
+    public function getValorAmenaza(){
+        $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(array( 'amenaza_id'=>$this->amenaza_id,
+                                                                                'analisis_id'=>$this->analisis_id,
+                                                                                'grupo_id'=>$this->grupo_id ),array('order'=>'id desc'));
+        if(!is_null($analisis_amenaza)){
+            return $analisis_amenaza->valor;
+        }else{
+            return "";
+        }
     }
 }
