@@ -31,7 +31,8 @@ class AnalisisController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','crearGrupoActivo','crearDependencia','verValoracion','gridControles'),
+                'actions' => array('create', 'update', 'admin','crearGrupoActivo','crearDependencia',
+                                    'verValoracion','gridControles','guardarValorControl'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -321,15 +322,16 @@ class AnalisisController extends Controller
         }
     }
 
-    public function actionVerValoracion($id,$analisis_id){
+    public function actionVerValoracion($id,$analisis_id,$grupo_id){
         $vulnerabilidad = new Vulnerabilidad();
         $vulnerabilidad->amenaza_id =$id;
         $analisis = Analisis::model()->findByPk($analisis_id);
+        $grupo = Analisis::model()->findByPk($grupo_id);
         if (isset($_GET['Vulnerabilidad']))
             $vulnerabilidad->attributes = $_GET['Vulnerabilidad'];
 
         $this->render('verValoracion', array(
-            'vulnerabilidad' => $vulnerabilidad,'analisis'=>$analisis
+            'vulnerabilidad' => $vulnerabilidad,'analisis'=>$analisis,'grupo'=>$grupo
         ));
     }
 
@@ -349,5 +351,100 @@ class AnalisisController extends Controller
             'id' => Yii::app()->getRequest()->getParam('id'),
             'controles' => $controles,
         ));
+    }
+
+    public function actionGuardarValorControl(){
+        if(isset($_POST['control_id'])){
+            try{
+                $transaction= Yii::app()->db->beginTransaction();
+                $control = Control::model()->findByPk($_POST['control_id']);
+                $analisis = Analisis::model()->findByPk($_POST['analisis_id']);
+
+                $analisis_control = new AnalisisControl();
+                $analisis_control->control_id = $control->id;
+                $analisis_control->analisis_id = $analisis->id;
+                $analisis_control->valor = $_POST['valor_control'];
+                $analisis_control->fecha = Date('Y-m-d');
+                if(!$analisis_control->save()){
+                    throw new Exception("Error al guardar valoracion del control");
+                }
+                $vulnerabilidad = $control->vulnerabilidad;
+
+                $analisis_vulnerabilidades = AnalisisVulnerabilidad::model()->findAllByAttributes(array('vulnerabilidad_id'=>$vulnerabilidad->id,
+                                                                                                         'analisis_id'=>$analisis->id));
+                if(empty($analisis_vulnerabilidades)){
+                    $analisis_vulnerabilidad = new AnalisisVulnerabilidad();
+                    $analisis_vulnerabilidad->analisis_id = $analisis->id;
+                    $analisis_vulnerabilidad->vulnerabilidad_id =$vulnerabilidad->id;
+                    $analisis_vulnerabilidad->valor = $analisis_control->valor;
+                    $analisis_vulnerabilidad->fecha = Date('Y-m-d');
+                    if(!$analisis_vulnerabilidad->save()){
+                        throw new Exception("Error al valorar vulnerabilidad");
+                    }
+                }else{
+                    $arrayValorVulnerabilidad =[];
+                    foreach ($analisis_vulnerabilidades as $av){
+                        $arrayValorVulnerabilidad[] = $av->valor;
+                    }
+                    $mayor_valor_vulnerabilidad = max($arrayValorVulnerabilidad);
+                    if($analisis_control->valor > $mayor_valor_vulnerabilidad){
+
+                        $analisis_vulnerabilidad = new AnalisisVulnerabilidad();
+                        $analisis_vulnerabilidad->analisis_id = $analisis->id;
+                        $analisis_vulnerabilidad->vulnerabilidad_id =$vulnerabilidad->id;
+                        $analisis_vulnerabilidad->valor = $analisis_control->valor;
+                        $analisis_vulnerabilidad->fecha = Date('Y-m-d');
+                        if(!$analisis_vulnerabilidad->save()){
+                            throw new Exception("Error al valorar vulnerabilidad");
+                        }
+                    }
+                }
+
+                $amenaza = $vulnerabilidad->amenaza;
+                $analisis_amenazas = AnalisisAmenaza::model()->findAllByAttributes(array('amenaza_id'=>$amenaza->id,
+                                                                                         'analisis_id'=>$analisis->id));
+
+                if(isset($analisis_vulnerabilidad)){
+                    if(empty($analisis_amenazas)){
+
+                            $analisis_amenaza = new AnalisisAmenaza();
+                            $analisis_amenaza->analisis_id = $analisis->id;
+                            $analisis_amenaza->amenaza_id = $amenaza->id;
+                            $analisis_amenaza->valor = $analisis_vulnerabilidad->valor;
+                            $analisis_amenaza->fecha = Date('Y-m-d');
+                            if(!$analisis_amenaza->save()){
+                                throw new Exception("Error al valorar vulnerabilidad");
+                            }
+                    }else{
+                        $arrayValorAmenaza =[];
+                        foreach ($analisis_amenazas as $aa){
+                            $arrayValorAmenaza[] = $aa->valor;
+                        }
+                        $mayor_valor_amenaza = max($arrayValorAmenaza);
+                        if($analisis_vulnerabilidad->valor > $mayor_valor_amenaza){
+
+                            $analisis_amenaza = new AnalisisAmenaza();
+                            $analisis_amenaza->analisis_id = $analisis->id;
+                            $analisis_amenaza->amenaza_id = $amenaza->id;
+                            $analisis_amenaza->valor = $analisis_control->valor;
+                            $analisis_amenaza->fecha = Date('Y-m-d');
+                            if(!$analisis_amenaza->save()){
+                                throw new Exception("Error al valorar vulnerabilidad");
+                            }
+                        }
+                    }
+                }
+
+                $transaction->commit();
+                $datos = ['error'=>0,'msj'=>'Valoracion del control realizada con exito'];
+                echo CJSON::encode($datos);
+            }catch (Exception $exception){
+                $transaction->rollback();
+                $datos = ['error'=>1,'msj'=>$exception->getMessage()];
+                echo CJSON::encode($datos);
+            }
+
+
+        }
     }
 }

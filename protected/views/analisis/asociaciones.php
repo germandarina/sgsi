@@ -91,21 +91,6 @@
     'selectableRows' => 1,
     //'filter' => $grupo_activo,
     'columns'=>array(
-        array(
-            'name'=>'activo_id',
-            'header'=>'Activo',
-            'value'=>'$data->activo->nombre',
-        ),
-        array(
-            'name'=>'activo_id',
-            'header'=>'Descripcion',
-            'value'=>'$data->activo->descripcion',
-        ),
-        array(
-            'name'=>'activo_id',
-            'header'=>'Personal',
-            'value'=>'$data->activo->getPersonal()',
-        ),
         array( 'name'=>'grupo_id',
             'header'=>'Grupo',
             'value'=>function($data){
@@ -129,6 +114,22 @@
                 }
             },
         ),
+        array(
+            'name'=>'activo_id',
+            'header'=>'Activo',
+            'value'=>'$data->activo->nombre',
+        ),
+        array(
+            'name'=>'activo_id',
+            'header'=>'Descripcion',
+            'value'=>'$data->activo->descripcion',
+        ),
+        array(
+            'name'=>'activo_id',
+            'header'=>'Personal',
+            'value'=>'$data->activo->getPersonal()',
+        ),
+
         'confidencialidad',
         'integridad',
         'disponibilidad',

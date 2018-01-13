@@ -34,7 +34,7 @@ $this->widget('booster.widgets.TbExtendedGridView',array(
                 'valoracion' => array(
                     'label' => 'Ver Valoracion',
                     'icon' => 'fa fa-star',
-                    'url' => 'Yii::app()->createUrl("/analisis/verValoracion", array("id"=>$data->amenaza_id,"analisis_id"=>$data->analisis_id))',
+                    'url' => 'Yii::app()->createUrl("/analisis/verValoracion", array("id"=>$data->amenaza_id,"analisis_id"=>$data->analisis_id,"grupo_id"=>$data->grupo_id))',
                 ),
             ),
             'htmlOptions' => array('style' => 'width:5%;text-align:center;')

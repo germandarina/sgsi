@@ -15,6 +15,31 @@
 		$("#control_id").val(control_id);
 		$("#modalValoraciones").modal('show');
 	}
+	
+	function guardarValoracion() {
+       var valor_control = $("#rating").val();
+       var control_id = $("#control_id").val();
+       var analisis_id = $("#analisis_id").val();
+       $.ajax({
+            type: 'POST',
+            url: "<?php echo CController::createUrl('analisis/guardarValorControl')?>",
+            data: { 'valor_control': valor_control,
+                    'control_id': control_id,
+                    'analisis_id': analisis_id
+                },
+            dataType: 'Text',
+            success: function (data) {
+                var datos = jQuery.parseJSON(data);
+                if(datos.error == 0){
+                    $("#modalValoraciones").modal('hide');
+                    Lobibox.notify('success',{msg: datos.msj});
+                }else{
+                    Lobibox.notify('error',{msg: datos.msj});
+                }
+                $.fn.yiiGridView.update('vulnerabilidad-grid');
+            }
+        });
+    }
 </script>
 <style>
 	.modal-dialog {
@@ -25,7 +50,27 @@
 </style>
 <div class="box">
 	<div class="box-header">
-		<h3 clas="box-title">Valoraciones para la Amenaza: <?= $vulnerabilidad->amenaza->nombre; ?></h3>
+        <?php
+        $this->widget(
+            'booster.widgets.TbPanel',
+            array(
+                'title' => 'Datos del Analisis',
+                'headerIcon' => 'th-list',
+                'context' => 'primary',
+                'content' => $this->renderPartial(
+                    '_cabecera',
+                    array('analisis' => $analisis,'vulnerabilidad'=>$vulnerabilidad,'grupo'=>$grupo), TRUE)
+            )
+        );
+        ?>
+        <?php $this->widget('booster.widgets.TbButton', array(
+            //'buttonType'=>'submit',
+            'label' => 'Volver',
+            'size' => 'medium',
+            'buttonType' => 'link',
+            'context'=>'success',
+            'url' => $this->createUrl("analisis/update",array('id'=>$analisis->id)),
+        )); ?>
 	</div>
 
 	<?php $this->widget('booster.widgets.TbExtendedGridView',array(
