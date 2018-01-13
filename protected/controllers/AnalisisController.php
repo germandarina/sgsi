@@ -31,7 +31,7 @@ class AnalisisController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','crearGrupoActivo','crearDependencia','verValoracion'),
+                'actions' => array('create', 'update', 'admin','crearGrupoActivo','crearDependencia','verValoracion','gridControles'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -321,15 +321,33 @@ class AnalisisController extends Controller
         }
     }
 
-    public function actionVerValoracion($id){
+    public function actionVerValoracion($id,$analisis_id){
         $vulnerabilidad = new Vulnerabilidad();
         $vulnerabilidad->amenaza_id =$id;
-
+        $analisis = Analisis::model()->findByPk($analisis_id);
         if (isset($_GET['Vulnerabilidad']))
             $vulnerabilidad->attributes = $_GET['Vulnerabilidad'];
 
         $this->render('verValoracion', array(
-            'vulnerabilidad' => $vulnerabilidad,
+            'vulnerabilidad' => $vulnerabilidad,'analisis'=>$analisis
+        ));
+    }
+
+    public function actionGridControles()
+    {
+        // partially rendering "_relational" view
+        $vulnerabilidadId = Yii::app()->getRequest()->getParam('id');
+        $control = Control::model()->findByAttributes(array('vulnerabilidad_id' => $vulnerabilidadId));
+        $controles = new Control();
+        if (!is_null($control)) {
+            $controles->vulnerabilidad_id = $control->vulnerabilidad_id;
+        } else {
+            $controles->vulnerabilidad_id = null;
+        }
+
+        $this->renderPartial('gridControles', array(
+            'id' => Yii::app()->getRequest()->getParam('id'),
+            'controles' => $controles,
         ));
     }
 }

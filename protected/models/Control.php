@@ -109,6 +109,24 @@ class Control extends CustomCActiveRecord
 		));
 	}
 
+	public function searchValoracion(){
+        $criteria=new CDbCriteria;
+
+        $criteria->compare('id',$this->id);
+        $criteria->compare('nombre',$this->nombre,true);
+        $criteria->compare('descripcion',$this->descripcion,true);
+        $criteria->compare('numeracion',$this->numeracion,true);
+        $criteria->compare('vulnerabilidad_id',$this->vulnerabilidad_id);
+        $criteria->compare('creaUserStamp',$this->creaUserStamp,true);
+        $criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
+        $criteria->compare('modUserStamp',$this->modUserStamp,true);
+        $criteria->compare('modTimeStamp',$this->modTimeStamp,true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,'sort'=>false,
+        ));
+    }
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!

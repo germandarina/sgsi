@@ -127,7 +127,7 @@ class GrupoActivo extends CustomCActiveRecord
 
         $criteria=new CDbCriteria;
         $criteria->select = " am.id as amenaza_id, am.nombre as amenaza_nombre , am.tipo_activo_id as tipo_activo_id, ta.nombre as tipo_activo_nombre,
-                             g.id as grupo_id, g.nombre as grupo_nombre   ";
+                             g.id as grupo_id, g.nombre as grupo_nombre, t.analisis_id as analisis_id   ";
         if(!is_null($this->amenaza_nombre)){
             $criteria->addCondition(" am.nombre like '%".$this->amenaza_nombre."%'  ");
         }
