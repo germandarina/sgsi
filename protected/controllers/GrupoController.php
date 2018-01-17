@@ -67,7 +67,7 @@ class GrupoController extends Controller
             $model->attributes = $_POST['Grupo'];
             if ($model->save()) {
                 Yii::app()->user->setNotification('success','Grupo creado con exito');
-                $this->redirect(array('admin'));
+                $this->redirect(array('create'));
             }
         }
 

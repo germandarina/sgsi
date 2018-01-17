@@ -67,7 +67,7 @@ class VulnerabilidadController extends Controller
             $model->attributes = $_POST['Vulnerabilidad'];
             if ($model->save()) {
                 Yii::app()->user->setNotification('success','Vulnerabilidad creada con exito');
-                $this->redirect(array('admin'));
+                $this->redirect(array('create'));
             }
         }
 

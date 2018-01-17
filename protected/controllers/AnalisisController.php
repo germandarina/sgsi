@@ -326,7 +326,7 @@ class AnalisisController extends Controller
         $vulnerabilidad = new Vulnerabilidad();
         $vulnerabilidad->amenaza_id =$id;
         $analisis = Analisis::model()->findByPk($analisis_id);
-        $grupo = Analisis::model()->findByPk($grupo_id);
+        $grupo = Grupo::model()->findByPk($grupo_id);
         if (isset($_GET['Vulnerabilidad']))
             $vulnerabilidad->attributes = $_GET['Vulnerabilidad'];
 

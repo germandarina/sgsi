@@ -13,7 +13,8 @@
  * @property string $creaTimeStamp
  * @property string $modUserStamp
  * @property string $modTimeStamp
- *
+ * @property integer $cantidad
+ * @property string $ubicacion
  * The followings are the available model relations:
  * @property Personal $personal
  * @property TipoActivo $tipoActivo
@@ -39,9 +40,9 @@ class Activo extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('areas,nombre, descripcion, tipo_activo_id, personal_id', 'required'),
+			array('cantidad,areas,nombre, descripcion, tipo_activo_id, personal_id', 'required'),
 			array('tipo_activo_id, personal_id', 'numerical', 'integerOnly'=>true),
-			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>50),
+			array('ubicacion,nombre, creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('descripcion', 'length', 'max'=>200),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
@@ -104,6 +105,8 @@ class Activo extends CustomCActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('descripcion',$this->descripcion,true);
+        $criteria->compare('cantidad',$this->cantidad,true);
+        $criteria->compare('ubicacion',$this->ubicacion,true);
 		$criteria->compare('tipo_activo_id',$this->tipo_activo_id);
         if(!empty($this->personal_id)){
             $criteria->together = true;

@@ -40,13 +40,6 @@
                 <?php echo $form->labelEx($model,'descripcion',array('class'=>'col-sm-3')); ?>
                 <?php echo $form->textArea($model,'descripcion',array('class'=>'col-sm-9','rows'=>6, 'cols'=>75)); ?>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-
-            </div>
-        </div>
-        <div class="row">
             <div class="col-sm-6">
                 <?php echo $form->select2Group(
                     $model, 'tipo_activo_id',
@@ -85,8 +78,6 @@
                 );
                 ?>
             </div>
-        </div>
-        <div class="row">
             <div class="col-sm-6">
                 <?php echo $form->select2Group(
                     $model, 'personal_id',
@@ -106,11 +97,15 @@
                 ?>
             </div>
         </div>
-<!---->
-<!--            --><?php //echo $form->textFieldGroup($model,'tipo_activo_id',array('class'=>'col-sm-5')); ?>
-<!--            --><?php //echo $form->textFieldGroup($model,'personal_id',array('class'=>'col-sm-5')); ?>
-<!---->
-<!--    -->
+        <div class="row">
+            <div class="col-sm-6">
+                <?php echo $form->numberFieldGroup($model,'cantidad',array('class'=>'col-sm-5','maxlength'=>50)); ?>
+            </div>
+            <div class="col-sm-6">
+                <?php echo $form->textFieldGroup($model,'ubicacion',array('class'=>'col-sm-5','maxlength'=>100)); ?>
+            </div>
+        </div>
+
     <div class="box-footer">
         <?php $this->widget('booster.widgets.TbButton', array(
 			'buttonType'=>'submit',

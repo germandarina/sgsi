@@ -70,7 +70,7 @@ class AmenazaController extends Controller
             $model->attributes = $_POST['Amenaza'];
             if ($model->save()) {
                 Yii::app()->user->setNotification('success','Amenaza creada con exito');
-                $this->redirect(array('admin'));
+                $this->redirect(array('create'));
             }
         }
 

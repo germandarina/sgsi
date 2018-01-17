@@ -68,7 +68,8 @@ class ControlController extends Controller
             $model->attributes = $_POST['Control'];
             if ($model->save()) {
                 Yii::app()->user->setNotification('success','Control creado con exito');
-                $this->redirect(array('update','id'=>$model->id));            }
+                $this->redirect(array('create'));
+            }
         }
 
         $this->render('create', array(

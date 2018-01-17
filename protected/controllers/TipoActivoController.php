@@ -67,7 +67,7 @@ class TipoActivoController extends Controller
             $model->attributes = $_POST['TipoActivo'];
             if ($model->save()) {
                 Yii::app()->user->setNotification('success','Tipo de Activo creado con exito');
-                $this->redirect(array('view', 'id' => $model->id));
+                $this->redirect(array('create'));
             }
         }
 

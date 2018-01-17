@@ -57,6 +57,8 @@
 			'name'=>'personal_id',
 			'value'=>'$data->getPersonal();',
 		 ),
+		'cantidad',
+		'ubicacion',
 		'creaUserStamp',
 		/*
 		'creaTimeStamp',
