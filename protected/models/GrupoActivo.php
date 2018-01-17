@@ -35,6 +35,17 @@ class GrupoActivo extends CustomCActiveRecord
     public $fecha_valor_amenaza;
     public $valor_amenaza;
 
+
+    const VALOR_ALTO = 3;
+    const VALOR_MEDIO = 2;
+    const VALOR_BAJO= 1;
+
+    public static $arrayValores =array(
+        self::VALOR_ALTO => 'Alto',
+        self::VALOR_MEDIO => 'Medio',
+        self::VALOR_BAJO => 'Bajo',
+    );
+
 	public function tableName()
 	{
 		return 'grupo_activo';
@@ -48,7 +59,7 @@ class GrupoActivo extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('valor,activo_id, analisis_id, confidencialidad, integridad, disponibilidad, trazabilidad', 'required'),
+			array('valor,activo_id, analisis_id', 'required'),
 			array('activo_id, grupo_id, analisis_id, confidencialidad, integridad, disponibilidad, trazabilidad', 'numerical', 'integerOnly'=>true),
 			array('creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('amenaza_nombre,grupo_nombre,activo_nombre,creaTimeStamp, modTimeStamp', 'safe'),

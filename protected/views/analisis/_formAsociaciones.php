@@ -10,6 +10,7 @@
     <?php echo $form->errorSummary($grupo_activo); ?>
 
     <input type="hidden" name="analisis_id" id="analisis_id" value="<?= $model->id ?>">
+    <input type="hidden" name="grupo_activo_id" id="grupo_activo_id" value="">
     <div class="row">
         <div class="col-sm-12">
             <?php echo $form->select2Group(
@@ -50,24 +51,84 @@
             ?>
         </div>
     </div>
-    <div class="row">
+    <div class="row" id="divConfidencialidad" style="display: none;">
         <div class="col-sm-12">
-            <?php echo $form->numberFieldGroup($grupo_activo,'confidencialidad',array('class'=>'col-sm-3')); ?>
+            <?php echo $form->select2Group(
+                $grupo_activo, 'confidencialidad',
+                [
+                    'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                    'widgetOptions' => [
+                        'asDropDownList' => true,
+                        'data' => GrupoActivo::$arrayValores,
+                        'options' => [
+                            'minimumResultsForSearch' => 10,
+                            'placeholder' => '--Seleccione--'
+                        ],
+                        // 'htmlOptions' => ['multiple'=>'multiple'],
+                    ],
+                ]
+            );
+            ?>
         </div>
     </div>
-    <div class="row">
+    <div class="row" id="divIntegridad" style="display: none;">
         <div class="col-sm-12">
-            <?php echo $form->numberFieldGroup($grupo_activo,'integridad',array('class'=>'col-sm-3')); ?>
+            <?php echo $form->select2Group(
+                $grupo_activo, 'integridad',
+                [
+                    'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                    'widgetOptions' => [
+                        'asDropDownList' => true,
+                        'data' => GrupoActivo::$arrayValores,
+                        'options' => [
+                            'minimumResultsForSearch' => 10,
+                            'placeholder' => '--Seleccione--'
+                        ],
+                        // 'htmlOptions' => ['multiple'=>'multiple'],
+                    ],
+                ]
+            );
+            ?>
         </div>
     </div>
-    <div class="row">
+    <div class="row" id="divDisponibilidad" style="display: none;">
         <div class="col-sm-12">
-            <?php echo $form->numberFieldGroup($grupo_activo,'disponibilidad',array('class'=>'col-sm-3')); ?>
+            <?php echo $form->select2Group(
+                $grupo_activo, 'disponibilidad',
+                [
+                    'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                    'widgetOptions' => [
+                        'asDropDownList' => true,
+                        'data' => GrupoActivo::$arrayValores,
+                        'options' => [
+                            'minimumResultsForSearch' => 10,
+                            'placeholder' => '--Seleccione--'
+                        ],
+                        // 'htmlOptions' => ['multiple'=>'multiple'],
+                    ],
+                ]
+            );
+            ?>
         </div>
     </div>
-    <div class="row">
+    <div class="row" id="divTrazabilidad" style="display: none;">
         <div class="col-sm-12">
-            <?php echo $form->numberFieldGroup($grupo_activo,'trazabilidad',array('class'=>'col-sm-3')); ?>
+            <?php echo $form->select2Group(
+                $grupo_activo, 'trazabilidad',
+                [
+                    'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                    'widgetOptions' => [
+                        'asDropDownList' => true,
+                        'data' => GrupoActivo::$arrayValores,
+                        'options' => [
+                            'minimumResultsForSearch' => 10,
+                            'placeholder' => '--Seleccione--'
+                        ],
+                        // 'htmlOptions' => ['multiple'=>'multiple'],
+                    ],
+                ]
+            );
+            ?>
         </div>
     </div>
 

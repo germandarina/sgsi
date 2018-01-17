@@ -32,7 +32,7 @@ class AnalisisController extends Controller
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update', 'admin','crearGrupoActivo','crearDependencia',
-                                    'verValoracion','gridControles','guardarValorControl'),
+                                    'verValoracion','gridControles','guardarValorControl','getGrupoActivo','eliminarGrupoActivo'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -190,24 +190,53 @@ class AnalisisController extends Controller
                 }else{
                     $grupo_id =NULL;
                 }
-                $grupo_activo_existente = GrupoActivo::model()->findByAttributes(array('analisis_id'=>$analisis->id,'activo_id'=>$_POST['activo_id']));
-                if(!is_null($grupo_activo_existente)){
-                    throw new Exception("El activo seleccionado ya se encuentra asociado.");
+                if(!empty($_POST['grupo_activo_id'])){
+                    $grupo_activo = GrupoActivo::model()->findByPk($_POST['grupo_activo_id']);
+                    $dependencia = Dependencia::model()->findByAttributes(['analisis_id'=>$grupo_activo->analisis_id,'activo_id'=>$grupo_activo->activo_id]);
+                    if(!empty($dependencia)){
+                        throw new Exception("Existe una dependencia relacionada al grupo activo seleccionado");
+                    }
+                }else{
+                    $grupo_activo_existente = GrupoActivo::model()->findByAttributes(array('analisis_id'=>$analisis->id,'activo_id'=>$_POST['activo_id']));
+                    if(!is_null($grupo_activo_existente)){
+                        throw new Exception("El activo seleccionado ya se encuentra asociado.");
+                    }
+                    $grupo_activo = new GrupoActivo();
                 }
+
 //                if(!is_null($grupo_activo_existente)){
 //                    $grupo = Grupo::model()->findByPk($grupo_activo_existente->grupo_id);
 //                    if($grupo->tipo_activo_id != $grupo_seleccionado->tipo_activo_id){
 //                        throw new Exception("El activo seleccionado debe pertenecer al mismo tipo de activo");
 //                    }
 //                }
-                $grupo_activo = new GrupoActivo();
+
                 $grupo_activo->analisis_id = $analisis->id;
                 $grupo_activo->grupo_id = $grupo_id;
                 $grupo_activo->activo_id = $_POST['activo_id'];
-                $grupo_activo->confidencialidad = $_POST['confidencialidad'];
-                $grupo_activo->trazabilidad = $_POST['trazabilidad'];
-                $grupo_activo->disponibilidad = $_POST['disponibilidad'];
-                $grupo_activo->integridad = $_POST['integridad'];
+                if($_POST['confidencialidad'] != ""){
+                    $grupo_activo->confidencialidad = $_POST['confidencialidad'];
+                }else{
+                    $grupo_activo->confidencialidad = NULL;
+                }
+                if($_POST['trazabilidad'] != ""){
+                    $grupo_activo->trazabilidad = $_POST['trazabilidad'];
+                }else{
+                    $grupo_activo->trazabilidad = NULL;
+                }
+                if($_POST['disponibilidad'] != ""){
+                    $grupo_activo->disponibilidad = $_POST['disponibilidad'];
+
+                }else{
+                    $grupo_activo->disponibilidad = NULL;
+                }
+                if($_POST['integridad'] != ""){
+                    $grupo_activo->integridad = $_POST['integridad'];
+
+                }else{
+                    $grupo_activo->integridad = NULL;
+                }
+
                 $arrayValores = array($_POST['confidencialidad'],$_POST['trazabilidad'],$_POST['disponibilidad'],$_POST['integridad']);
                 $grupo_activo->valor = max($arrayValores);
                 if(!$grupo_activo->save()){
@@ -451,6 +480,36 @@ class AnalisisController extends Controller
             }
 
 
+        }
+    }
+
+    public function actionGetGrupoActivo(){
+        if(isset($_POST['grupo_activo_id'])){
+            $grupo_activo = GrupoActivo::model()->findByPk($_POST['grupo_activo_id']);
+            $tipoActivo = TipoActivo::model()->findByPk($grupo_activo->grupo->tipo_activo_id);
+            $datos = ['grupo_activo'=>$grupo_activo,'tipoActivo'=>$tipoActivo];
+            echo CJSON::encode($datos);
+            die();
+        }
+    }
+
+    public function actionEliminarGrupoActivo(){
+        if(isset($_POST['grupo_activo_id'])){
+            $grupo_activo = GrupoActivo::model()->findByPk($_POST['grupo_activo_id']);
+            $dependencia = Dependencia::model()->findByAttributes(['analisis_id'=>$grupo_activo->analisis_id,'activo_id'=>$grupo_activo->activo_id]);
+            if(!empty($dependencia)){
+                $datos = ['error'=>1,'msj'=>"Existe una dependencia relacionada al grupo activo seleccionado"];
+                echo CJSON::encode($datos);
+                die();
+            }
+            if(!$grupo_activo->delete()){
+                $datos = ['error'=>1,'msj'=>'Error al eliminar grupo activo'];
+                echo CJSON::encode($datos);
+                die();
+            }
+            $datos = ['error'=>0,'msj'=>'Grupo activo eliminado con exito'];
+            echo CJSON::encode($datos);
+            die();
         }
     }
 }

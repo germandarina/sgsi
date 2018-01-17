@@ -217,7 +217,8 @@ class ActivoController extends Controller
         if($_POST['grupo_id']){
             $grupo = Grupo::model()->findByPk($_POST['grupo_id']);
             $activos = Activo::model()->findAllByAttributes(array('tipo_activo_id'=>$grupo->tipo_activo_id));
-            $datos = array('activos'=>$activos);
+            $tipoActivo = TipoActivo::model()->findByPk($grupo->tipo_activo_id);
+            $datos = array('activos'=>$activos,'tipoActivo'=>$tipoActivo);
             echo CJSON::encode($datos);
             die();
         }

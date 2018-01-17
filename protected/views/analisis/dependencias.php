@@ -99,27 +99,27 @@
             }
         });
     }
-    function getActivos() {
-        var grupo_id = $("#GrupoActivo_grupo_id").val();
-        $.ajax({
-            type: 'POST',
-            url: "<?php echo CController::createUrl('activo/getActivosPorTipo')?>",
-            data: {'grupo_id': grupo_id},
-            dataType: 'Text',
-            success: function (data) {
-                var datos = jQuery.parseJSON(data);
-                var activos = datos.activos;
-
-                $("#GrupoActivo_activo_id").find('option').remove();
-                $("#GrupoActivo_activo_id").select2('val', null);
-                if(activos.length >0){
-                    $.each(activos, function (i, activo) {
-                        $("#GrupoActivo_activo_id").append('<option value="' + activo.id + '">' + activo.nombre + '</option>');
-                    });
-                }
-            }
-        });
-    }
+//    function getActivos() {
+//        var grupo_id = $("#GrupoActivo_grupo_id").val();
+//        $.ajax({
+//            type: 'POST',
+//            url: "<?php //echo CController::createUrl('activo/getActivosPorTipo')?>//",
+//            data: {'grupo_id': grupo_id},
+//            dataType: 'Text',
+//            success: function (data) {
+//                var datos = jQuery.parseJSON(data);
+//                var activos = datos.activos;
+//
+//                $("#GrupoActivo_activo_id").find('option').remove();
+//                $("#GrupoActivo_activo_id").select2('val', null);
+//                if(activos.length >0){
+//                    $.each(activos, function (i, activo) {
+//                        $("#GrupoActivo_activo_id").append('<option value="' + activo.id + '">' + activo.nombre + '</option>');
+//                    });
+//                }
+//            }
+//        });
+//    }
     function guardarDependencia() {
         var activo_padre_id = $("#Dependencia_activo_padre_id").val();
         var activo_id = $("#Dependencia_activo_id").val();
