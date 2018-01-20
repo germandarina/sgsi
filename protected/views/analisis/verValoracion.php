@@ -1,23 +1,14 @@
-<link href="<?= Yii::app()->request->baseUrl ?>/js/jquery-bar-rating-master/dist/themes/bars-square.css" rel="stylesheet" type="text/css"/>
-<script src="<?= Yii::app()->request->baseUrl?>/js/jquery-bar-rating-master/dist/jquery.barrating.min.js" type="text/javascript"></script>
-<script>
-	$(function () {
-		$('#rating').barrating('show', {
-			theme: 'bars-square',
-			showValues: true,
-			showSelectedRating: false
-		});
-	});
 
+<script>
 	function valorarControl(control_id) {
-		$(".br-widget > a").removeClass('br-selected');
-		$("#rating").val(0);
+		$("#Analisis_valor_form_valoracion").val(0);
+		$("#Analisis_valor_form_valoracion").select2('val',0);
 		$("#control_id").val(control_id);
 		$("#modalValoraciones").modal('show');
 	}
 	
 	function guardarValoracion() {
-       var valor_control = $("#rating").val();
+       var valor_control = $("#Analisis_valor_form_valoracion").val();
        var control_id = $("#control_id").val();
        var analisis_id = $("#analisis_id").val();
        var grupo_activo_id = $("#grupo_activo_id_hidden").val();
@@ -43,13 +34,6 @@
         });
     }
 </script>
-<style>
-	.modal-dialog {
-		width: 300px !important;
-		margin: 30px auto !important;
-	}
-
-</style>
 <div class="box">
 	<div class="box-header">
         <?php

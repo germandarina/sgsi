@@ -1,19 +1,9 @@
-<link href="<?= Yii::app()->request->baseUrl ?>/js/jquery-bar-rating-master/dist/themes/bars-square.css" rel="stylesheet" type="text/css"/>
-<script src="<?= Yii::app()->request->baseUrl?>/js/jquery-bar-rating-master/dist/jquery.barrating.min.js" type="text/javascript"></script>
+
 <script>
-    $(function () {
-
-        $('#rating').barrating('show', {
-            theme: 'bars-square',
-            showValues: true,
-            showSelectedRating: false
-        });
-    });
-
     function valorarAmenaza(event,amenaza_id,analisis_id,grupo_activo_id,activo_id) {
         event.preventDefault();
-        $(".br-widget > a").removeClass('br-selected');
-        $("#rating").val(0);
+        $("#Analisis_valor_form_valoracion").val(0);
+        $("#Analisis_valor_form_valoracion").select2('val',0);
 
         $("#amenaza_id").val(amenaza_id);
         $("#analisis_id").val(analisis_id);
@@ -27,7 +17,7 @@
         var grupo_activo_id = $("#grupo_activo_id_hidden").val();
         var analisis_id = $("#analisis_id").val();
         var amenaza_id = $("#amenaza_id").val();
-        var amenaza_valor = $("#rating").val();
+        var amenaza_valor = $("#Analisis_valor_form_valoracion").val();
         $.ajax({
             type: 'POST',
             url: "<?php echo CController::createUrl('analisis/guardarValorAmenaza')?>",
@@ -51,13 +41,7 @@
         });
     }
 </script>
-<style>
-    #modalAmenaza{
-        width: 300px !important;
-        margin: 30px auto !important;
-    }
 
-</style>
 <?php
 $this->widget('booster.widgets.TbExtendedGridView',array(
     'id'=>'valoraciones-grid',

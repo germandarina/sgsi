@@ -1,32 +1,30 @@
 <?php
 
 /**
- * This is the model class for table "analisis".
+ * This is the model class for table "analisis_riesgo".
  *
- * The followings are the available columns in table 'analisis':
+ * The followings are the available columns in table 'analisis_riesgo':
  * @property integer $id
- * @property string $nombre
- * @property string $descripcion
+ * @property integer $analisis_id
+ * @property integer $riesgo_aceptable
  * @property string $fecha
- * @property integer $personal_id
  * @property string $creaUserStamp
  * @property string $creaTimeStamp
  * @property string $modUserStamp
  * @property string $modTimeStamp
  *
  * The followings are the available model relations:
- * @property Personal $personal
- * @property GrupoActivo[] $grupoActivos
+ * @property Analisis $analisis
+ * @property AnalisisRiesgoDetalle[] $analisisRiesgoDetalles
  */
-class Analisis extends CustomCActiveRecord
+class AnalisisRiesgo extends CustomCActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
-	public $valor_form_valoracion;
 	public function tableName()
 	{
-		return 'analisis';
+		return 'analisis_riesgo';
 	}
 
 	/**
@@ -37,14 +35,12 @@ class Analisis extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nombre, descripcion, fecha, personal_id', 'required'),
-			array('personal_id', 'numerical', 'integerOnly'=>true),
-			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>50),
-			array('descripcion', 'length', 'max'=>200),
-			array('creaTimeStamp, modTimeStamp', 'safe'),
+			array('analisis_id, riesgo_aceptable', 'numerical', 'integerOnly'=>true),
+			array('creaUserStamp, modUserStamp', 'length', 'max'=>50),
+			array('fecha, creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, nombre, descripcion, fecha, personal_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('id, analisis_id, riesgo_aceptable, fecha, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,8 +52,8 @@ class Analisis extends CustomCActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'personal' => array(self::BELONGS_TO, 'Personal', 'personal_id'),
-			'grupoActivos' => array(self::HAS_MANY, 'GrupoActivo', 'analisis_id'),
+			'analisis' => array(self::BELONGS_TO, 'Analisis', 'analisis_id'),
+			'analisisRiesgoDetalles' => array(self::HAS_MANY, 'AnalisisRiesgoDetalle', 'analisis_riesgo_id'),
 		);
 	}
 
@@ -68,15 +64,13 @@ class Analisis extends CustomCActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'nombre' => 'Nombre',
-			'descripcion' => 'Descripcion',
+			'analisis_id' => 'Analisis',
+			'riesgo_aceptable' => 'Riesgo Aceptable',
 			'fecha' => 'Fecha',
-			'personal_id' => 'Personal',
 			'creaUserStamp' => 'Crea User Stamp',
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
-            'valor_form_valoracion' =>'Valor',
 		);
 	}
 
@@ -99,10 +93,9 @@ class Analisis extends CustomCActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('nombre',$this->nombre,true);
-		$criteria->compare('descripcion',$this->descripcion,true);
+		$criteria->compare('analisis_id',$this->analisis_id);
+		$criteria->compare('riesgo_aceptable',$this->riesgo_aceptable);
 		$criteria->compare('fecha',$this->fecha,true);
-		$criteria->compare('personal_id',$this->personal_id);
 		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
 		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
 		$criteria->compare('modUserStamp',$this->modUserStamp,true);
@@ -117,15 +110,10 @@ class Analisis extends CustomCActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Analisis the static model class
+	 * @return AnalisisRiesgo the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
-
-	public function getPersonal(){
-        return $this->personal->apellido.' , '.$this->personal->nombre;
-
-    }
 }

@@ -35,6 +35,9 @@ $this->widget(
 						array('label' => 'Valoración de Amenazas, Vulnerabilidades y Controles',
 							'content' => $this->renderPartial('valoraciones', array('model'=>$model,'amenaza'=>$amenaza,'grupo_activo'=>$grupo_activo), true),
 						),
+						array('label' => 'Gestion de Riesgos',
+							'content' => $this->renderPartial('gestionDeRiesgos', array('model'=>$model,'amenaza'=>$amenaza,'grupo_activo'=>$grupo_activo), true),
+						),
 					),
 				)
 			);

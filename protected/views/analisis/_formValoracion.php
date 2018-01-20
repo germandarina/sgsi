@@ -1,29 +1,36 @@
 <div class="box-body">
+    <?php $form=$this->beginWidget('booster.widgets.TbActiveForm',array(
+        'id'=>'control-valor-form',
+        'enableAjaxValidation'=>false,
+        'type' => 'horizontal'
+    )); ?>
+
     <input type="hidden" name="analisis_id" id="analisis_id" value="<?= $analisis->id?>">
     <input type="hidden" name="grupo_activo_id_hidden" id="grupo_activo_id_hidden" value="<?= isset($grupo_activo)? $grupo_activo->id : "" ?>">
     <input type="hidden" name="control_id" id="control_id">
     <input type="hidden" name="amenaza_id" id="amenaza_id">
     <input type="hidden" name="activo_id_hidden" id="activo_id_hidden">
-    <div class="col-sm-1">
 
-    </div>
-    <div class="col-sm-10">
-        <div class="br-wrapper br-theme-bars-square">
-            <select id="rating" name="rating" autocomplete="off" style="display: none;">
-                <option value=""></option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
-<!--            <div class="br-widget">-->
-<!--                <a href="#" data-rating-value="1" data-rating-text="1" class="">1</a>-->
-<!--                <a href="#" data-rating-value="2" data-rating-text="2" class="">2</a>-->
-<!--                <a href="#" data-rating-value="3" data-rating-text="3" class="">3</a>-->
-<!--                <a href="#" data-rating-value="4" data-rating-text="4" class="">4</a>-->
-<!--                <a href="#" data-rating-value="5" data-rating-text="5" class="">5</a>-->
-<!--            </div>-->
+
+    <div class="row">
+        <div class="col-sm-12">
+            <?php echo $form->select2Group(
+                $analisis, 'valor_form_valoracion',
+                [
+                    'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                    'widgetOptions' => [
+                        'asDropDownList' => true,
+                        'data' => GrupoActivo::$arrayValores,
+                        'options' => [
+                            'minimumResultsForSearch' => 10,
+                            'placeholder' => '--Seleccione--'
+                        ],
+                        'htmlOptions' => ['onChange'=>'getActivos()'],
+                    ],
+                ]
+            );
+            ?>
         </div>
     </div>
+    <?php $this->endWidget(); ?>
 </div>
