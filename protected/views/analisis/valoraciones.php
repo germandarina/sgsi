@@ -6,25 +6,34 @@ $this->widget('booster.widgets.TbExtendedGridView',array(
     'headerOffset' => 10,
     // 40px is the height of the main navigation at bootstrap
     'type' => 'striped hover condensed',
-    'dataProvider' => $grupo_activo->searchValoraciones(),
+    'dataProvider' => $amenaza->searchValoraciones(),
     'responsiveTable' => true,
     'template' => "{items}\n{pager}",
     'selectableRows' => 1,
-    'filter' => $grupo_activo,
+    'filter' => $amenaza,
     'columns'=>array(
         array(
-            'name'=>'amenaza_nombre',
+            'name'=>'nombre',
             'header'=>'Amenazas',
-            'value'=>'$data->amenaza_nombre',
+            'value'=>'$data->nombre',
         ),
         array(
-            'name'=>'tipo_activo_nombre',
-            'header'=>'Tipo Activo',
-            'value'=>'$data->tipo_activo_nombre',
+            'name'=>'activo_nombre',
+            'header'=>'Activo',
+            'value'=>'$data->activo_nombre',
         ),
-        array( 'name'=>'grupo_nombre',
+        array(
+            'name'=>'tipo_activo_id',
+            'header'=>'Tipo Activo',
+            'value'=>'$data->tipoActivo->nombre',
+            'filter' => CHtml::listData(TipoActivo::model()->getTipoActivoDelAnalisis($model->id),'id','nombre'),
+
+        ),
+        array(
+            'name'=>'grupo_nombre',
             'header'=>'Grupo',
-            'value'=>'$data->grupo_nombre'
+            'value'=>'$data->getGrupo()',
+            'filter' => CHtml::listData(Grupo::model()->getGruposDelAnalisis($model->id),'id','nombre'),
         ),
         array( 'name'=>'fecha_valor_amenaza',
             'header'=>'Fecha Valoracion',
@@ -39,12 +48,12 @@ $this->widget('booster.widgets.TbExtendedGridView',array(
         array(
             'class' => 'booster.widgets.TbButtonColumn',
             'template' => '{valoracion}',
-            'header' => 'Ver Valoracion',
+            'header' => 'Valorar Controles / Vulnerabilidades',
             'buttons' => array(
                 'valoracion' => array(
                     'label' => 'Ver Valoracion',
                     'icon' => 'fa fa-star',
-                    'url' => 'Yii::app()->createUrl("/analisis/verValoracion", array("id"=>$data->amenaza_id,"analisis_id"=>$data->analisis_id,"grupo_id"=>$data->grupo_id))',
+                    'url' => 'Yii::app()->createUrl("/analisis/verValoracion", array("id"=>$data->id,"analisis_id"=>$data->analisis_id,"grupo_id"=>$data->grupo_id))',
                 ),
             ),
             'htmlOptions' => array('style' => 'width:5%;text-align:center;')

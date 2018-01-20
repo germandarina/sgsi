@@ -22,6 +22,13 @@ class Amenaza extends CustomCActiveRecord
 	/**
 	 * @return string the associated database table name
 	 */
+	public $activo_nombre;
+    public $grupo_nombre;
+    public $grupo_id;
+    public $fecha_valor_amenaza;
+    public $valor_amenaza;
+    public $analisis_id;
+
 
     const VALOR_SI = 1;
     const VALOR_NO = 0;
@@ -129,6 +136,34 @@ class Amenaza extends CustomCActiveRecord
 		));
 	}
 
+    public function searchValoraciones(){
+
+        $criteria=new CDbCriteria;
+        $criteria->select = " t.*, g.id as grupo_id, g.nombre as grupo_nombre, ga.analisis_id as analisis_id, a.nombre as activo_nombre  ";
+
+        if(!empty($this->nombre)){
+            $criteria->addCondition(" t.nombre like '%".$this->nombre."%'  ");
+        }
+
+        if(!empty($this->grupo_nombre)){
+            $criteria->compare(" g.id",$this->grupo_nombre);
+        }
+        if(!empty($this->tipo_activo_id)){
+            $criteria->compare(" ta.id ",$this->tipo_activo_id);
+        }
+
+
+        $criteria->join = " left join activo a on a.tipo_activo_id = t.tipo_activo_id
+                            left join tipo_activo ta on ta.id = a.tipo_activo_id
+                            left join grupo_activo  ga on ga.activo_id = a.id
+                            left join grupo g on g.id = ga.grupo_id
+                            ";
+        $criteria->group = " t.id, g.id";
+        $criteria->order = " a.id asc ";
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,'sort'=>false,'pagination'=>['pageSize'=>20]
+        ));
+    }
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -139,4 +174,35 @@ class Amenaza extends CustomCActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    public function getFechaValorAmenaza(){
+//        $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(array( 'amenaza_id' => $this->id,
+//            'analisis_id' => $this->analisis_id,
+//            'grupo_id' => $this->grupo_id ),array('order'=>'id desc'));
+//        if(!is_null($analisis_amenaza)){
+//            return Utilities::ViewDateFormat($analisis_amenaza->fecha);
+//        }else{
+//            return "";
+//        }
+    }
+
+    public function getValorAmenaza(){
+//        $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(array( 'amenaza_id'=>$this->id,
+//            'analisis_id'=>$this->analisis_id,
+//            'grupo_id'=>$this->grupo_id ),array('order'=>'id desc'));
+//        if(!is_null($analisis_amenaza)){
+//            return $analisis_amenaza->valor;
+//        }else{
+//            return "";
+//        }
+    }
+
+    public function getGrupo(){
+        if(!is_null($this->grupo_id)){
+            $grupo = Grupo::model()->findByPk($this->grupo_id);
+            return $grupo->nombre;
+        }else{
+            return "";
+        }
+    }
 }

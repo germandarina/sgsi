@@ -151,10 +151,12 @@ class GrupoActivo extends CustomCActiveRecord
         if(!is_null($this->tipo_activo_nombre)){
             $criteria->addCondition(" ta.nombre like '%".$this->tipo_activo_nombre."%'  ");
         }
-        $criteria->join = " left join grupo g  on g.id = t.grupo_id 
+        $criteria->join = " 
                             inner join activo a on t.activo_id
                             inner join tipo_activo ta on ta.id = a.tipo_activo_id
-                            inner join amenaza am on am.tipo_activo_id = ta.id ";
+                            inner join amenaza am on am.tipo_activo_id = ta.id 
+                            left join grupo g on g.id = t.grupo_id ";
+        $criteria->group = " am.id ";
         $criteria->order = " ta.id asc ";
         return new CActiveDataProvider($this, array(
             'criteria'=>$criteria,
@@ -188,6 +190,15 @@ class GrupoActivo extends CustomCActiveRecord
                                                                                 'grupo_id'=>$this->grupo_id ),array('order'=>'id desc'));
         if(!is_null($analisis_amenaza)){
             return $analisis_amenaza->valor;
+        }else{
+            return "";
+        }
+    }
+
+    public function getGrupo(){
+        if(!is_null($this->grupo_id)){
+            $grupo = $this->grupo;
+            return $grupo->nombre;
         }else{
             return "";
         }

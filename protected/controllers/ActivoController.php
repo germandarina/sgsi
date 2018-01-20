@@ -214,10 +214,17 @@ class ActivoController extends Controller
     }
 
     public function actionGetActivosPorTipo(){
-        if($_POST['grupo_id']){
-            $grupo = Grupo::model()->findByPk($_POST['grupo_id']);
-            $activos = Activo::model()->findAllByAttributes(array('tipo_activo_id'=>$grupo->tipo_activo_id));
-            $tipoActivo = TipoActivo::model()->findByPk($grupo->tipo_activo_id);
+        if(isset($_POST['grupo_id'])){
+            if(!empty($_POST['grupo_id'])){
+                $grupo = Grupo::model()->findByPk($_POST['grupo_id']);
+                $activos = Activo::model()->findAllByAttributes(array('tipo_activo_id'=>$grupo->tipo_activo_id));
+                $tipoActivo = TipoActivo::model()->findByPk($grupo->tipo_activo_id);
+            }else{
+                $activo = Activo::model()->findByPk($_POST['activo_id']);
+                $activos = Activo::model()->findAllByAttributes(array('tipo_activo_id'=>$activo->tipo_activo_id));
+                $tipoActivo = TipoActivo::model()->findByPk($activo->tipo_activo_id);
+            }
+
             $datos = array('activos'=>$activos,'tipoActivo'=>$tipoActivo);
             echo CJSON::encode($datos);
             die();

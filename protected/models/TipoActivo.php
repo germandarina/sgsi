@@ -131,4 +131,15 @@ class TipoActivo extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	public static function getTipoActivoDelAnalisis($analisis_id){
+        $query = " select ta.nombre,ta.id
+                        from tipo_activo ta
+                        inner join activo a on a.tipo_activo_id = ta.id
+                        inner join grupo_activo ga on ga.activo_id = a.id
+                        where analisis_id = ".$analisis_id."  ";
+        $command = Yii::app()->db->createCommand($query);
+        $resultado = $command->queryAll($query);
+        return $resultado;
+    }
 }

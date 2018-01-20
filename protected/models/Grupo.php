@@ -118,4 +118,14 @@ class Grupo extends CustomCActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	public static function getGruposDelAnalisis($analisis_id){
+        $query = "select g.nombre, g.id
+                    from grupo g
+                    inner join grupo_activo ga on ga.grupo_id = g.id
+                    where analisis_id = ".$analisis_id."  ";
+        $command = Yii::app()->db->createCommand($query);
+        $resultado = $command->queryAll($query);
+        return $resultado;
+    }
 }

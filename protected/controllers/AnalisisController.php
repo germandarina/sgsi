@@ -92,10 +92,12 @@ class AnalisisController extends Controller
         $dependencia->analisis_id = $model->id;
         $dependenciasPadres = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>NULL));
         $model->fecha = Utilities::ViewDateFormat($model->fecha);
-        if(isset($_GET['GrupoActivo'])){
-            $grupo_activo->amenaza_nombre = $_GET['GrupoActivo']['amenaza_nombre'];
-            $grupo_activo->grupo_nombre = $_GET['GrupoActivo']['grupo_nombre'];
-            $grupo_activo->tipo_activo_nombre = $_GET['GrupoActivo']['tipo_activo_nombre'];
+        $amenaza = new Amenaza();
+        if(isset($_GET['Amenaza'])){
+            $amenaza->nombre = $_GET['Amenaza']['nombre'];
+            $amenaza->grupo_nombre = $_GET['Amenaza']['grupo_nombre'];
+            $amenaza->tipo_activo_id = $_GET['Amenaza']['tipo_activo_id'];
+            $amenaza->activo_nombre = $_GET['Amenaza']['activo_nombre'];
         }
         if (isset($_POST['Analisis'])) {
             $model->attributes = $_POST['Analisis'];
@@ -107,7 +109,8 @@ class AnalisisController extends Controller
         }
 
         $this->render('update', array(
-            'model' => $model,'grupo_activo'=>$grupo_activo,'dependencia'=>$dependencia,'dependenciasPadres'=>$dependenciasPadres
+            'model' => $model,'grupo_activo'=>$grupo_activo,'dependencia'=>$dependencia,'dependenciasPadres'=>$dependenciasPadres,
+            'amenaza'=>$amenaza
         ));
     }
 
@@ -486,7 +489,11 @@ class AnalisisController extends Controller
     public function actionGetGrupoActivo(){
         if(isset($_POST['grupo_activo_id'])){
             $grupo_activo = GrupoActivo::model()->findByPk($_POST['grupo_activo_id']);
-            $tipoActivo = TipoActivo::model()->findByPk($grupo_activo->grupo->tipo_activo_id);
+            if(!is_null($grupo_activo->grupo)){
+                $tipoActivo = TipoActivo::model()->findByPk($grupo_activo->grupo->tipo_activo_id);
+            }else{
+                $tipoActivo = TipoActivo::model()->findByPk($grupo_activo->activo->tipo_activo_id);
+            }
             $datos = ['grupo_activo'=>$grupo_activo,'tipoActivo'=>$tipoActivo];
             echo CJSON::encode($datos);
             die();

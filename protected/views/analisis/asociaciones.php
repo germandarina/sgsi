@@ -20,10 +20,12 @@
 
     function getActivos() {
         var grupo_id = $("#GrupoActivo_grupo_id").val();
+        var activo_id = $("#GrupoActivo_activo_id").val();
         $.ajax({
             type: 'POST',
             url: "<?php echo CController::createUrl('activo/getActivosPorTipo')?>",
-            data: {'grupo_id': grupo_id},
+            data: {'grupo_id': grupo_id,
+                    'activo_id':activo_id},
             dataType: 'Text',
             success: function (data) {
                 var datos = jQuery.parseJSON(data);
@@ -113,8 +115,13 @@
                 var datos = jQuery.parseJSON(data);
                 var grupo_activo = datos.grupo_activo;
                 $("#grupo_activo_id").val(grupo_activo.id);
-                $("#GrupoActivo_grupo_id").val(grupo_activo.grupo_id);
-                $("#GrupoActivo_grupo_id").select2('val',grupo_activo.grupo_id);
+                if(grupo_activo.grupo_id != null){
+                    $("#GrupoActivo_grupo_id").val(grupo_activo.grupo_id);
+                    $("#GrupoActivo_grupo_id").select2('val',grupo_activo.grupo_id);
+                }else{
+                    $("#GrupoActivo_activo_id").val(grupo_activo.activo_id);
+                    $("#GrupoActivo_activo_id").select2('val',grupo_activo.activo_id);
+                }
                 getActivos();
                 $("#analisis_id").val(grupo_activo_id.analisis_id);
                 $("#GrupoActivo_confidencialidad").select2('val',grupo_activo.confidencialidad);
