@@ -2,13 +2,13 @@
 <script src="<?= Yii::app()->request->baseUrl?>/js/jquery-bar-rating-master/dist/jquery.barrating.min.js" type="text/javascript"></script>
 <script>
 	$(function () {
-
 		$('#rating').barrating('show', {
 			theme: 'bars-square',
 			showValues: true,
 			showSelectedRating: false
 		});
 	});
+
 	function valorarControl(control_id) {
 		$(".br-widget > a").removeClass('br-selected');
 		$("#rating").val(0);
@@ -20,14 +20,14 @@
        var valor_control = $("#rating").val();
        var control_id = $("#control_id").val();
        var analisis_id = $("#analisis_id").val();
-       var grupo_id = $("#grupo_id").val();
+       var grupo_activo_id = $("#grupo_activo_id_hidden").val();
        $.ajax({
             type: 'POST',
             url: "<?php echo CController::createUrl('analisis/guardarValorControl')?>",
             data: { 'valor_control': valor_control,
                     'control_id': control_id,
                     'analisis_id': analisis_id,
-                    'grupo_id':grupo_id
+                    'grupo_activo_id':grupo_activo_id
                 },
             dataType: 'Text',
             success: function (data) {
@@ -61,7 +61,7 @@
                 'context' => 'primary',
                 'content' => $this->renderPartial(
                     '_cabecera',
-                    array('analisis' => $analisis,'vulnerabilidad'=>$vulnerabilidad,'grupo'=>$grupo), TRUE)
+                    array('analisis' => $analisis,'vulnerabilidad'=>$vulnerabilidad,'grupo'=>$grupo,'activo'=>$activo), TRUE)
             )
         );
         ?>
@@ -75,7 +75,9 @@
         )); ?>
 	</div>
 
-	<?php $this->widget('booster.widgets.TbExtendedGridView',array(
+       <h4 style="margin-left: 3%;">Listado de Vulnerabilidades</h4>
+
+    <?php $this->widget('booster.widgets.TbExtendedGridView',array(
 	'id'=>'vulnerabilidad-grid',
 	'fixedHeader' => false,
 	'headerOffset' => 10,
@@ -92,24 +94,32 @@
 			'class' => 'booster.widgets.TbRelationalColumn',
 			'name' => 'id',
 			'type'=>'raw',
-			'url' => $this->createUrl('analisis/gridControles',array('analisis_id'=>$analisis->id,'grupo_id'=>$grupo->id)),
+			'url' => $this->createUrl('analisis/gridControles',array('analisis_id'=>$analisis->id,'grupo_activo_id'=>$grupo_activo->id)),
 			'value' => '"<span class = \"fa fa-plus-square\"></span>"',
 			'filter'=>false,
 		)
 	), array(
-		'nombre',
-		'descripcion',
+	    array(
+	        'name'=>'nombre',
+            'header'=>'Nombre Vulnerabilidad',
+            'value'=>'$data->nombre',
+        ),
+        array(
+            'name'=>'descripcion',
+            'header'=>'Descripcion Vulnerabilidad',
+            'value'=>'$data->descripcion',
+        ),
         array( 'name'=>'fecha_valor_vulnerabilidad',
             'header'=>'Fecha Valoracion',
-            'value'=>function($data)use($analisis,$grupo){
-                return $data->getFechaValorVulnerabilidad($analisis->id,$grupo->id);
+            'value'=>function($data)use($analisis,$grupo_activo){
+                return $data->getFechaValorVulnerabilidad($analisis->id,$grupo_activo->id);
             },
             'filter'=>false,
         ),
         array( 'name'=>'valor_vulnerabilidad',
             'header'=>'Valor Vulnerabilidad',
-            'value'=>function($data)use($analisis,$grupo){
-                return $data->getValorVulnerabilidad($analisis->id,$grupo->id);
+            'value'=>function($data)use($analisis,$grupo_activo){
+                return $data->getValorVulnerabilidad($analisis->id,$grupo_activo->id);
             },
             'filter'=>false,
         ),
@@ -125,7 +135,7 @@
 				<h4 class="modal-title" id="cabeceraModal">Nueva Valoracion</h4>
 			</div>
 			<div class="modal-body" id="cuerpoDetalleCredito">
-				<?php echo $this->renderPartial('_formValoracion', array('analisis'=>$analisis,'grupo'=>$grupo)); ?>
+				<?php echo $this->renderPartial('_formValoracion', array('analisis'=>$analisis,'grupo_activo'=>$grupo_activo)); ?>
 			</div>
 			<div class="modal-footer">
 				<button type="button" onclick="js:guardarValoracion()" class="btn btn-success" id="botonModal">

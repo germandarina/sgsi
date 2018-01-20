@@ -3,6 +3,7 @@
 		<thead>
 			<tr style="background-color: #8cd688;">
 				<th>Analisis</th>
+				<th>Activo</th>
 				<th>Amenaza</th>
 				<th>Grupo </th>
 			</tr>
@@ -10,6 +11,7 @@
 		<tbody>
 			<tr>
 				<td><?= $analisis->nombre?></td>
+				<td><?= $activo->nombre ?></td>
 				<td><?= $vulnerabilidad->amenaza->nombre ?></td>
 				<td><?= !is_null($grupo) ? $grupo->nombre : "Sin Grupo Asignado" ?></td>
 			</tr>

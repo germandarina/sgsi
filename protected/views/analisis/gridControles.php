@@ -24,25 +24,25 @@ $this->widget('booster.widgets.TbExtendedGridView', array(
 		),
 		array(
 			'name'=>'nombre',
-			'header'=>'Nombre',
+			'header'=>'Nombre Control',
 			'value'=>'$data->nombre',
 		),
 		array(
 			'name' => 'descripcion',
-			'header' => 'Descripcion',
+			'header' => 'Descripcion Control',
 			'value' => '$data->descripcion',
 		),
 		array( 'name'=>'fecha_valor_control',
 			'header'=>'Fecha Valoracion',
-			'value'=>function($data)use($analisis_id,$grupo_id){
-				return $data->getFechaValorControl($analisis_id,$grupo_id);
+			'value'=>function($data)use($analisis_id,$grupo_activo_id){
+				return $data->getFechaValorControl($analisis_id,$grupo_activo_id);
 			},
 			'filter'=>false,
 		),
 		array( 'name'=>'valor_control',
 			'header'=>'Valor Control',
-			'value'=>function($data)use($analisis_id,$grupo_id){
-				return $data->getValorControl($analisis_id,$grupo_id);
+			'value'=>function($data)use($analisis_id,$grupo_activo_id){
+				return $data->getValorControl($analisis_id,$grupo_activo_id);
 			},
 			'filter'=>false,
 		),

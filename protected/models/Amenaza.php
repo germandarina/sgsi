@@ -23,11 +23,13 @@ class Amenaza extends CustomCActiveRecord
 	 * @return string the associated database table name
 	 */
 	public $activo_nombre;
+    public $grupo_activo_id;
     public $grupo_nombre;
     public $grupo_id;
     public $fecha_valor_amenaza;
     public $valor_amenaza;
     public $analisis_id;
+    public $activo_id;
 
 
     const VALOR_SI = 1;
@@ -139,7 +141,8 @@ class Amenaza extends CustomCActiveRecord
     public function searchValoraciones(){
 
         $criteria=new CDbCriteria;
-        $criteria->select = " t.*, g.id as grupo_id, g.nombre as grupo_nombre, ga.analisis_id as analisis_id, a.nombre as activo_nombre  ";
+        $criteria->select = " t.*, g.id as grupo_id, g.nombre as grupo_nombre, ga.analisis_id as analisis_id, 
+                              a.nombre as activo_nombre, a.id as activo_id , ga.id as grupo_activo_id  ";
 
         if(!empty($this->nombre)){
             $criteria->addCondition(" t.nombre like '%".$this->nombre."%'  ");
@@ -176,25 +179,25 @@ class Amenaza extends CustomCActiveRecord
 	}
 
     public function getFechaValorAmenaza(){
-//        $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(array( 'amenaza_id' => $this->id,
-//            'analisis_id' => $this->analisis_id,
-//            'grupo_id' => $this->grupo_id ),array('order'=>'id desc'));
-//        if(!is_null($analisis_amenaza)){
-//            return Utilities::ViewDateFormat($analisis_amenaza->fecha);
-//        }else{
-//            return "";
-//        }
+        $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(array('amenaza_id' => $this->id,
+                                                                                'analisis_id' => $this->analisis_id,
+                                                                                'grupo_activo_id' => $this->grupo_activo_id ),array('order'=>'id desc'));
+        if(!is_null($analisis_amenaza)){
+            return Utilities::ViewDateFormat($analisis_amenaza->fecha);
+        }else{
+            return "";
+        }
     }
 
     public function getValorAmenaza(){
-//        $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(array( 'amenaza_id'=>$this->id,
-//            'analisis_id'=>$this->analisis_id,
-//            'grupo_id'=>$this->grupo_id ),array('order'=>'id desc'));
-//        if(!is_null($analisis_amenaza)){
-//            return $analisis_amenaza->valor;
-//        }else{
-//            return "";
-//        }
+        $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(array( 'amenaza_id'=>$this->id,
+                                                                                'analisis_id'=>$this->analisis_id,
+                                                                                'grupo_activo_id'=>$this->grupo_activo_id ),array('order'=>'id desc'));
+        if(!is_null($analisis_amenaza)){
+            return $analisis_amenaza->valor;
+        }else{
+            return "";
+        }
     }
 
     public function getGrupo(){

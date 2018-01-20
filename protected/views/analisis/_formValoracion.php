@@ -1,7 +1,9 @@
 <div class="box-body">
     <input type="hidden" name="analisis_id" id="analisis_id" value="<?= $analisis->id?>">
-    <input type="hidden" name="grupo_id" id="grupo_id" value="<?= $grupo->id?>">
+    <input type="hidden" name="grupo_activo_id_hidden" id="grupo_activo_id_hidden" value="<?= isset($grupo_activo)? $grupo_activo->id : "" ?>">
     <input type="hidden" name="control_id" id="control_id">
+    <input type="hidden" name="amenaza_id" id="amenaza_id">
+    <input type="hidden" name="activo_id_hidden" id="activo_id_hidden">
     <div class="col-sm-1">
 
     </div>

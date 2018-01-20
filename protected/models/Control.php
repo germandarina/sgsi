@@ -23,9 +23,9 @@ class Control extends CustomCActiveRecord
 	 * @return string the associated database table name
 	 */
 	public $analisis_id;
-    public $grupo_id;
     public $fecha_valor_control;
     public $valor_control;
+    public $grupo_activo_id;
 
 	public function tableName()
 	{
@@ -122,7 +122,7 @@ class Control extends CustomCActiveRecord
         $criteria->compare('descripcion',$this->descripcion,true);
         $criteria->compare('numeracion',$this->numeracion,true);
         $criteria->compare('vulnerabilidad_id',$this->vulnerabilidad_id);
-//        $criteria->compare('grupo_id',$this->grupo_id);
+//        $criteria->compare('grupo_activo_id',$this->grupo_activo_id);
 //        $criteria->compare('analisis_id',$this->analisis_id);
 //        $criteria->compare('creaUserStamp',$this->creaUserStamp,true);
 //        $criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
@@ -145,10 +145,10 @@ class Control extends CustomCActiveRecord
 		return parent::model($className);
 	}
 
-    public function getFechaValorControl($analisis_id,$grupo_id){
+    public function getFechaValorControl($analisis_id,$grupo_activo_id){
         $analisis_control = AnalisisControl::model()->findByAttributes(array('control_id' => $this->id,
             'analisis_id' => $analisis_id,
-            'grupo_id' => $grupo_id ),array('order'=>'id desc'));
+            'grupo_activo_id' => $grupo_activo_id ),array('order'=>'id desc'));
         if(!is_null($analisis_control)){
             return Utilities::ViewDateFormat($analisis_control->fecha);
         }else{
@@ -156,10 +156,10 @@ class Control extends CustomCActiveRecord
         }
     }
 
-    public function getValorControl($analisis_id,$grupo_id){
+    public function getValorControl($analisis_id,$grupo_activo_id){
         $analisis_control = AnalisisControl::model()->findByAttributes(array( 'control_id'=>$this->id,
             'analisis_id'=>$analisis_id,
-            'grupo_id'=>$grupo_id ),array('order'=>'id desc'));
+            'grupo_activo_id'=>$grupo_activo_id ),array('order'=>'id desc'));
         if(!is_null($analisis_control)){
             return $analisis_control->valor;
         }else{

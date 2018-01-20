@@ -121,10 +121,10 @@ class Vulnerabilidad extends CustomCActiveRecord
 		return parent::model($className);
 	}
 
-    public function getFechaValorVulnerabilidad($analisis_id,$grupo_id){
+    public function getFechaValorVulnerabilidad($analisis_id,$grupo_activo_id){
         $analisis_vulnerabilidad = AnalisisVulnerabilidad::model()->findByAttributes(array( 'vulnerabilidad_id' => $this->id,
-            'analisis_id' => $analisis_id,
-            'grupo_id' => $grupo_id ),array('order'=>'id desc'));
+                                                                            'analisis_id' => $analisis_id,
+                                                                            'grupo_activo_id' => $grupo_activo_id ),array('order'=>'id desc'));
         if(!is_null($analisis_vulnerabilidad)){
             return Utilities::ViewDateFormat($analisis_vulnerabilidad->fecha);
         }else{
@@ -132,10 +132,10 @@ class Vulnerabilidad extends CustomCActiveRecord
         }
     }
 
-    public function getValorVulnerabilidad($analisis_id,$grupo_id){
+    public function getValorVulnerabilidad($analisis_id,$grupo_activo_id){
         $analisis_vulnerabilidad = AnalisisVulnerabilidad::model()->findByAttributes(array( 'vulnerabilidad_id'=>$this->id,
                                                                                             'analisis_id'=>$analisis_id,
-                                                                                            'grupo_id'=>$grupo_id ),array('order'=>'id desc'));
+                                                                                            'grupo_activo_id'=>$grupo_activo_id ),array('order'=>'id desc'));
         if(!is_null($analisis_vulnerabilidad)){
             return $analisis_vulnerabilidad->valor;
         }else{
