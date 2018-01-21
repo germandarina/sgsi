@@ -1,36 +1,36 @@
 <?php
 
 /**
- * This is the model class for table "analisis_riesgo_detalle".
+ * This is the model class for table "nivel_de_riesgos".
  *
- * The followings are the available columns in table 'analisis_riesgo_detalle':
+ * The followings are the available columns in table 'nivel_de_riesgos':
  * @property integer $id
- * @property integer $analisis_riesgo_id
- * @property integer $grupo_activo_id
- * @property integer $valor_activo
- * @property integer $valor_integridad
- * @property integer $valor_disponibilidad
- * @property integer $valor_confidencialidad
- * @property integer $valor_trazabilidad
- * @property integer $nivel_riesgo_id
+ * @property integer $valor_minimo
+ * @property integer $valor_maximo
+ * @property integer $concepto
  * @property string $creaUserStamp
  * @property string $creaTimeStamp
  * @property string $modUserStamp
  * @property string $modTimeStamp
- *
- * The followings are the available model relations:
- * @property AnalisisRiesgo $analisisRiesgo
- * @property GrupoActivo $grupoActivo
- * @property NivelDeRiesgos $nivelRiesgo
  */
-class AnalisisRiesgoDetalle extends CustomCActiveRecord
+class NivelDeRiesgos extends CustomCActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
+	const CONCEPTO_ACEPTABLE = 1;
+    const CONCEPTO_ACEPTABLE_CON_PRECAUCION = 2;
+    const CONCEPTO_NO_ACEPTABLE = 3;
+
+    public static $arrayConceptos = [
+        self::CONCEPTO_ACEPTABLE => 'Aceptable',
+        self::CONCEPTO_ACEPTABLE_CON_PRECAUCION => 'Aceptable con Precaucion',
+        self::CONCEPTO_NO_ACEPTABLE => 'No Aceptable',
+    ];
+
 	public function tableName()
 	{
-		return 'analisis_riesgo_detalle';
+		return 'nivel_de_riesgos';
 	}
 
 	/**
@@ -41,12 +41,13 @@ class AnalisisRiesgoDetalle extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('analisis_riesgo_id, nivel_riesgo_id,grupo_activo_id, valor_activo, valor_integridad, valor_disponibilidad, valor_confidencialidad, valor_trazabilidad', 'numerical', 'integerOnly'=>true),
+			array('valor_minimo, valor_maximo, concepto', 'required'),
+			array('valor_minimo, valor_maximo, concepto', 'numerical', 'integerOnly'=>true),
 			array('creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('nivel_riesgo_id,id, analisis_riesgo_id, grupo_activo_id, valor_activo, valor_integridad, valor_disponibilidad, valor_confidencialidad, valor_trazabilidad, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('id, valor_minimo, valor_maximo, concepto, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,9 +59,6 @@ class AnalisisRiesgoDetalle extends CustomCActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'analisisRiesgo' => array(self::BELONGS_TO, 'AnalisisRiesgo', 'analisis_riesgo_id'),
-			'grupoActivo' => array(self::BELONGS_TO, 'GrupoActivo', 'grupo_activo_id'),
-            'nivelRiesgo' => array(self::BELONGS_TO,'NivelDeRiesgo','nivel_riesgo_id'),
 		);
 	}
 
@@ -71,13 +69,9 @@ class AnalisisRiesgoDetalle extends CustomCActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'analisis_riesgo_id' => 'Analisis Riesgo',
-			'grupo_activo_id' => 'Grupo Activo',
-			'valor_activo' => 'Valor Activo',
-			'valor_integridad' => 'Valor Integridad',
-			'valor_disponibilidad' => 'Valor Disponibilidad',
-			'valor_confidencialidad' => 'Valor Confidencialidad',
-			'valor_trazabilidad' => 'Valor Trazabilidad',
+			'valor_minimo' => 'Valor Minimo',
+			'valor_maximo' => 'Valor Maximo',
+			'concepto' => 'Concepto',
 			'creaUserStamp' => 'Crea User Stamp',
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
@@ -104,14 +98,9 @@ class AnalisisRiesgoDetalle extends CustomCActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('analisis_riesgo_id',$this->analisis_riesgo_id);
-        $criteria->compare('nivel_riesgo_id',$this->nivel_riesgo_id);
-        $criteria->compare('grupo_activo_id',$this->grupo_activo_id);
-		$criteria->compare('valor_activo',$this->valor_activo);
-		$criteria->compare('valor_integridad',$this->valor_integridad);
-		$criteria->compare('valor_disponibilidad',$this->valor_disponibilidad);
-		$criteria->compare('valor_confidencialidad',$this->valor_confidencialidad);
-		$criteria->compare('valor_trazabilidad',$this->valor_trazabilidad);
+		$criteria->compare('valor_minimo',$this->valor_minimo);
+		$criteria->compare('valor_maximo',$this->valor_maximo);
+		$criteria->compare('concepto',$this->concepto);
 		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
 		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
 		$criteria->compare('modUserStamp',$this->modUserStamp,true);
@@ -126,7 +115,7 @@ class AnalisisRiesgoDetalle extends CustomCActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return AnalisisRiesgoDetalle the static model class
+	 * @return NivelDeRiesgos the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

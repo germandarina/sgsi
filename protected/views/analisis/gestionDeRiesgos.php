@@ -3,6 +3,50 @@
         $("#valor_riesgo_aceptable").val(1);
         $("#modalRiesgoAceptable").modal('show');
     }
+    
+    function guardarRiesgoAceptable() {
+        var analisis_id = $("#analisis_id").val();
+        var riesgo_aceptable = $("#valor_riesgo_aceptable").val();
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo CController::createUrl('analisis/guardarRiesgoAceptable')?>",
+            data: {
+                'riesgo_aceptable': riesgo_aceptable,
+                'analisis_id': analisis_id
+            },
+            dataType: 'Text',
+            success: function (data) {
+                var datos = jQuery.parseJSON(data);
+                if(datos.error == 0){
+                    $("#modalRiesgoAceptable").modal('hide');
+                    Lobibox.notify('success',{msg: datos.msj});
+                }else{
+                    Lobibox.notify('error',{msg: datos.msj});
+                }
+                $.fn.yiiGridView.update('activos-grid');
+            }
+        });
+    }
+    function evaluarActivos() {
+        var analisis_id = $("#analisis_id").val();
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo CController::createUrl('analisis/evaluarActivos')?>",
+            data: {
+                'analisis_id': analisis_id
+            },
+            dataType: 'Text',
+            success: function (data) {
+                var datos = jQuery.parseJSON(data);
+                if(datos.error == 0){
+                    Lobibox.notify('success',{msg: datos.msj});
+                }else{
+                    Lobibox.notify('error',{msg: datos.msj});
+                }
+                $.fn.yiiGridView.update('activos-grid');
+            }
+        });
+    }
 </script>
 
 <div class="box-header">
@@ -55,6 +99,7 @@
             </div>
             <div class="modal-body" id="cuerpoDetalleCredito">
                 <div class="box-body">
+
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
@@ -68,7 +113,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" onclick="js:guardarAsociacion()" class="btn btn-success" id="botonModal">
+                <button type="button" onclick="js:guardarRiesgoAceptable()" class="btn btn-success" id="botonModal">
                     Guardar
                 </button>
                 <button type="button" data-dismiss="modal" class="btn btn-default">Cerrar</button>

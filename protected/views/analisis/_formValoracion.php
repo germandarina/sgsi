@@ -25,7 +25,7 @@
                             'minimumResultsForSearch' => 10,
                             'placeholder' => '--Seleccione--'
                         ],
-                        'htmlOptions' => ['onChange'=>'getActivos()'],
+//                        'htmlOptions' => ['onChange'=>'getActivos()'],
                     ],
                 ]
             );

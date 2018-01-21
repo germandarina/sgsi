@@ -33,7 +33,7 @@ class AnalisisController extends Controller
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update', 'admin','crearGrupoActivo','crearDependencia',
                                     'verValoracion','gridControles','guardarValorControl','getGrupoActivo','eliminarGrupoActivo',
-                                    'guardarValorAmenaza'),
+                                    'guardarValorAmenaza','guardarRiesgoAceptable','evaluarActivos'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -506,6 +506,80 @@ class AnalisisController extends Controller
                 die();
             }
 
+        }
+    }
+
+    public function actionGuardarRiesgoAceptable(){
+        if(isset($_POST['analisis_id'])){
+            try{
+                $analisis_riesgo = AnalisisRiesgo::model()->findByAttributes(array('analisis_id'=>$_POST['analisis_id']));
+                if(!is_null($analisis_riesgo)){
+                    $analisis_riesgo->riesgo_aceptable = $_POST['riesgo_aceptable'];
+                    if(!$analisis_riesgo->save()){
+                        throw new Exception("Error al cargar el valor de riesgo aceptable");
+                    }
+                }else{
+                    $analisis_riesgo = new AnalisisRiesgo();
+                    $analisis_riesgo->riesgo_aceptable = $_POST['riesgo_aceptable'];
+                    $analisis_riesgo->fecha = Date('Y-m-d');
+                    $analisis_riesgo->analisis_id = $_POST['analisis_id'];
+                    if(!$analisis_riesgo->save()){
+                        throw new Exception("Error al crear analisis de riesgo con riesgo aceptable");
+                    }
+                }
+                $datos = ['error'=>0,'msj'=>'Riesgo aceptable guardado con exito'];
+                echo CJSON::encode($datos);
+                die();
+            }catch (Exception $exception){
+                $datos = ['error'=>1,'msj'=>$exception->getMessage()];
+                echo CJSON::encode($datos);
+                die();
+            }
+
+        }
+    }
+
+    public function actionEvaluarActivos(){
+        $analisis_riesgo = AnalisisRiesgo::model()->findByAttributes(array('analisis_id'=>$_POST['analisis_id']));
+        if(is_null($analisis_riesgo)){
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $analisis_riesgo = new AnalisisRiesgo();
+                $analisis_riesgo->riesgo_aceptable = "";
+                $analisis_riesgo->fecha = Date('Y-m-d');
+                $analisis_riesgo->analisis_id = $_POST['analisis_id'];
+                if(!$analisis_riesgo->save()){
+                    throw new Exception("Error al crear analisis de riesgo");
+                }
+
+                $grupos_activos = GrupoActivo::model()->findAllByAttributes(array('analisis_id'=>$analisis_riesgo->analisis_id));
+                if(!empty($grupos_activos)){
+                    foreach ($grupos_activos as $ga){
+                        $analisis_riesgo_detalle = AnalisisRiesgoDetalle::model()->findByAttributes(array('analisis_riesgo_id'=>$analisis_riesgo->id
+                                                                                                            ,'grupo_activo_id'=>$ga->id));
+                        if(!empty($analisis_riesgo_detalle)){
+
+                        }else{
+                            $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(array('analisis_id'=>$_POST['analisis_id'],'grupo_activo_id'=>$ga->id),
+                                                                                            array('order'=>'id desc'));
+
+                            $analisis_riesgo_detalle = new AnalisisRiesgoDetalle();
+                            $analisis_riesgo_detalle->analisis_riesgo_id = $analisis_riesgo->id;
+                        }
+                    }
+                }else{
+                    throw new Exception("No existen activos cargados para este analisis");
+                }
+                $transaction->commit();
+                $datos = ['error'=>0,'msj'=>'Proceso Realizado con Exito'];
+                echo CJSON::encode($datos);
+                die();
+            }catch (Exception $exception){
+                $transaction->rollback();
+                $datos = ['error'=>1,'msj'=>$exception->getMessage()];
+                echo CJSON::encode($datos);
+                die();
+            }
         }
     }
 }
