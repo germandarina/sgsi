@@ -80,7 +80,7 @@
 			'class' => 'booster.widgets.TbRelationalColumn',
 			'name' => 'id',
 			'type'=>'raw',
-			'url' => $this->createUrl('analisis/gridControles',array('analisis_id'=>$analisis->id,'grupo_activo_id'=>$grupo_activo->id)),
+			'url' => $this->createUrl('analisis/gridControles',array('analisis_id'=>$analisis->id,'grupo_activo_id'=>$grupo_activo->id,'analisis_amenaza_id'=>$analisis_amenaza->id)),
 			'value' => '"<span class = \"fa fa-plus-square\"></span>"',
 			'filter'=>false,
 		)
@@ -97,15 +97,15 @@
         ),
         array( 'name'=>'fecha_valor_vulnerabilidad',
             'header'=>'Fecha Valoracion',
-            'value'=>function($data)use($analisis,$grupo_activo){
-                return $data->getFechaValorVulnerabilidad($analisis->id,$grupo_activo->id);
+            'value'=>function($data)use($analisis,$grupo_activo,$analisis_amenaza){
+                return $data->getFechaValorVulnerabilidad($analisis->id,$grupo_activo->id,$analisis_amenaza->id);
             },
             'filter'=>false,
         ),
         array( 'name'=>'valor_vulnerabilidad',
             'header'=>'Valor Vulnerabilidad',
-            'value'=>function($data)use($analisis,$grupo_activo){
-                return $data->getValorVulnerabilidad($analisis->id,$grupo_activo->id);
+            'value'=>function($data)use($analisis,$grupo_activo,$analisis_amenaza){
+                return $data->getValorVulnerabilidad($analisis->id,$grupo_activo->id,$analisis_amenaza->id);
             },
             'filter'=>false,
         ),

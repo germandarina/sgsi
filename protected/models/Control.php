@@ -26,6 +26,7 @@ class Control extends CustomCActiveRecord
     public $fecha_valor_control;
     public $valor_control;
     public $grupo_activo_id;
+    public $analisis_amenaza_id;
 
 	public function tableName()
 	{
@@ -145,10 +146,11 @@ class Control extends CustomCActiveRecord
 		return parent::model($className);
 	}
 
-    public function getFechaValorControl($analisis_id,$grupo_activo_id){
+    public function getFechaValorControl($analisis_id,$grupo_activo_id,$analisis_amenaza_id){
         $analisis_control = AnalisisControl::model()->findByAttributes(array('control_id' => $this->id,
-            'analisis_id' => $analisis_id,
-            'grupo_activo_id' => $grupo_activo_id ),array('order'=>'id desc'));
+                                                                            'analisis_id' => $analisis_id,
+                                                                            'grupo_activo_id' => $grupo_activo_id,
+                                                                            'analisis_amenaza_id'=>$analisis_amenaza_id ),array('order'=>'id desc'));
         if(!is_null($analisis_control)){
             return Utilities::ViewDateFormat($analisis_control->fecha);
         }else{
@@ -156,10 +158,11 @@ class Control extends CustomCActiveRecord
         }
     }
 
-    public function getValorControl($analisis_id,$grupo_activo_id){
+    public function getValorControl($analisis_id,$grupo_activo_id,$analisis_amenaza_id){
         $analisis_control = AnalisisControl::model()->findByAttributes(array( 'control_id'=>$this->id,
-            'analisis_id'=>$analisis_id,
-            'grupo_activo_id'=>$grupo_activo_id ),array('order'=>'id desc'));
+                                                                            'analisis_id'=>$analisis_id,
+                                                                            'grupo_activo_id'=>$grupo_activo_id,
+                                                                            'analisis_amenaza_id'=>$analisis_amenaza_id ),array('order'=>'id desc'));
         if(!is_null($analisis_control)){
             return $analisis_control->valor;
         }else{

@@ -121,10 +121,11 @@ class Vulnerabilidad extends CustomCActiveRecord
 		return parent::model($className);
 	}
 
-    public function getFechaValorVulnerabilidad($analisis_id,$grupo_activo_id){
+    public function getFechaValorVulnerabilidad($analisis_id,$grupo_activo_id,$analisis_amenaza_id){
         $analisis_vulnerabilidad = AnalisisVulnerabilidad::model()->findByAttributes(array( 'vulnerabilidad_id' => $this->id,
                                                                             'analisis_id' => $analisis_id,
-                                                                            'grupo_activo_id' => $grupo_activo_id ),array('order'=>'id desc'));
+                                                                            'grupo_activo_id' => $grupo_activo_id,
+                                                                            'analisis_amenaza_id'=>$analisis_amenaza_id),array('order'=>'id desc'));
         if(!is_null($analisis_vulnerabilidad)){
             return Utilities::ViewDateFormat($analisis_vulnerabilidad->fecha);
         }else{
@@ -132,14 +133,41 @@ class Vulnerabilidad extends CustomCActiveRecord
         }
     }
 
-    public function getValorVulnerabilidad($analisis_id,$grupo_activo_id){
+    public function getValorVulnerabilidad($analisis_id,$grupo_activo_id,$analisis_amenaza_id){
         $analisis_vulnerabilidad = AnalisisVulnerabilidad::model()->findByAttributes(array( 'vulnerabilidad_id'=>$this->id,
                                                                                             'analisis_id'=>$analisis_id,
-                                                                                            'grupo_activo_id'=>$grupo_activo_id ),array('order'=>'id desc'));
+                                                                                            'grupo_activo_id'=>$grupo_activo_id,
+                                                                                            'analisis_amenaza_id'=>$analisis_amenaza_id ),array('order'=>'id desc'));
         if(!is_null($analisis_vulnerabilidad)){
             return $analisis_vulnerabilidad->valor;
         }else{
             return "";
+        }
+    }
+
+    public function getMayorValorVulnerabilidad($analisis_id,$analisis_amenaza_id,$grupo_activo_id){
+        $queryDistinct ="select distinct(vulnerabilidad_id) as id
+                        from analisis_vulnerabilidad
+                        where analisis_id = ".$analisis_id."
+                        and analisis_amenaza_id = ".$analisis_amenaza_id."
+                        and grupo_activo_id = ".$grupo_activo_id."
+                       ";
+        $commmand = Yii::app()->db->createCommand($queryDistinct);
+        $resutados = $commmand->queryAll($queryDistinct);
+        if(!empty($resutados)){
+            $arrayValores = [];
+            foreach ($resutados as $resutado){
+               $av = AnalisisVulnerabilidad::model()->findByAttributes([ 'vulnerabilidad_id'=>$resutado['id'],
+                                                                         'analisis_id'=>$analisis_id,
+                                                                         'grupo_activo_id'=>$grupo_activo_id,
+                                                                         'analisis_amenaza_id'=>$analisis_amenaza_id],['order'=>'id desc']);
+                $arrayValores[] = $av->valor;
+            }
+
+            $mayor_valor = max($arrayValores);
+            return $mayor_valor;
+        }else{
+            return 0;
         }
     }
 }

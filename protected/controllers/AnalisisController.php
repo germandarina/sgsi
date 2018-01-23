@@ -383,9 +383,11 @@ class AnalisisController extends Controller
         $controles->grupo_activo_id = Yii::app()->getRequest()->getParam('grupo_activo_id');
         $analisis_id =  Yii::app()->getRequest()->getParam('analisis_id');
         $grupo_activo_id =  Yii::app()->getRequest()->getParam('grupo_activo_id');
+        $analisis_amenaza_id = Yii::app()->getRequest()->getParam('analisis_amenaza_id');
         $this->renderPartial('gridControles', array(
             'id' => Yii::app()->getRequest()->getParam('id'),
-            'controles' => $controles,'analisis_id'=>$analisis_id,'grupo_activo_id'=>$grupo_activo_id
+            'controles' => $controles,'analisis_id'=>$analisis_id,'grupo_activo_id'=>$grupo_activo_id,
+            'analisis_amenaza_id'=>$analisis_amenaza_id
         ));
     }
 
@@ -531,7 +533,10 @@ class AnalisisController extends Controller
         if(isset($_POST['amenaza_id'])){
             try{
                 $analisis = Analisis::model()->findByPk($_POST['analisis_id']);
-                $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(['analisis_id'=>$analisis->id,'amenaza_id'=>$_POST['amenaza_id']]);
+                $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(['analisis_id'=>$analisis->id,
+                                                                                'amenaza_id'=>$_POST['amenaza_id'],
+                                                                                'grupo_activo_id'=>$_POST['grupo_activo_id'],
+                                                                                'activo_id'=>$_POST['activo_id']]);
                 if(is_null($analisis_amenaza)){
                     $analisis_amenaza = new AnalisisAmenaza();
                 }
@@ -587,32 +592,65 @@ class AnalisisController extends Controller
     }
 
     public function actionEvaluarActivos(){
-        $analisis_riesgo = AnalisisRiesgo::model()->findByAttributes(array('analisis_id'=>$_POST['analisis_id']));
-        if(is_null($analisis_riesgo)){
+        if(isset($_POST['analisis_id'])){
             try{
                 $transaction = Yii::app()->db->beginTransaction();
-                $analisis_riesgo = new AnalisisRiesgo();
-                $analisis_riesgo->riesgo_aceptable = "";
-                $analisis_riesgo->fecha = Date('Y-m-d');
-                $analisis_riesgo->analisis_id = $_POST['analisis_id'];
-                if(!$analisis_riesgo->save()){
-                    throw new Exception("Error al crear analisis de riesgo");
+                $analisis_riesgo = AnalisisRiesgo::model()->findByAttributes(array('analisis_id'=>$_POST['analisis_id']));
+                if(is_null($analisis_riesgo)) {
+                    $analisis_riesgo = new AnalisisRiesgo();
+                    $analisis_riesgo->riesgo_aceptable = "";
+                    $analisis_riesgo->fecha = Date('Y-m-d');
+                    $analisis_riesgo->analisis_id = $_POST['analisis_id'];
+                    if(!$analisis_riesgo->save()){
+                        throw new Exception("Error al crear analisis de riesgo");
+                    }
                 }
 
                 $grupos_activos = GrupoActivo::model()->findAllByAttributes(array('analisis_id'=>$analisis_riesgo->analisis_id));
                 if(!empty($grupos_activos)){
                     foreach ($grupos_activos as $ga){
-                        $analisis_riesgo_detalle = AnalisisRiesgoDetalle::model()->findByAttributes(array('analisis_riesgo_id'=>$analisis_riesgo->id
-                                                                                                            ,'grupo_activo_id'=>$ga->id));
-                        if(!empty($analisis_riesgo_detalle)){
+                        $valor_activo = $ga->valor;
+                        $analisis_amenaza =  AnalisisAmenaza::model()->findByAttributes(array('analisis_id'=>$_POST['analisis_id'],
+                                                                                                'grupo_activo_id'=>$ga->id,
+                                                                                                'activo_id'=>$ga->activo_id ),
+                                                                                                array('order'=>'valor desc'));
+                        if(!is_null($analisis_amenaza)){
+                            $valor_amenaza = $analisis_amenaza->valor;
+                            $valor_vulnerabilidad = (int) Vulnerabilidad::model()->getMayorValorVulnerabilidad($_POST['analisis_id'],$analisis_amenaza->id,$ga->id);
 
-                        }else{
-                            $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(array('analisis_id'=>$_POST['analisis_id'],'grupo_activo_id'=>$ga->id),
-                                                                                            array('order'=>'id desc'));
 
-                            $analisis_riesgo_detalle = new AnalisisRiesgoDetalle();
-                            $analisis_riesgo_detalle->analisis_riesgo_id = $analisis_riesgo->id;
+                            $valor_riesgo_activo = $valor_activo * $valor_amenaza * $valor_vulnerabilidad;
+                            $analisis_riesgo_detalle = AnalisisRiesgoDetalle::model()->findByAttributes(array('analisis_riesgo_id'=>$analisis_riesgo->id
+                            ,'grupo_activo_id'=>$ga->id));
+                            if(!is_null($analisis_riesgo_detalle)){
+                                if($valor_riesgo_activo != $analisis_riesgo_detalle->valor_activo){
+                                    $analisis_riesgo_detalle->valor_activo = $valor_riesgo_activo;
+                                    $analisis_riesgo_detalle->valor_confidencialidad = $ga->confidencialidad * $valor_amenaza * $valor_vulnerabilidad;
+                                    $analisis_riesgo_detalle->valor_disponibilidad = $ga->disponibilidad * $valor_amenaza * $valor_vulnerabilidad;
+                                    $analisis_riesgo_detalle->valor_integridad =$ga->integridad * $valor_amenaza * $valor_vulnerabilidad;
+                                    $analisis_riesgo_detalle->valor_trazabilidad = $ga->trazabilidad * $valor_amenaza * $valor_vulnerabilidad;
+                                    $analisis_riesgo_detalle->nivel_riesgo_id = Activo::model()->getNivelDeRiesgo($valor_riesgo_activo);
+                                    if(!$analisis_riesgo_detalle->save()){
+                                        throw new Exception("Error al crear analisis de riesgo detalle");
+                                    }
+                                }
+                            }else{
+
+                                $analisis_riesgo_detalle = new AnalisisRiesgoDetalle();
+                                $analisis_riesgo_detalle->analisis_riesgo_id = $analisis_riesgo->id;
+                                $analisis_riesgo_detalle->grupo_activo_id = $ga->id;
+                                $analisis_riesgo_detalle->valor_activo = $valor_riesgo_activo;
+                                $analisis_riesgo_detalle->valor_confidencialidad = $ga->confidencialidad * $valor_amenaza * $valor_vulnerabilidad;
+                                $analisis_riesgo_detalle->valor_disponibilidad = $ga->disponibilidad * $valor_amenaza * $valor_vulnerabilidad;
+                                $analisis_riesgo_detalle->valor_integridad =$ga->integridad * $valor_amenaza * $valor_vulnerabilidad;
+                                $analisis_riesgo_detalle->valor_trazabilidad = $ga->trazabilidad * $valor_amenaza * $valor_vulnerabilidad;
+                                $analisis_riesgo_detalle->nivel_riesgo_id = Activo::model()->getNivelDeRiesgo($valor_riesgo_activo);
+                                if(!$analisis_riesgo_detalle->save()){
+                                    throw new Exception("Error al crear analisis de riesgo detalle");
+                                }
+                            }
                         }
+
                     }
                 }else{
                     throw new Exception("No existen activos cargados para este analisis");
@@ -628,5 +666,6 @@ class AnalisisController extends Controller
                 die();
             }
         }
+
     }
 }

@@ -180,8 +180,9 @@ class Amenaza extends CustomCActiveRecord
 
     public function getFechaValorAmenaza(){
         $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(array('amenaza_id' => $this->id,
-                                                                                'analisis_id' => $this->analisis_id,
-                                                                                'grupo_activo_id' => $this->grupo_activo_id ),array('order'=>'id desc'));
+                                                                            'analisis_id' => $this->analisis_id,
+                                                                            'grupo_activo_id' => $this->grupo_activo_id,
+                                                                            'activo_id'=>$this->activo_id),array('order'=>'id desc'));
         if(!is_null($analisis_amenaza)){
             return Utilities::ViewDateFormat($analisis_amenaza->fecha);
         }else{
@@ -190,9 +191,10 @@ class Amenaza extends CustomCActiveRecord
     }
 
     public function getValorAmenaza(){
-        $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(array( 'amenaza_id'=>$this->id,
-                                                                                'analisis_id'=>$this->analisis_id,
-                                                                                'grupo_activo_id'=>$this->grupo_activo_id ),array('order'=>'id desc'));
+        $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(array('amenaza_id'=>$this->id,
+                                                                             'analisis_id'=>$this->analisis_id,
+                                                                             'grupo_activo_id'=>$this->grupo_activo_id,
+                                                                             'activo_id'=>$this->activo_id),array('order'=>'id desc'));
         if(!is_null($analisis_amenaza)){
             return $analisis_amenaza->valor;
         }else{

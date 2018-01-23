@@ -34,15 +34,15 @@ $this->widget('booster.widgets.TbExtendedGridView', array(
 		),
 		array( 'name'=>'fecha_valor_control',
 			'header'=>'Fecha Valoracion',
-			'value'=>function($data)use($analisis_id,$grupo_activo_id){
-				return $data->getFechaValorControl($analisis_id,$grupo_activo_id);
+			'value'=>function($data)use($analisis_id,$grupo_activo_id,$analisis_amenaza_id){
+				return $data->getFechaValorControl($analisis_id,$grupo_activo_id,$analisis_amenaza_id);
 			},
 			'filter'=>false,
 		),
 		array( 'name'=>'valor_control',
 			'header'=>'Valor Control',
-			'value'=>function($data)use($analisis_id,$grupo_activo_id){
-				return $data->getValorControl($analisis_id,$grupo_activo_id);
+			'value'=>function($data)use($analisis_id,$grupo_activo_id,$analisis_amenaza_id){
+				return $data->getValorControl($analisis_id,$grupo_activo_id,$analisis_amenaza_id);
 			},
 			'filter'=>false,
 		),
