@@ -12,13 +12,15 @@
        var control_id = $("#control_id").val();
        var analisis_id = $("#analisis_id").val();
        var grupo_activo_id = $("#grupo_activo_id_hidden").val();
+	   var analisis_amenaza_id = $("#analisis_amenaza_id").val();
        $.ajax({
             type: 'POST',
             url: "<?php echo CController::createUrl('analisis/guardarValorControl')?>",
             data: { 'valor_control': valor_control,
                     'control_id': control_id,
                     'analisis_id': analisis_id,
-                    'grupo_activo_id':grupo_activo_id
+                    'grupo_activo_id':grupo_activo_id,
+					'analisis_amenaza_id':analisis_amenaza_id
                 },
             dataType: 'Text',
             success: function (data) {
@@ -119,7 +121,7 @@
 				<h4 class="modal-title" id="cabeceraModal">Nueva Valoracion</h4>
 			</div>
 			<div class="modal-body" id="cuerpoDetalleCredito">
-				<?php echo $this->renderPartial('_formValoracion', array('analisis'=>$analisis,'grupo_activo'=>$grupo_activo)); ?>
+				<?php echo $this->renderPartial('_formValoracion', array('analisis'=>$analisis,'grupo_activo'=>$grupo_activo,'analisis_amenaza'=>$analisis_amenaza)); ?>
 			</div>
 			<div class="modal-footer">
 				<button type="button" onclick="js:guardarValoracion()" class="btn btn-success" id="botonModal">

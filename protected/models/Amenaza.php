@@ -161,7 +161,7 @@ class Amenaza extends CustomCActiveRecord
                             left join grupo_activo  ga on ga.activo_id = a.id
                             left join grupo g on g.id = ga.grupo_id
                             ";
-        $criteria->group = " t.id, g.id";
+       // $criteria->group = " t.id, g.id";
         $criteria->order = " a.id asc ";
         return new CActiveDataProvider($this, array(
             'criteria'=>$criteria,'sort'=>false,'pagination'=>['pageSize'=>20]

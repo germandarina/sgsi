@@ -8,6 +8,7 @@
  * @property integer $analisis_id
  * @property integer $amenaza_id
  * @property integer $grupo_activo_id
+ * @property integer $activo_id
  * @property integer $valor
  * @property string $fecha
  * @property string $creaUserStamp
@@ -19,6 +20,7 @@
  * @property Analisis $analisis
  * @property Amenaza $amenaza
  * @property GrupoActivo $grupoActivo
+ * @property Activo $activo
  */
 class AnalisisAmenaza extends CustomCActiveRecord
 {
@@ -39,7 +41,7 @@ class AnalisisAmenaza extends CustomCActiveRecord
 		// will receive user inputs.
 		return array(
 			array('fecha', 'required'),
-			array('grupo_activo_id,analisis_id, amenaza_id, valor', 'numerical', 'integerOnly'=>true),
+			array('activo_id,grupo_activo_id,analisis_id, amenaza_id, valor', 'numerical', 'integerOnly'=>true),
 			array('fecha', 'length', 'max'=>200),
 			array('creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
@@ -60,6 +62,7 @@ class AnalisisAmenaza extends CustomCActiveRecord
 			'analisis' => array(self::BELONGS_TO, 'Analisis', 'analisis_id'),
 			'amenaza' => array(self::BELONGS_TO, 'Amenaza', 'amenaza_id'),
             'grupoActivo' => array(self::BELONGS_TO, 'GrupoActivo', 'grupo_activo_id'),
+            'activo' => array(self::BELONGS_TO, 'Activo', 'activo_id'),
 
         );
 	}
@@ -80,6 +83,7 @@ class AnalisisAmenaza extends CustomCActiveRecord
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
             'grupo_activo_id'=>'Grupo Activo ',
+            'activo_id'=>'Activo',
 		);
 	}
 

@@ -7,6 +7,7 @@
  * @property integer $id
  * @property integer $analisis_id
  * @property integer $vulnerabilidad_id
+ * @property integer $analisis_amenaza_id
  * @property integer $valor
  * @property string $fecha
  * @property string $creaUserStamp
@@ -19,6 +20,7 @@
  * @property Analisis $analisis
  * @property Vulnerabilidad $vulnerabilidad
  * @property GrupoActivo $grupoActivo
+ * @property AnalisisAmenaza $analisisAmenaza
 
  */
 class AnalisisVulnerabilidad extends CustomCActiveRecord
@@ -40,13 +42,13 @@ class AnalisisVulnerabilidad extends CustomCActiveRecord
 		// will receive user inputs.
 		return array(
 			array('fecha', 'required'),
-			array('grupo_activo_id,analisis_id, vulnerabilidad_id, valor', 'numerical', 'integerOnly'=>true),
+			array('analisis_amenaza_id,grupo_activo_id,analisis_id, vulnerabilidad_id, valor', 'numerical', 'integerOnly'=>true),
 			array('fecha', 'length', 'max'=>200),
 			array('creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('grupo_activo_id,id, analisis_id, vulnerabilidad_id, valor, fecha, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('analisis_amenaza_id,grupo_activo_id,id, analisis_id, vulnerabilidad_id, valor, fecha, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -61,6 +63,8 @@ class AnalisisVulnerabilidad extends CustomCActiveRecord
 			'analisis' => array(self::BELONGS_TO, 'Analisis', 'analisis_id'),
 			'vulnerabilidad' => array(self::BELONGS_TO, 'Vulnerabilidad', 'vulnerabilidad_id'),
             'grupoActivo' => array(self::BELONGS_TO, 'GrupoActivo', 'grupo_activo_id'),
+            'analisisAmenaza' => array(self::BELONGS_TO, 'AnalisisAmenaza', 'analisis_amenaza_id'),
+
         );
 	}
 
@@ -80,6 +84,7 @@ class AnalisisVulnerabilidad extends CustomCActiveRecord
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
             'grupo_activo_id'=>'GrupoActivo ',
+            'analisis_amenaza_id' => 'Analisis Amenaza',
         );
 	}
 

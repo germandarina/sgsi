@@ -10,6 +10,7 @@
     <input type="hidden" name="control_id" id="control_id">
     <input type="hidden" name="amenaza_id" id="amenaza_id">
     <input type="hidden" name="activo_id_hidden" id="activo_id_hidden">
+    <input type="hidden" name="analisis_amenaza_id" id="analisis_amenaza_id" value="<?= isset($analisis_amenaza)?$analisis_amenaza->id :"" ?>">
 
 
     <div class="row">

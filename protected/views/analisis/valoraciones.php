@@ -18,6 +18,7 @@
         var analisis_id = $("#analisis_id").val();
         var amenaza_id = $("#amenaza_id").val();
         var amenaza_valor = $("#Analisis_valor_form_valoracion").val();
+        var activo_id = $("#activo_id_hidden").val();
         $.ajax({
             type: 'POST',
             url: "<?php echo CController::createUrl('analisis/guardarValorAmenaza')?>",
@@ -25,7 +26,8 @@
                 'amenaza_valor': amenaza_valor,
                 'amenaza_id': amenaza_id,
                 'analisis_id': analisis_id,
-                'grupo_activo_id':grupo_activo_id
+                'grupo_activo_id':grupo_activo_id,
+                'activo_id':activo_id
             },
             dataType: 'Text',
             success: function (data) {
@@ -105,6 +107,7 @@ $this->widget('booster.widgets.TbExtendedGridView',array(
                                                                                      "grupo_activo_id"=>$data->grupo_activo_id,
                                                                                      "grupo_id"=>$data->grupo_id,"activo_id"=>$data->activo_id
                                                                                       ))',
+                    'visible'=>'$data->getValorAmenaza() != "" ? true : false ',
                 ),
             ),
             'htmlOptions' => array('style' => 'width:5%;text-align:center;')

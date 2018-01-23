@@ -43,6 +43,7 @@
 		'creaTimeStamp',
 	array(
 	'class'=>'booster.widgets.TbButtonColumn',
+		'template'=>'{update}{delete}'
 	),
 	),
 	)); ?>
