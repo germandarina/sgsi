@@ -41,7 +41,7 @@ class GrupoActivo extends CustomCActiveRecord
     public $valor_trazabilidad;
     public $nivel_riesgo_id;
     public $analisis_riesgo_id;
-
+    public $analisis_riesgo_detalle_id;
 
     const VALOR_ALTO = 3;
     const VALOR_MEDIO = 2;
@@ -149,7 +149,7 @@ class GrupoActivo extends CustomCActiveRecord
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria=new CDbCriteria;
-        $criteria->select = 't.activo_id, ard.* ';
+        $criteria->select = 't.activo_id, ard.*, ard.id as analisis_riesgo_detalle_id ';
         $criteria->join = " inner join analisis_riesgo_detalle ard  on ard.grupo_activo_id = t.id ";
 
         $criteria->compare('t.activo_id',$this->activo_id);

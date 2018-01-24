@@ -33,7 +33,7 @@ class AnalisisController extends Controller
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update', 'admin','crearGrupoActivo','crearDependencia',
                                     'verValoracion','gridControles','guardarValorControl','getGrupoActivo','eliminarGrupoActivo',
-                                    'guardarValorAmenaza','guardarRiesgoAceptable','evaluarActivos'),
+                                    'guardarValorAmenaza','guardarRiesgoAceptable','evaluarActivos','getActuacion','crearActualizarActuacion'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -669,5 +669,39 @@ class AnalisisController extends Controller
             }
         }
 
+    }
+
+    public function actionGetActuacion(){
+        if(isset($_POST['analisis_riesgo_detalle_id'])){
+            $actuacion = ActuacionRiesgo::model()->findByAttributes(['analisis_riesgo_detalle_id'=>$_POST['analisis_riesgo_detalle_id']]);
+            if(!is_null($actuacion)){
+                $datos = ['fecha'=>Utilities::ViewDateFormat($actuacion->fecha),'descripcion'=>$actuacion->descripcion];
+                echo CJSON::encode($datos);
+                die();
+            }
+            $datos = ['fecha'=>"",'descripcion'=>""];
+            echo CJSON::encode($datos);
+            die();
+        }
+    }
+
+    public function actionCrearActualizarActuacion(){
+        if(isset($_POST['analisis_riesgo_detalle_id'])){
+            $actuacion = ActuacionRiesgo::model()->findByAttributes(['analisis_riesgo_detalle_id'=>$_POST['analisis_riesgo_detalle_id']]);
+            if(is_null($actuacion)){
+                $actuacion = new ActuacionRiesgo();
+                $actuacion->analisis_riesgo_detalle_id = $_POST['analisis_riesgo_detalle_id'];
+            }
+            $actuacion->fecha = Utilities::MysqlDateFormat($_POST['fecha']);
+            $actuacion->descripcion = $_POST['descripcion'];
+            if(!$actuacion->save()){
+                $datos = ['error'=>1,'msj'=>'Error al crear/actualizar actuacion'];
+                echo CJSON::encode($datos);
+                die();
+            }
+            $datos = ['error'=>0,'msj'=>'Actuacion creada/actualizar con exito'];
+            echo CJSON::encode($datos);
+            die();
+        }
     }
 }

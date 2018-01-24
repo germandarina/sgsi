@@ -49,6 +49,52 @@
             }
         });
     }
+    
+    function getActuacion(event,analisis_riesgo_detalle_id) {
+        event.preventDefault();
+        $("#analisis_riesgo_detalle_id").val(analisis_riesgo_detalle_id);
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo CController::createUrl('analisis/getActuacion')?>",
+            data: {
+                'analisis_riesgo_detalle_id': analisis_riesgo_detalle_id
+            },
+            dataType: 'Text',
+            success: function (data) {
+                var datos = jQuery.parseJSON(data);
+                   $("#ActuacionRiesgo_fecha").val(datos.fecha);
+                   $("#ActuacionRiesgo_descripcion").val(datos.descripcion);
+
+
+                $("#modalActuacion").modal('show');
+            }
+        });
+    }
+    function crearActualizarActuacion() {
+       var fecha = $("#ActuacionRiesgo_fecha").val();
+       var descripcion = $("#ActuacionRiesgo_descripcion").val();
+       var analisis_riesgo_detalle_id = $("#analisis_riesgo_detalle_id").val();
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo CController::createUrl('analisis/crearActualizarActuacion')?>",
+            data: {
+                'analisis_riesgo_detalle_id': analisis_riesgo_detalle_id,
+                'fecha':fecha,
+                'descripcion':descripcion
+            },
+            dataType: 'Text',
+            success: function (data) {
+                var datos = jQuery.parseJSON(data);
+                if(datos.error == 0){
+                    Lobibox.notify('success',{msg: datos.msj});
+                }else{
+                    Lobibox.notify('error',{msg: datos.msj});
+                }
+                $("#modalActuacion").modal('hide');
+            }
+        });
+
+    }
 </script>
 
 <div class="box-header">
@@ -130,11 +176,9 @@
                 }
                 if($analisis_riesgo->riesgo_aceptable > $data->valor_activo){
                     return "<span class='label label-success' style='font-size: 12px;'><i class='fa fa-long-arrow-down' aria-hidden='true'></i></span>&nbsp;".$data->valor_activo;
-
                 }
                 if($analisis_riesgo->riesgo_aceptable == $data->valor_activo){
                     return "<span class='label label-success' style='font-size: 12px;'><i class='fa fa-exchange' aria-hidden='true'></i></span>&nbsp;".$data->valor_activo;
-
                 }
             }
         ),
@@ -158,6 +202,11 @@
             'header'=>'Valor Trazabilidad',
             'value'=>'$data->valor_trazabilidad',
         ),
+        [
+            'header' => 'Actuaciones',
+            'type' => 'raw',
+            'value' => '"<a onclick=\"getActuacion(event, $data->analisis_riesgo_detalle_id) \" title=\"Actuacion de Activo\" class=\"linkCredito\"><i class=\"fa fa-cogs \"></i></a>"',
+        ],
     ),
 )); ?>
 
@@ -170,7 +219,6 @@
             </div>
             <div class="modal-body" id="cuerpoDetalleCredito">
                 <div class="box-body">
-
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
@@ -192,6 +240,59 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalActuacion" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="cabeceraModal">Actuacion</h4>
+            </div>
+            <div class="modal-body" id="cuerpoDetalleCredito">
+                <div class="box-body">
+                    <?php $form=$this->beginWidget('booster.widgets.TbActiveForm',array(
+                        'id'=>'area-form',
+                        'enableAjaxValidation'=>false,
+                        'type' => 'horizontal'
+                    )); ?>
+
+                    <input type="hidden" id="analisis_riesgo_detalle_id">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <?php echo $form->datepickerGroup($actuacion, 'fecha', [
+                                    'widgetOptions' => [
+                                        'options' => [
+                                            'format' => 'dd/mm/yyyy',
+                                            'autoclose' => true,
+                                            'startDate' => ($actuacion->fecha),
+                                            'endDate' => ($actuacion->fecha),
+                                        ],
+                                       // 'htmlOptions' => ['readonly' => 'readonly']
+                                    ],
+                                    'wrapperHtmlOptions' => ['class' => 'col-sm-9 input-group-sm'],
+                                    'prepend' => '<i class="fa fa-calendar"></i>'
+                                ]); ?>
+                            </div>
+                            <div class="col-sm-12">
+                                <?php echo $form->labelEx($actuacion,'descripcion',array('class'=>'col-sm-3')); ?>
+                                <?php echo $form->textArea($actuacion,'descripcion',array('class'=>'col-sm-9','rows'=>6, 'cols'=>75)); ?>
+                            </div>
+                        </div>
+                    <?php $this->endWidget(); ?>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="js:crearActualizarActuacion()" class="btn btn-success" id="botonModal">
+                    Guardar
+                </button>
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 
 <div class="modal fade" id="modalProcesando" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
