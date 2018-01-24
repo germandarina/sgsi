@@ -34,6 +34,13 @@ class GrupoActivo extends CustomCActiveRecord
     public $amenaza_id;
     public $fecha_valor_amenaza;
     public $valor_amenaza;
+    public $valor_activo;
+    public $valor_integridad;
+    public $valor_confidencialidad;
+    public $valor_disponibilidad;
+    public $valor_trazabilidad;
+    public $nivel_riesgo_id;
+    public $analisis_riesgo_id;
 
 
     const VALOR_ALTO = 3;
@@ -136,6 +143,29 @@ class GrupoActivo extends CustomCActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+    public function searchGestionRiesgos()
+    {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria=new CDbCriteria;
+        $criteria->select = 't.activo_id, ard.* ';
+        $criteria->join = " inner join analisis_riesgo_detalle ard  on ard.grupo_activo_id = t.id ";
+
+        $criteria->compare('t.activo_id',$this->activo_id);
+//        $criteria->compare('t.grupo_id',$this->grupo_id);
+//        $criteria->compare('t.analisis_id',$this->analisis_id);
+//        $criteria->compare('t.confidencialidad',$this->confidencialidad);
+//        $criteria->compare('t.integridad',$this->integridad);
+//        $criteria->compare('t.disponibilidad',$this->disponibilidad);
+//        $criteria->compare('t.trazabilidad',$this->trazabilidad);
+//        $criteria->order = " g.id, g.tipo_activo_id ";
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,'sort'=>false,'pagination'=>['pageSize'=>20]
+        ));
+    }
+
+
 
 	public function searchValoraciones(){
 

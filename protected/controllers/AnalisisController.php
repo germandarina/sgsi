@@ -362,8 +362,10 @@ class AnalisisController extends Controller
         $grupo_activo = GrupoActivo::model()->findByPk($grupo_activo_id);
         $grupo = Grupo::model()->findByPk($grupo_id);
         $activo = Activo::model()->findByPk($activo_id);
-        $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(['amenaza_id'=>$id,'analisis_id'=>$analisis_id,
-                                                                       'grupo_activo_id'=>$grupo_activo_id,'activo_id'=>$activo_id]);
+        $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(['amenaza_id'=>$id,
+                                                                        'analisis_id'=>$analisis_id,
+                                                                        'grupo_activo_id'=>$grupo_activo_id,
+                                                                        'activo_id'=>$activo_id]);
         if (isset($_GET['Vulnerabilidad']))
             $vulnerabilidad->attributes = $_GET['Vulnerabilidad'];
 
@@ -616,12 +618,12 @@ class AnalisisController extends Controller
                                                                                                 array('order'=>'valor desc'));
                         if(!is_null($analisis_amenaza)){
                             $valor_amenaza = $analisis_amenaza->valor;
-                            $valor_vulnerabilidad = (int) Vulnerabilidad::model()->getMayorValorVulnerabilidad($_POST['analisis_id'],$analisis_amenaza->id,$ga->id);
+                            $valor_vulnerabilidad = (int) Vulnerabilidad::model()->getMayorValorVulnerabilidad($_POST['analisis_id'],$ga->id);
 
 
                             $valor_riesgo_activo = $valor_activo * $valor_amenaza * $valor_vulnerabilidad;
                             $analisis_riesgo_detalle = AnalisisRiesgoDetalle::model()->findByAttributes(array('analisis_riesgo_id'=>$analisis_riesgo->id
-                            ,'grupo_activo_id'=>$ga->id));
+                                                                                                                ,'grupo_activo_id'=>$ga->id));
                             if(!is_null($analisis_riesgo_detalle)){
                                 if($valor_riesgo_activo != $analisis_riesgo_detalle->valor_activo){
                                     $analisis_riesgo_detalle->valor_activo = $valor_riesgo_activo;

@@ -145,11 +145,10 @@ class Vulnerabilidad extends CustomCActiveRecord
         }
     }
 
-    public function getMayorValorVulnerabilidad($analisis_id,$analisis_amenaza_id,$grupo_activo_id){
+    public function getMayorValorVulnerabilidad($analisis_id,$grupo_activo_id){
         $queryDistinct ="select distinct(vulnerabilidad_id) as id
                         from analisis_vulnerabilidad
                         where analisis_id = ".$analisis_id."
-                        and analisis_amenaza_id = ".$analisis_amenaza_id."
                         and grupo_activo_id = ".$grupo_activo_id."
                        ";
         $commmand = Yii::app()->db->createCommand($queryDistinct);
@@ -160,7 +159,7 @@ class Vulnerabilidad extends CustomCActiveRecord
                $av = AnalisisVulnerabilidad::model()->findByAttributes([ 'vulnerabilidad_id'=>$resutado['id'],
                                                                          'analisis_id'=>$analisis_id,
                                                                          'grupo_activo_id'=>$grupo_activo_id,
-                                                                         'analisis_amenaza_id'=>$analisis_amenaza_id],['order'=>'id desc']);
+                                                                         ],['order'=>'id desc']);
                 $arrayValores[] = $av->valor;
             }
 
