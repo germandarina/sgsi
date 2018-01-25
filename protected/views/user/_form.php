@@ -39,36 +39,41 @@
     <div class="row">
         <div class="col-sm-6">
             <?php
-            if (!$model->isNewRecord)
-                $value = array_keys(Yii::app()->authManager->getAuthAssignments($model->id));
-            else
-                $value = array();
+            if(!Yii::app()->user->model->isGerencial()){
+                if (!$model->isNewRecord)
+                    $value = array_keys(Yii::app()->authManager->getAuthAssignments($model->id));
+                else
+                    $value = array();
 
-            $model->perfil = $value;
-            ?>
-            <?php echo $form->select2Group(
-                $model,
-                'perfil',
-                array(
-                    'wrapperHtmlOptions' => array(
-                        'class' => 'col-sm-9 input-group-sm',
-                    ),
-                    'widgetOptions' => array(
-                        'asDropDownList' => true,
-                        'data' => $perfiles,
-                        'htmlOptions' => [
-                            'multiple' => 'multiple',
-                            'onchange' => 'verificarPerfil()',
-                            'id' => 'perfiles',
-                            'value' => 'Administrador'
-                        ],
-                        'options' => [
-                            'minimumResultsForSearch' => 10,
-                            'placeholder' => '--Seleccione--',
-                        ],
-                    ),
-                )
-            );
+                $model->perfil = $value;
+                ?>
+                <?php echo $form->select2Group(
+                    $model,
+                    'perfil',
+                    array(
+                        'wrapperHtmlOptions' => array(
+                            'class' => 'col-sm-9 input-group-sm',
+                        ),
+                        'widgetOptions' => array(
+                            'asDropDownList' => true,
+                            'data' => $perfiles,
+                            'htmlOptions' => [
+                                'multiple' => 'multiple',
+                                'onchange' => 'verificarPerfil()',
+                                'id' => 'perfiles',
+                                'value' => 'Administrador'
+                            ],
+                            'options' => [
+                                'minimumResultsForSearch' => 10,
+                                'placeholder' => '--Seleccione--',
+                            ],
+                        ),
+                    )
+                );
+
+            }else{
+              echo  '<input type="hidden" name="User[perfil][]" id="User_perfil" value="'.$perfilAuditor.'">';
+            }
             ?>
         </div>
     </div>

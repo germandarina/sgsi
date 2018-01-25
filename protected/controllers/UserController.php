@@ -89,8 +89,12 @@ class UserController extends Controller
     {
         $model = new User;
         $perfiles = array();
+        $perfilAuditor = "";
         foreach (Yii::app()->authManager->roles as $nombrePerfil => $perfil) {
             $perfiles[$nombrePerfil] = $nombrePerfil;
+            if($perfil->name == 'auditor'){
+                $perfilAuditor = $perfil->name;
+            }
         }
 
         if (isset($_POST['User'])) {
@@ -105,7 +109,7 @@ class UserController extends Controller
             }
         }
         $this->render('create', array(
-            'model' => $model, "perfiles" => $perfiles
+            'model' => $model, "perfiles" => $perfiles,'perfilAuditor'=>$perfilAuditor
         ));
     }
 

@@ -12,5 +12,5 @@ $this->widget(
 		<h3>Crear Usuario</h3>
 	</div>
 
-	<?php echo $this->renderPartial('_form', array('model'=>$model, "perfiles" => $perfiles)); ?>
+	<?php echo $this->renderPartial('_form', array('model'=>$model, "perfiles" => $perfiles,'perfilAuditor'=>$perfilAuditor)); ?>
 </div>

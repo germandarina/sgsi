@@ -123,7 +123,6 @@ class ProyectoController extends Controller
             try{
                 $transaction = Yii::app()->db->beginTransaction();
                 $model->attributes = $_POST['Proyecto'];
-                $model->attributes = $_POST['Proyecto'];
                 if(empty($model->fecha)){
                     $model->addError('fecha','Debe seleccionar una fecha');
                     throw new Exception("Debe seleccionar una fecha");
@@ -137,7 +136,7 @@ class ProyectoController extends Controller
                     throw new Exception("Error al actualizar proyecto");
                 }
                 foreach ($areasProyecto as $relacion){
-                    if(!$relacion->save()){
+                    if(!$relacion->delete()){
                         throw new Exception("Error al eliminar relacion area proyecto");
                     }
                 }
@@ -150,7 +149,7 @@ class ProyectoController extends Controller
                     }
                 }
                 $transaction->commit();
-                Yii::app()->user->setNotification('error','Proyecto actualizado con exito');
+                Yii::app()->user->setNotification('success','Proyecto actualizado con exito');
                 $this->redirect(array('admin'));
             }catch (Exception $exception){
                 $transaction->rollBack();

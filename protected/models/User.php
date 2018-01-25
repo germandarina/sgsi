@@ -246,6 +246,15 @@ class User extends CActiveRecord
         return $isAdmin;
     }
 
+    public function isGerencial(){
+        $isAdmin = false;
+        $rolesUsuario = array_keys(Yii::app()->authManager->getAuthAssignments($this->id));
+
+        if (in_array('gerencial', $rolesUsuario))
+            $isAdmin = true;
+
+        return $isAdmin;
+    }
 
     public function jornadaLaboralValida()
     {
@@ -304,5 +313,15 @@ class User extends CActiveRecord
         $seconds = $interval->h*3600 + $interval->s;
 
         return $seconds;
+    }
+
+    public static function getUsuariosAuditores(){
+          $query = " select u.*
+                        from usuario u
+                        inner join AuthAssignment aa on aa.userid = u.id
+                        where aa.itemname = 'auditor'";
+          $command = Yii::app()->db->createCommand($query);
+          $usuarios = $command->queryAll($query);
+          return $usuarios;
     }
 }

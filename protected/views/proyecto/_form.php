@@ -61,6 +61,27 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-sm-6">
+            <?php echo $form->select2Group(
+                $model, 'usuario_id',
+                [
+                    'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                    'widgetOptions' => [
+                        'asDropDownList' => true,
+                        'data' => CHtml::listData(User::model()->getUsuariosAuditores(), 'id', 'username'),
+                        'options' => [
+                            'minimumResultsForSearch' => 10,
+                            'placeholder' => '--Seleccione--'
+                        ],
+                      //  'htmlOptions' => ['multiple'=>'multiple'],
+                    ],
+                ]
+            );
+            ?>
+        </div>
+    </div>
+
 
     <div class="box-footer">
         <?php $this->widget('booster.widgets.TbButton', array(

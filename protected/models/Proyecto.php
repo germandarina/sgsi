@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table 'proyecto':
  * @property integer $id
+ * @property integer usuario_id
  * @property string $nombre
  * @property string $descripcion
  * @property string $fecha
@@ -19,6 +20,7 @@ class Proyecto extends CustomCActiveRecord
 	 * @return string the associated database table name
 	 */
 	public $areas = array();
+
 	public function tableName()
 	{
 		return 'proyecto';
@@ -35,10 +37,10 @@ class Proyecto extends CustomCActiveRecord
 			array('nombre, descripcion,areas ,fecha', 'required'),
 			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('descripcion', 'length', 'max'=>200),
-			array('creaTimeStamp, modTimeStamp', 'safe'),
+			array('usuario_id,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('areas,id, nombre, descripcion, fecha, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('usuario_id,areas,id, nombre, descripcion, fecha, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -50,7 +52,8 @@ class Proyecto extends CustomCActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-		);
+            'usuario' => array(self::BELONGS_TO, 'User', 'usuario_id'),
+        );
 	}
 
 	/**
@@ -67,6 +70,7 @@ class Proyecto extends CustomCActiveRecord
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
+            'usuario_id'=>'Usuario',
 		);
 	}
 
@@ -87,7 +91,6 @@ class Proyecto extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
 		$criteria->compare('id',$this->id);
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('descripcion',$this->descripcion,true);
@@ -96,8 +99,9 @@ class Proyecto extends CustomCActiveRecord
 		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
 		$criteria->compare('modUserStamp',$this->modUserStamp,true);
 		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
+        $criteria->compare('usuario_id',$this->usuario_id,true);
 
-		return new CActiveDataProvider($this, array(
+        return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
@@ -112,4 +116,18 @@ class Proyecto extends CustomCActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	public function getAreas(){
+        $areas_proyectos = AreaProyecto::model()->findAllByAttributes(['proyecto_id'=>$this->id]);
+        if(!empty($areas_proyectos)){
+            $stringAreas = "";
+            foreach ($areas_proyectos as $ap){
+                $area = $ap->area;
+                $stringAreas .= $area->nombre.' / ';
+            }
+            return trim($stringAreas, ' / ');
+        }else{
+            return "";
+        }
+    }
 }
