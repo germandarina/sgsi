@@ -122,6 +122,7 @@
     'id'=>'activos-grid',
     'fixedHeader' => false,
     'headerOffset' => 10,
+   // 'rowCssClassExpression'=>'$data->getClaseNivelDeRiesgo()',
     // 40px is the height of the main navigation at bootstrap
     'type' => 'striped hover condensed',
     'dataProvider' => $grupo_activo->searchGestionRiesgos(),
@@ -149,17 +150,8 @@
             'header'=>'Nivel de Riesgo',
             'value'=>function($data){
                 if(!is_null($data->nivel_riesgo_id)){
-                        switch ($data->nivel_riesgo_id){
-                            case NivelDeRiesgos::CONCEPTO_ACEPTABLE:
-                                return "<span class='label label-success'>".NivelDeRiesgos::$arrayConceptos[$data->nivel_riesgo_id]."</span>";
-                                break;
-                            case NivelDeRiesgos::CONCEPTO_ACEPTABLE_CON_PRECAUCION:
-                                return "<span class='label label-warning' style='font-size: 12px;'>".NivelDeRiesgos::$arrayConceptos[$data->nivel_riesgo_id]."</span>";
-                                break;
-                            case NivelDeRiesgos::CONCEPTO_NO_ACEPTABLE:
-                                return "<span class='label label-danger' style='font-size: 12px;'>".NivelDeRiesgos::$arrayConceptos[$data->nivel_riesgo_id]."</span>";
-                                break;
-                        }
+                    $label = $data->getClaseNivelDeRiesgo();
+                    return "<span class='".$label."' style='font-size: 12px;' >".NivelDeRiesgos::$arrayConceptos[$data->nivel_riesgo_id]."</span>";
                 }else{
                     return "";
                 }
@@ -170,37 +162,84 @@
             'name'=>'valor_activo',
             'header'=>'Valor Activo',
             'value'=>function($data){
-                $analisis_riesgo = AnalisisRiesgo::model()->findByPk($data->analisis_riesgo_id);
-                if($analisis_riesgo->riesgo_aceptable < $data->valor_activo){
-                    return "<span class='label label-success' style='font-size: 12px;'><i class='fa fa-long-arrow-up' aria-hidden='true'></i></span>&nbsp;".$data->valor_activo;
+                if($data->valor_activo != 0 && !is_null($data->valor_activo)){
+                    $labelFlecha = $data->getClaseFlechaRiesgoAceptable();
+                    $label = $data->getClaseNivelDeRiesgo();
+                    return "<i class='".$labelFlecha."' style='color:green' aria-hidden='true'></i>&nbsp;"."<span class='".$label."' style='font-size: 12px;' >".$data->valor_activo."</span>";
+                }else{
+                    return "";
                 }
-                if($analisis_riesgo->riesgo_aceptable > $data->valor_activo){
-                    return "<span class='label label-success' style='font-size: 12px;'><i class='fa fa-long-arrow-down' aria-hidden='true'></i></span>&nbsp;".$data->valor_activo;
-                }
-                if($analisis_riesgo->riesgo_aceptable == $data->valor_activo){
-                    return "<span class='label label-success' style='font-size: 12px;'><i class='fa fa-exchange' aria-hidden='true'></i></span>&nbsp;".$data->valor_activo;
-                }
+
+//                $analisis_riesgo = AnalisisRiesgo::model()->findByPk($data->analisis_riesgo_id);
+//                if($analisis_riesgo->riesgo_aceptable < $data->valor_activo){
+//                }
+//                if($analisis_riesgo->riesgo_aceptable > $data->valor_activo){
+//                    return "<i class='".$label."' style='color:green' aria-hidden='true'></i>&nbsp;".$data->valor_activo;
+//                }
+//                if($analisis_riesgo->riesgo_aceptable == $data->valor_activo){
+//                    return "<i class='".$label."' style='color:green' aria-hidden='true'></i>&nbsp;".$data->valor_activo;
+//                }
             }
         ),
         array(
+            'type'=>'raw',
             'name'=>'valor_confidencialidad',
             'header'=>'Valor Confidencialidad',
-            'value'=>'$data->valor_confidencialidad',
+            'value'=>function($data){
+                if($data->valor_confidencialidad != 0 && !is_null($data->valor_confidencialidad)){
+                    $labelFlecha = $data->getClaseFlechaRiesgoAceptable();
+                    $label = $data->getClaseNivelDeValores($data->valor_confidencialidad);
+                    return "<i class='".$labelFlecha."' style='color:green' aria-hidden='true'></i>&nbsp;"."<span class='".$label."' style='font-size: 12px;' >".$data->valor_confidencialidad."</span>";
+
+                }else{
+                    return "";
+                }
+            },
         ),
         array(
+            'type'=>'raw',
             'name'=>'valor_integridad',
             'header'=>'Valor Integridad',
-            'value'=>'$data->valor_integridad',
+            'value'=>function($data){
+                if($data->valor_integridad != 0 && !is_null($data->valor_integridad)){
+                    $labelFlecha = $data->getClaseFlechaRiesgoAceptable();
+                    $label = $data->getClaseNivelDeValores($data->valor_integridad);
+                    return "<i class='".$labelFlecha."' style='color:green' aria-hidden='true'></i>&nbsp;"."<span class='".$label."' style='font-size: 12px;' >".$data->valor_integridad."</span>";
+
+                }else{
+                    return "";
+                }
+            },
         ),
         array(
+            'type'=>'raw',
             'name'=>'activo_disponibilidad',
             'header'=>'Valor Disponibilidad',
-            'value'=>'$data->valor_disponibilidad',
+            'value'=>function($data){
+                if($data->valor_disponibilidad != 0 && !is_null($data->valor_disponibilidad)){
+                    $labelFlecha = $data->getClaseFlechaRiesgoAceptable();
+                    $label = $data->getClaseNivelDeValores($data->valor_disponibilidad);
+                    return "<i class='".$labelFlecha."' style='color:green' aria-hidden='true'></i>&nbsp;"."<span class='".$label."' style='font-size: 12px;' >".$data->valor_disponibilidad."</span>";
+
+                }else{
+                    return "";
+                }
+            },
         ),
         array(
+            'type'=>'raw',
             'name'=>'valor_trazabilidad',
             'header'=>'Valor Trazabilidad',
-            'value'=>'$data->valor_trazabilidad',
+            'value'=>function($data){
+                if($data->valor_trazabilidad != 0 && !is_null($data->valor_trazabilidad)){
+                    $labelFlecha = $data->getClaseFlechaRiesgoAceptable();
+                    $label = $data->getClaseNivelDeValores($data->valor_trazabilidad);
+                    return "<i class='".$labelFlecha."' style='color:green' aria-hidden='true'></i>&nbsp;"."<span class='".$label."' style='font-size: 12px;' >".$data->valor_trazabilidad."</span>";
+
+                }else{
+                    return "";
+                }
+            },
         ),
         [
             'header' => 'Actuaciones',

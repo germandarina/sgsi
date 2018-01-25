@@ -233,4 +233,38 @@ class GrupoActivo extends CustomCActiveRecord
             return "";
         }
     }
+
+    public function getClaseFlechaRiesgoAceptable(){
+
+        $analisis_riesgo = AnalisisRiesgo::model()->findByPk($this->analisis_riesgo_id);
+        if($analisis_riesgo->riesgo_aceptable < $this->valor_activo){
+            return 'fa fa-long-arrow-up ';
+        }
+        if($analisis_riesgo->riesgo_aceptable > $this->valor_activo){
+            return 'fa fa-long-arrow-down ';
+        }
+        if($analisis_riesgo->riesgo_aceptable == $this->valor_activo){
+            return 'fa fa-exchange ';
+        }
+    }
+
+    public function getClaseNivelDeRiesgo(){
+        switch ($this->nivel_riesgo_id){
+            case NivelDeRiesgos::CONCEPTO_ACEPTABLE:
+                return  'label label-success';
+                break;
+            case NivelDeRiesgos::CONCEPTO_ACEPTABLE_CON_PRECAUCION:
+                return 'label label-warning';
+                break;
+            case NivelDeRiesgos::CONCEPTO_NO_ACEPTABLE:
+                return 'label label-danger';
+                break;
+        }
+    }
+
+    public function getClaseNivelDeValores($valor){
+       $nivel_riesgo_id = Activo::model()->getNivelDeRiesgo($valor);
+       $this->nivel_riesgo_id = $nivel_riesgo_id;
+       return $this->getClaseNivelDeRiesgo();
+    }
 }
