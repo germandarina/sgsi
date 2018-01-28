@@ -139,10 +139,14 @@ class AnalisisController extends Controller
     public function actionDelete($id)
     {
         if (Yii::app()->request->isPostRequest) {
-// we only allow deletion via POST request
+            $grupo_activo = GrupoActivo::model()->findByAttributes(['analisis_id'=>$id]);
+            if(!is_null($grupo_activo)){
+                $model = $this->loadModel($id);
+                $model->addError($this->id,'Este analisis ya posee las asociaciones realizadas');
+                throw new Exception("Error al eliminar analisis");
+            }
             $this->loadModel($id)->delete();
 
-// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
             if (!isset($_GET['ajax']))
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
         } else

@@ -62,7 +62,8 @@ class NivelDeRiesgos extends CustomCActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-		);
+            'proyecto' => array(self::BELONGS_TO, 'Proyecto', 'proyecto_id'),
+        );
 	}
 
 	/**
