@@ -31,7 +31,7 @@ class ProyectoController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin'),
+                'actions' => array('create', 'update', 'admin','asignarProyecto', 'delete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -232,6 +232,21 @@ class ProyectoController extends Controller
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'proyecto-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
+        }
+    }
+
+    public function actionAsignarProyecto(){
+        if(isset($_POST['proyecto_id'])){
+            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+            $usuario->ultimo_proyecto_id = $_POST['proyecto_id'];
+            if(!$usuario->save()){
+                $datos =['error'=>1,'msj'=>'error al asignar proyecto.'];
+                echo CJSON::encode($datos);
+                die();
+            }
+            $datos =['error'=>0,'msj'=>'proyecto asignado con exito.'];
+            echo CJSON::encode($datos);
+            die();
         }
     }
 }

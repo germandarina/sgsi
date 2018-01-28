@@ -17,6 +17,7 @@
  * @property integer $diaDesde
  * @property integer $diaHasta
  * @property integer $estado
+ * @property integer $ultimo_proyecto_id
  * @property integer $ultimoLoginSucursalId
  * The followings are the available model relations:
  * @property AclSucursal $sucursal
@@ -55,7 +56,7 @@ class User extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('diaDesde, diaHasta, ultimoLoginSucursalId', 'numerical', 'integerOnly' => true),
+            array('ultimo_proyecto_id,diaDesde, diaHasta, ultimoLoginSucursalId', 'numerical', 'integerOnly' => true),
             array('username,password,sucursalId', 'required'),
             array('username', 'unique'),
             array('username, creaUserStamp, modUserStamp', 'length', 'max' => 50),
@@ -72,7 +73,7 @@ class User extends CActiveRecord
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('diaDesde', 'compare', 'compareAttribute' => 'diaHasta', 'operator' => '<', 'message' => 'Dia desde debe ser menor que el dia Hasta.', 'on' => 'jornadaLaboral'),
-            array('id, username, password, sucursalId, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp
+            array('ultimo_proyecto_id,id, username, password, sucursalId, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp
 				,horaDesde,horaHasta,diaDesde, diaHasta, estado', 'safe', 'on' => 'search'),
         );
     }
@@ -251,6 +252,16 @@ class User extends CActiveRecord
         $rolesUsuario = array_keys(Yii::app()->authManager->getAuthAssignments($this->id));
 
         if (in_array('gerencial', $rolesUsuario))
+            $isAdmin = true;
+
+        return $isAdmin;
+    }
+
+    public function isAuditor(){
+        $isAdmin = false;
+        $rolesUsuario = array_keys(Yii::app()->authManager->getAuthAssignments($this->id));
+
+        if (in_array('auditor', $rolesUsuario))
             $isAdmin = true;
 
         return $isAdmin;

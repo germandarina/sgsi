@@ -1,34 +1,14 @@
 <ul class="nav navbar-nav">
     <!-- Messages: style can be found in dropdown.less-->
-    <li class="dropdown messages-menu" style="display:none;">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-envelope-o"></i>
-            <span class="label label-success">4</span>
-        </a>
-        <ul class="dropdown-menu">
-            <li class="header">You have 4 messages</li>
-            <li>
-                <!-- inner menu: contains the actual data -->
-                <ul class="menu">
-                    <li><!-- start message -->
-                        <a href="#">
-                            <div class="pull-left">
-                                <img src="<?= $themeUrl ?>/img/user2-160x160.jpg" class="img-circle"
-                                     alt="User Image"/>
-                            </div>
-                            <h4>
-                                Support Team
-                                <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                            </h4>
-                            <p>Why not buy a new awesome theme?</p>
-                        </a>
-                    </li>
-                    <!-- end message -->
-                </ul>
-            </li>
-            <li class="footer"><a href="#">See All Messages</a></li>
-        </ul>
+    <?php if(Yii::app()->user->model->isAuditor()){?>
+    <?php   $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+            $proyecto = Proyecto::model()->findByPk($usuario->ultimo_proyecto_id); ?>
+    <li class="dropdown messages-menu" style="float: left;">
+        <?php if(!is_null($proyecto)) {?>
+            <h5 style="color: white; margin-right: 10%;">Proyecto seleccionado: <?= $proyecto->nombre; ?></h5>
+        <?php } ?>
     </li>
+    <?php }?>
     <!-- Notifications: style can be found in dropdown.less -->
     <li class="dropdown notifications-menu" style="display:none;">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">

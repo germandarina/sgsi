@@ -14,10 +14,12 @@
  * @property string $modUserStamp
  * @property string $modTimeStamp
  * @property integer $cantidad
+ * @property integer $proyecto_id
  * @property string $ubicacion
  * The followings are the available model relations:
  * @property Personal $personal
  * @property TipoActivo $tipoActivo
+ * @property Proyecto $proyecto
  * @property ActivoArea[] $activoAreas
  * @property GrupoActivo[] $grupoActivos
  */
@@ -41,13 +43,13 @@ class Activo extends CustomCActiveRecord
 		// will receive user inputs.
 		return array(
 			array('cantidad,areas,nombre, descripcion, tipo_activo_id, personal_id', 'required'),
-			array('tipo_activo_id, personal_id', 'numerical', 'integerOnly'=>true),
+			array('proyecto_id,tipo_activo_id, personal_id', 'numerical', 'integerOnly'=>true),
 			array('ubicacion,nombre, creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('descripcion', 'length', 'max'=>200),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, nombre, descripcion, tipo_activo_id, personal_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('proyecto_id,id, nombre, descripcion, tipo_activo_id, personal_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,7 +62,8 @@ class Activo extends CustomCActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'personal' => array(self::BELONGS_TO, 'Personal', 'personal_id'),
-			'tipoActivo' => array(self::BELONGS_TO, 'TipoActivo', 'tipo_activo_id'),
+            'proyecto' => array(self::BELONGS_TO, 'Proyecto', 'proyecto_id'),
+            'tipoActivo' => array(self::BELONGS_TO, 'TipoActivo', 'tipo_activo_id'),
 			'activoAreas' => array(self::HAS_MANY, 'ActivoArea', 'activo_id'),
 			'grupoActivos' => array(self::HAS_MANY, 'GrupoActivo', 'activo_id'),
 		);
@@ -81,6 +84,7 @@ class Activo extends CustomCActiveRecord
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
+            'proyecto_id'=>'Proyecto'
 		);
 	}
 
@@ -101,7 +105,10 @@ class Activo extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
+        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        if(!is_null($usuario->ultimo_proyecto_id)){
+            $criteria->compare('proyecto_id',$usuario->ultimo_proyecto_id);
+        }
 		$criteria->compare('id',$this->id);
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('descripcion',$this->descripcion,true);
@@ -112,13 +119,9 @@ class Activo extends CustomCActiveRecord
             $criteria->together = true;
             $criteria->with = ['personal'];
             $criteria->addCondition("personal.nombre LIKE '%".$this->personal_id."%' or personal.apellido LIKE '%".$this->personal_id."%' ");
-//            $criteria->compare('personal.nombre',$this->personal_id,true);
-//            $criteria->compare('personal.apellido',$this->personal_id,true);
+
         }
 		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
-//		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
-//		$criteria->compare('modUserStamp',$this->modUserStamp,true);
-//		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

@@ -39,7 +39,7 @@
 
     <header class="main-header">
         <!-- Logo -->
-        <a href="#" class="logo">
+        <a href="<?= Yii::app()->getBaseUrl()?>" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><b><?php echo ucwords(strtolower(CHtml::encode(Yii::app()->name))); ?></b></span>
             <!-- logo for regular state and mobile devices -->

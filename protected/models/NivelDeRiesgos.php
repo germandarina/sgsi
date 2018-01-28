@@ -8,10 +8,13 @@
  * @property integer $valor_minimo
  * @property integer $valor_maximo
  * @property integer $concepto
+ * @property integer $proyecto_id
  * @property string $creaUserStamp
  * @property string $creaTimeStamp
  * @property string $modUserStamp
  * @property string $modTimeStamp
+ * @property Proyecto $proyecto
+
  */
 class NivelDeRiesgos extends CustomCActiveRecord
 {
@@ -42,12 +45,12 @@ class NivelDeRiesgos extends CustomCActiveRecord
 		// will receive user inputs.
 		return array(
 			array('valor_minimo, valor_maximo, concepto', 'required'),
-			array('valor_minimo, valor_maximo, concepto', 'numerical', 'integerOnly'=>true),
+			array('proyecto_id,valor_minimo, valor_maximo, concepto', 'numerical', 'integerOnly'=>true),
 			array('creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, valor_minimo, valor_maximo, concepto, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('proyecto_id,id, valor_minimo, valor_maximo, concepto, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -96,7 +99,10 @@ class NivelDeRiesgos extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
+        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        if(!is_null($usuario->ultimo_proyecto_id)){
+            $criteria->compare('proyecto_id',$usuario->ultimo_proyecto_id);
+        }
 		$criteria->compare('id',$this->id);
 		$criteria->compare('valor_minimo',$this->valor_minimo);
 		$criteria->compare('valor_maximo',$this->valor_maximo);

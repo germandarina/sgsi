@@ -8,6 +8,7 @@
  * @property string $nombre
  * @property string $criterio
  * @property integer $tipo_activo_id
+ * @property integer $proyecto_id
  * @property string $creaUserStamp
  * @property string $creaTimeStamp
  * @property string $modUserStamp
@@ -16,6 +17,7 @@
  * The followings are the available model relations:
  * @property TipoActivo $tipoActivo
  * @property GrupoActivo[] $grupoActivos
+ * @property Proyecto $proyecto
  */
 class Grupo extends CustomCActiveRecord
 {
@@ -36,13 +38,13 @@ class Grupo extends CustomCActiveRecord
 		// will receive user inputs.
 		return array(
 		    array('tipo_activo_id,nombre,criterio','required'),
-			array('tipo_activo_id', 'numerical', 'integerOnly'=>true),
+			array('proyecto_id,tipo_activo_id', 'numerical', 'integerOnly'=>true),
 			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('criterio', 'length', 'max'=>200),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, nombre, criterio, tipo_activo_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('proyecto_id,id, nombre, criterio, tipo_activo_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,7 +58,8 @@ class Grupo extends CustomCActiveRecord
 		return array(
 			'tipoActivo' => array(self::BELONGS_TO, 'TipoActivo', 'tipo_activo_id'),
 			'grupoActivos' => array(self::HAS_MANY, 'GrupoActivo', 'grupo_id'),
-		);
+            'proyecto' => array(self::BELONGS_TO, 'Proyecto', 'proyecto_id'),
+        );
 	}
 
 	/**
@@ -73,6 +76,7 @@ class Grupo extends CustomCActiveRecord
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
+            'proyecto_id'=>'Proyecto'
 		);
 	}
 
@@ -93,7 +97,10 @@ class Grupo extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
+        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        if(!is_null($usuario->ultimo_proyecto_id)){
+            $criteria->compare('proyecto_id',$usuario->ultimo_proyecto_id);
+        }
 		$criteria->compare('id',$this->id);
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('criterio',$this->criterio,true);

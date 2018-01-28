@@ -9,6 +9,7 @@
  * @property string $descripcion
  * @property string $fecha
  * @property integer $personal_id
+ * @property integer $proyecto_id
  * @property string $creaUserStamp
  * @property string $creaTimeStamp
  * @property string $modUserStamp
@@ -16,6 +17,7 @@
  *
  * The followings are the available model relations:
  * @property Personal $personal
+ * @property Proyecto $proyecto
  * @property GrupoActivo[] $grupoActivos
  */
 class Analisis extends CustomCActiveRecord
@@ -38,13 +40,13 @@ class Analisis extends CustomCActiveRecord
 		// will receive user inputs.
 		return array(
 			array('nombre, descripcion, fecha, personal_id', 'required'),
-			array('personal_id', 'numerical', 'integerOnly'=>true),
+			array('proyecto_id,personal_id', 'numerical', 'integerOnly'=>true),
 			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('descripcion', 'length', 'max'=>200),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, nombre, descripcion, fecha, personal_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('id, nombre, proyecto_id,descripcion, fecha, personal_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,7 +59,8 @@ class Analisis extends CustomCActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'personal' => array(self::BELONGS_TO, 'Personal', 'personal_id'),
-			'grupoActivos' => array(self::HAS_MANY, 'GrupoActivo', 'analisis_id'),
+            'proyecto' => array(self::BELONGS_TO, 'Proyecto', 'proyecto_id'),
+            'grupoActivos' => array(self::HAS_MANY, 'GrupoActivo', 'analisis_id'),
 		);
 	}
 
@@ -77,7 +80,8 @@ class Analisis extends CustomCActiveRecord
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
             'valor_form_valoracion' =>'Valor',
-		);
+            'proyecto_id'=>'Proyecto'
+        );
 	}
 
 	/**
@@ -97,7 +101,10 @@ class Analisis extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
+        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        if(!is_null($usuario->ultimo_proyecto_id)){
+            $criteria->compare('proyecto_id',$usuario->ultimo_proyecto_id);
+        }
 		$criteria->compare('id',$this->id);
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('descripcion',$this->descripcion,true);
