@@ -68,6 +68,14 @@ class AnalisisController extends Controller
         if (isset($_POST['Analisis'])) {
             $model->attributes = $_POST['Analisis'];
             $model->fecha = Utilities::MysqlDateFormat($model->fecha);
+            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+            if(!is_null($usuario->ultimo_proyecto_id)){
+                $model->proyecto_id = $usuario->ultimo_proyecto_id;
+            }else{
+                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
+                $this->redirect(array('create'));
+
+            }
             if ($model->save()) {
                 Yii::app()->user->setNotification('success','Analisis creado con exito');
                 $this->redirect(array('update','id'=>$model->id));
@@ -103,6 +111,14 @@ class AnalisisController extends Controller
         if (isset($_POST['Analisis'])) {
             $model->attributes = $_POST['Analisis'];
             $model->fecha = Utilities::MysqlDateFormat($model->fecha);
+            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+            if(!is_null($usuario->ultimo_proyecto_id)){
+                $model->proyecto_id = $usuario->ultimo_proyecto_id;
+            }else{
+                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
+                $this->redirect(array('create'));
+
+            }
             if ($model->save()) {
                 Yii::app()->user->setNotification('success','Analisis actualizado con exito');
                 $this->redirect(array('admin'));
@@ -207,13 +223,6 @@ class AnalisisController extends Controller
                     }
                     $grupo_activo = new GrupoActivo();
                 }
-
-//                if(!is_null($grupo_activo_existente)){
-//                    $grupo = Grupo::model()->findByPk($grupo_activo_existente->grupo_id);
-//                    if($grupo->tipo_activo_id != $grupo_seleccionado->tipo_activo_id){
-//                        throw new Exception("El activo seleccionado debe pertenecer al mismo tipo de activo");
-//                    }
-//                }
 
                 $grupo_activo->analisis_id = $analisis->id;
                 $grupo_activo->grupo_id = $grupo_id;
@@ -440,11 +449,7 @@ class AnalisisController extends Controller
                                                                                                                 'grupo_activo_id'=>$_POST['grupo_activo_id'],
                                                                                                                 'analisis_amenaza_id'=>$_POST['analisis_amenaza_id']
                                                                                                             ),array('order'=>'id desc'));
-//                    $arrayValorVulnerabilidad =[];
-//                    foreach ($analisis_vulnerabilidades as $av){
-//                        $arrayValorVulnerabilidad[] = $av->valor;
-//                    }
-//                    $mayor_valor_vulnerabilidad = max($arrayValorVulnerabilidad);
+
                     if($analisis_control->valor > $av->valor){
 
                         $analisis_vulnerabilidad = new AnalisisVulnerabilidad();

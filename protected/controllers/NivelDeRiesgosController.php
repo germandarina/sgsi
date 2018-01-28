@@ -63,11 +63,17 @@ class NivelDeRiesgosController extends Controller
     {
         $model = new NivelDeRiesgos;
 
-// Uncomment the following line if AJAX validation is needed
-// $this->performAjaxValidation($model);
 
         if (isset($_POST['NivelDeRiesgos'])) {
             $model->attributes = $_POST['NivelDeRiesgos'];
+            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+            if(!is_null($usuario->ultimo_proyecto_id)){
+                $model->proyecto_id = $usuario->ultimo_proyecto_id;
+            }else{
+                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
+                $this->redirect(array('create'));
+
+            }
             if ($model->save()) {
                 Yii::app()->user->setNotification('success','Nivel de riesgo creado con exito');
                 $this->redirect(array('create'));
@@ -88,11 +94,16 @@ class NivelDeRiesgosController extends Controller
     {
         $model = $this->loadModel($id);
 
-// Uncomment the following line if AJAX validation is needed
-// $this->performAjaxValidation($model);
-
         if (isset($_POST['NivelDeRiesgos'])) {
             $model->attributes = $_POST['NivelDeRiesgos'];
+            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+            if(!is_null($usuario->ultimo_proyecto_id)){
+                $model->proyecto_id = $usuario->ultimo_proyecto_id;
+            }else{
+                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
+                $this->redirect(array('create'));
+
+            }
             if ($model->save()) {
                 Yii::app()->user->setNotification('success','Nivel de riesgo actualizado con exito');
                 $this->redirect(array('update', 'id' => $model->id));

@@ -65,6 +65,12 @@ class ActivoController extends Controller
         if (isset($_POST['Activo'])) {
             try{
                 $transaction = Yii::app()->db->beginTransaction();
+                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+                if(!is_null($usuario->ultimo_proyecto_id)){
+                   $model->proyecto_id = $usuario->ultimo_proyecto_id;
+                }else{
+                    throw new Exception("Debe seleccionar un proyecto para empezar a trabajar");
+                }
                 $model->attributes = $_POST['Activo'];
                 if (!$model->save()) {
                     throw new Exception("Error al crear activo");
@@ -109,6 +115,14 @@ class ActivoController extends Controller
         if (isset($_POST['Activo'])) {
             try{
                 $transaction = Yii::app()->db->beginTransaction();
+
+                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+                if(!is_null($usuario->ultimo_proyecto_id)){
+                    $model->proyecto_id = $usuario->ultimo_proyecto_id;
+                }else{
+                    throw new Exception("Debe seleccionar un proyecto para empezar a trabajar");
+                }
+
                 $model->attributes = $_POST['Activo'];
                 if (!$model->save()) {
                     throw new Exception("Error al actualizar activo");
@@ -217,11 +231,11 @@ class ActivoController extends Controller
         if(isset($_POST['grupo_id'])){
             if(!empty($_POST['grupo_id'])){
                 $grupo = Grupo::model()->findByPk($_POST['grupo_id']);
-                $activos = Activo::model()->findAllByAttributes(array('tipo_activo_id'=>$grupo->tipo_activo_id));
+                $activos = Activo::model()->findAllByAttributes(array('tipo_activo_id'=>$grupo->tipo_activo_id,'proyecto_id'=>$grupo->proyecto_id));
                 $tipoActivo = TipoActivo::model()->findByPk($grupo->tipo_activo_id);
             }else{
                 $activo = Activo::model()->findByPk($_POST['activo_id']);
-                $activos = Activo::model()->findAllByAttributes(array('tipo_activo_id'=>$activo->tipo_activo_id));
+                $activos = Activo::model()->findAllByAttributes(array('tipo_activo_id'=>$activo->tipo_activo_id,'proyecto_id'=>$activo->proyecto_id));
                 $tipoActivo = TipoActivo::model()->findByPk($activo->tipo_activo_id);
             }
 
@@ -232,8 +246,9 @@ class ActivoController extends Controller
     }
     public function actionGetPadresEHijos(){
         if(isset($_POST['analisis_id'])){
-            $padres = Activo::model()->getPadresDisponibles($_POST['analisis_id']);
-            $hijos = Activo::model()->getHijosDisponibles($_POST['analisis_id']);
+            $analisis = Analisis::model()->findByPk($_POST['analisis_id']);
+            $padres = Activo::model()->getPadresDisponibles($analisis->id,$analisis->proyecto_id);
+            $hijos = Activo::model()->getHijosDisponibles($analisis->id,$analisis->proyecto_id);
             $datos = ['hijos'=>$hijos,'padres'=>$padres];
             echo CJSON::encode($datos);
             die();

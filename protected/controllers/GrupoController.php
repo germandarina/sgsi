@@ -65,6 +65,14 @@ class GrupoController extends Controller
 
         if (isset($_POST['Grupo'])) {
             $model->attributes = $_POST['Grupo'];
+            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+            if(!is_null($usuario->ultimo_proyecto_id)){
+                $model->proyecto_id = $usuario->ultimo_proyecto_id;
+            }else{
+                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
+                $this->redirect(array('create'));
+
+            }
             if ($model->save()) {
                 Yii::app()->user->setNotification('success','Grupo creado con exito');
                 $this->redirect(array('create'));
@@ -87,6 +95,15 @@ class GrupoController extends Controller
 
         if (isset($_POST['Grupo'])) {
             $model->attributes = $_POST['Grupo'];
+
+            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+            if(!is_null($usuario->ultimo_proyecto_id)){
+                $model->proyecto_id = $usuario->ultimo_proyecto_id;
+            }else{
+                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
+                $this->redirect(array('create'));
+
+            }
             if ($model->save()){
                 Yii::app()->user->setNotification('success','Grupo creado con exito');
                 $this->redirect(array('admin'));

@@ -109,7 +109,7 @@ class Activo extends CustomCActiveRecord
         if(!is_null($usuario->ultimo_proyecto_id)){
             $criteria->compare('proyecto_id',$usuario->ultimo_proyecto_id);
         }
-		$criteria->compare('id',$this->id);
+//		$criteria->compare('id',$this->id);
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('descripcion',$this->descripcion,true);
         $criteria->compare('cantidad',$this->cantidad,true);
@@ -143,7 +143,7 @@ class Activo extends CustomCActiveRecord
         return $this->personal->apellido.' , '.$this->personal->nombre;
     }
 
-    public function getPadresDisponibles($analisis_id){
+    public function getPadresDisponibles($analisis_id,$proyecto_id){
        $queryPadres = " select a.id, concat(a.nombre, ' - ',ta.nombre) as nombre
                             from activo a
                             inner join tipo_activo ta on ta.id = a.tipo_activo_id
@@ -151,8 +151,8 @@ class Activo extends CustomCActiveRecord
                             left join (
                             select d.activo_padre_id
                             from dependencia d
-                            inner join analisis a on a.id=d.analisis_id
-                            where a.id = ".$analisis_id." and d.activo_padre_id is not null
+                            inner join analisis an on an.id=d.analisis_id
+                            where an.id = ".$analisis_id." and an.proyecto_id = ".$proyecto_id." and d.activo_padre_id is not null
                             )consulta on consulta.activo_padre_id = a.id
                             where consulta.activo_padre_id is null ";
        $command = Yii::app()->db->createCommand($queryPadres);
@@ -160,7 +160,7 @@ class Activo extends CustomCActiveRecord
        return $padres;
     }
 
-    public function getHijosDisponibles($analisis_id){
+    public function getHijosDisponibles($analisis_id,$proyecto_id){
         $queryHijos = " select a.id, concat(a.nombre, ' - ',ta.nombre) as nombre
                             from activo a
                             inner join tipo_activo ta on ta.id = a.tipo_activo_id
@@ -168,7 +168,8 @@ class Activo extends CustomCActiveRecord
                             inner join analisis an on an.id = ga.analisis_id
                             left join dependencia d on (d.activo_id = ga.activo_id )
                             where d.id is null                    
-                            and  an.id = ".$analisis_id." ";
+                            and  an.id = ".$analisis_id."
+                            and an.proyecto_id = ".$proyecto_id." ";
         $command = Yii::app()->db->createCommand($queryHijos);
         $hijos = $command->queryAll($queryHijos);
         return $hijos;
