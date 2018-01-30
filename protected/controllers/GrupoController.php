@@ -123,12 +123,22 @@ class GrupoController extends Controller
     public function actionDelete($id)
     {
         if (Yii::app()->request->isPostRequest) {
-// we only allow deletion via POST request
-            $this->loadModel($id)->delete();
-
-// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-            if (!isset($_GET['ajax']))
+            try{
+                $grupo_activo = GrupoActivo::model()->findByAttributes(['grupo_id'=>$id]);
+                if(!is_null($grupo_activo)){
+                    throw new Exception("Error. Este grupo ya posee las asociaciones realizadas");
+                }
+                $this->loadModel($id)->delete();
+                $data = "Se elimino correctamente el grupo";
+                echo CJSON::encode($data);
+            }catch (Exception $exception){
+                $data = $exception->getMessage();
+                echo CJSON::encode($data);
+                die();
+            }
+            if (!isset($_GET['ajax'])) {
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+            }
         } else
             throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
     }

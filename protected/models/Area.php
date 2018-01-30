@@ -95,12 +95,16 @@ class Area extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('nombre',$this->nombre,true);
-		$criteria->compare('descripcion',$this->descripcion,true);
-		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
-		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
+        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        if(!is_null($usuario->ultimo_proyecto_id)){
+            $criteria->join = " inner join area_proyecto ap on ap.area_id = t.id ";
+            $criteria->compare('ap.proyecto_id',$usuario->ultimo_proyecto_id);
+        }
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.nombre',$this->nombre,true);
+		$criteria->compare('t.descripcion',$this->descripcion,true);
+		$criteria->compare('t.creaUserStamp',$this->creaUserStamp,true);
+		$criteria->compare('t.creaTimeStamp',$this->creaTimeStamp,true);
         if($this->organizacion_id != ""){
             $criteria->with = array('organizacion');
             $criteria->compare('organizacion.nombre',$this->organizacion_id,true);

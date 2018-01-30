@@ -174,12 +174,33 @@ class ProyectoController extends Controller
     public function actionDelete($id)
     {
         if (Yii::app()->request->isPostRequest) {
-// we only allow deletion via POST request
-            $this->loadModel($id)->delete();
+            try{
+                $grupo_activo = Activo::model()->findByAttributes(['proyecto_id'=>$id]);
+                if(!is_null($grupo_activo)){
+                    throw new Exception("Error. Este proyecto ya posee las asociaciones realizadas");
+                }
 
-// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-            if (!isset($_GET['ajax']))
+                $grupo_activo = Grupo::model()->findByAttributes(['proyecto_id'=>$id]);
+                if(!is_null($grupo_activo)){
+                    throw new Exception("Error. Este proyecto ya posee las asociaciones realizadas");
+                }
+
+                $grupo_activo = Analisis::model()->findByAttributes(['proyecto_id'=>$id]);
+                if(!is_null($grupo_activo)){
+                    throw new Exception("Error. Este proyecto ya posee las asociaciones realizadas");
+                }
+
+                $this->loadModel($id)->delete();
+                $data = "Se elimino correctamente el analisis";
+                echo CJSON::encode($data);
+            }catch (Exception $exception){
+                $data = $exception->getMessage();
+                echo CJSON::encode($data);
+                die();
+            }
+            if (!isset($_GET['ajax'])) {
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+            }
         } else
             throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
     }

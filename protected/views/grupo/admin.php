@@ -54,7 +54,9 @@
                 */
 				array(
 					'class'=>'booster.widgets.TbButtonColumn',
-					'template'=>'{update}{delete}'
+					'template'=>'{update}{delete}',
+					'afterDelete' => 'function(link,success,data) { if (success && data) Lobibox.notify(\'info\', {msg: data }); }'
+
 				),
 			),
 		));
@@ -89,7 +91,8 @@
                     */
 					array(
 						'class'=>'booster.widgets.TbButtonColumn',
-						'template'=>'{update}{delete}'
+						'template'=>'{update}{delete}',
+						'afterDelete' => 'function(link,success,data) { if (success && data) Lobibox.notify(\'info\', {msg: data }); }'
 					),
 				),
 			));

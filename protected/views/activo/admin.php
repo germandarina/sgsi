@@ -67,14 +67,11 @@
 					'filter'=>CHtml::listData(Proyecto::model()->findAll(),'id','nombre'),
 				),
 				'creaUserStamp',
-				/*
-                'creaTimeStamp',
-                'modUserStamp',
-                'modTimeStamp',
-                */
 				array(
 					'class'=>'booster.widgets.TbButtonColumn',
-					'template'=>'{update}{delete}'
+					'template'=>'{update}{delete}',
+					'afterDelete' => 'function(link,success,data) { if (success && data) Lobibox.notify(\'info\', {msg: data }); }'
+
 				),
 			),
 		));
@@ -122,14 +119,11 @@
 					'cantidad',
 					'ubicacion',
 					'creaUserStamp',
-					/*
-                    'creaTimeStamp',
-                    'modUserStamp',
-                    'modTimeStamp',
-                    */
+
 					array(
 						'class'=>'booster.widgets.TbButtonColumn',
-						'template'=>'{update}{delete}'
+						'template'=>'{update}{delete}',
+						'afterDelete' => 'function(link,success,data) { if (success && data) Lobibox.notify(\'info\', {msg: data }); }'
 					),
 				),
 			));

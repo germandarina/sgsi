@@ -17,35 +17,71 @@
 					),
 				),
 			)
-		); ?>	</div>
+		); ?>
+	</div>
 
-	<?php $this->widget('booster.widgets.TbExtendedGridView',array(
-	'id'=>'area-grid',
-	'fixedHeader' => false,
-	'headerOffset' => 10,
-	// 40px is the height of the main navigation at bootstrap
-	'type' => 'striped hover condensed',
-	'dataProvider' => $model->search(),
-	'responsiveTable' => true,
-	'template' => "{summary}\n{items}\n{pager}",
-	'selectableRows' => 1,
-	'filter' => $model,
-	'columns'=>array(
-		'nombre',
-		'descripcion',
+	<?php
+	if(Yii::app()->user->model->isAdmin()){
+		$this->widget('booster.widgets.TbExtendedGridView',array(
+		'id'=>'area-grid',
+		'fixedHeader' => false,
+		'headerOffset' => 10,
+		// 40px is the height of the main navigation at bootstrap
+		'type' => 'striped hover condensed',
+		'dataProvider' => $model->search(),
+		'responsiveTable' => true,
+		'template' => "{summary}\n{items}\n{pager}",
+		'selectableRows' => 1,
+		'filter' => $model,
+		'columns'=>array(
+			'nombre',
+			'descripcion',
+			array(
+				'name'=>'organizacion_id',
+				'header'=>'Organizacion',
+				'value'=>'$data->organizacion->nombre',
+			),
+			'creaUserStamp',
+			'creaTimeStamp',
 		array(
-			'name'=>'organizacion_id',
-			'header'=>'Organizacion',
-			'value'=>'$data->organizacion->nombre',
+		'class'=>'booster.widgets.TbButtonColumn',
+			'template'=>'{update}{delete}',
+			'afterDelete' => 'function(link,success,data) { if (success && data) Lobibox.notify(\'info\', {msg: data }); }'
 		),
-		'creaUserStamp',
-		'creaTimeStamp',
-	array(
-	'class'=>'booster.widgets.TbButtonColumn',
-		'template'=>'{update}{delete}'
-	),
-	),
-	)); ?>
+		),
+		)); }else{
+			$usuario = User::model()->findByPk(Yii::app()->user->model->id);
+			if(!is_null($usuario->ultimo_proyecto_id)) {
+				$this->widget('booster.widgets.TbExtendedGridView',array(
+					'id'=>'area-grid',
+					'fixedHeader' => false,
+					'headerOffset' => 10,
+					// 40px is the height of the main navigation at bootstrap
+					'type' => 'striped hover condensed',
+					'dataProvider' => $model->search(),
+					'responsiveTable' => true,
+					'template' => "{summary}\n{items}\n{pager}",
+					'selectableRows' => 1,
+					'filter' => $model,
+					'columns'=>array(
+						'nombre',
+						'descripcion',
+						array(
+							'name'=>'organizacion_id',
+							'header'=>'Organizacion',
+							'value'=>'$data->organizacion->nombre',
+						),
+						'creaUserStamp',
+						'creaTimeStamp',
+						array(
+							'class'=>'booster.widgets.TbButtonColumn',
+							'template'=>'{update}{delete}',
+							'afterDelete' => 'function(link,success,data) { if (success && data) Lobibox.notify(\'info\', {msg: data }); }'
+						),
+					),
+				));
+			}
+	}?>
 </div>
 
 

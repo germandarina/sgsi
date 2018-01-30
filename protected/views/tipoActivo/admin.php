@@ -82,35 +82,12 @@
 			},
 			'filter'=>TipoActivo::$valores,
 		],
-		//		array(
-//			'name'=>'confidencialidad',
-//			'header'=>'Confidencialidad',
-//			'value'=>'TipoActivo::$valores[$data->confidencialidad]',
-//			'filter'=>TipoActivo::$valores,
-//		),
-//		array(
-//			'name'=>'integridad',
-//			'header'=>'Integridad',
-//			'value'=>'TipoActivo::$valores[$data->integridad]',
-//			'filter'=>TipoActivo::$valores,
-//		),
-//		array(
-//			'name'=>'disponibilidad',
-//			'header'=>'Disponibilidad',
-//			'value'=>'TipoActivo::$valores[$data->disponibilidad]',
-//			'filter'=>TipoActivo::$valores,
-//		),
-//		array(
-//			'name'=>'trazabilidad',
-//			'header'=>'Trazabilidad',
-//			'value'=>'TipoActivo::$valores[$data->trazabilidad]',
-//			'filter'=>TipoActivo::$valores,
-//		),
 		'creaUserStamp',
 		'creaTimeStamp',
 	array(
 	'class'=>'booster.widgets.TbButtonColumn',
-		'template'=>'{update}{delete}'
+		'template'=>'{update}{delete}',
+		'afterDelete' => 'function(link,success,data) { if (success && data) Lobibox.notify(\'info\', {msg: data }); }'
 	),
 	array(
 		'class' => 'booster.widgets.TbButtonColumn',
@@ -120,28 +97,12 @@
 			'relaciones' => array(
 				'label' => 'Ver Relaciones',
 				'icon'=>'fa fa-code-fork',
-				//'imageUrl' => Yii::app()->request->baseUrl . '/images/recibo.png',
 				'url' => 'Yii::app()->createUrl("/tipoActivo/verRelaciones", array("id"=>$data->id))',
-//				'options' => array(
-//					'class' => 'imagenRecibo',
-//					//'style' => 'padding-left: 8px;',
-//				),
-//				'visible' => function ($row, $data) use ($esArqueo) {
-//					/*if($esArqueo) {
-//						return false;
-//					}
-//				*/
-//					return ($data->estado == OrdenPedido::ESTADO_PAGADA && $data->realizarNotaCredito == 1) ? true : false;
-//				},
+
 			),
 		),
 		'htmlOptions' => array('style' => 'width:2%;text-align:center;')
 	),
-//	[
-//		'header' => 'Relaciones',
-//		'type' => 'raw',
-//		'value' => '"<a onclick=\"mostrarDetalleOrdenCompra($data->id) \" title=\"Ver Relaciones\" class=\"linkCredito\"><i class=\"fa fa-code-fork\" aria-hidden=\"true\"></i></a>"',
-//	]
 	),
 	)); ?>
 </div>

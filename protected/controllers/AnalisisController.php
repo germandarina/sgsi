@@ -33,11 +33,11 @@ class AnalisisController extends Controller
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update', 'admin','crearGrupoActivo','crearDependencia',
                                     'verValoracion','gridControles','guardarValorControl','getGrupoActivo','eliminarGrupoActivo',
-                                    'guardarValorAmenaza','guardarRiesgoAceptable','evaluarActivos','getActuacion','crearActualizarActuacion'),
+                                    'guardarValorAmenaza','guardarRiesgoAceptable','evaluarActivos','getActuacion','crearActualizarActuacion','delete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
+                'actions' => array('admin',),
                 'users' => array('admin'),
             ),
             array('deny',  // deny all users
@@ -139,16 +139,22 @@ class AnalisisController extends Controller
     public function actionDelete($id)
     {
         if (Yii::app()->request->isPostRequest) {
-            $grupo_activo = GrupoActivo::model()->findByAttributes(['analisis_id'=>$id]);
-            if(!is_null($grupo_activo)){
-                $model = $this->loadModel($id);
-                $model->addError($this->id,'Este analisis ya posee las asociaciones realizadas');
-                throw new Exception("Error al eliminar analisis");
+            try{
+                $grupo_activo = GrupoActivo::model()->findByAttributes(['analisis_id'=>$id]);
+                if(!is_null($grupo_activo)){
+                    throw new Exception("Error. Este analisis ya posee las asociaciones realizadas");
+                }
+                $this->loadModel($id)->delete();
+                $data = "Se elimino correctamente el analisis";
+                echo CJSON::encode($data);
+            }catch (Exception $exception){
+                $data = $exception->getMessage();
+                echo CJSON::encode($data);
+                die();
             }
-            $this->loadModel($id)->delete();
-
-            if (!isset($_GET['ajax']))
-                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+            if (!isset($_GET['ajax'])) {
+                    $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+            }
         } else
             throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
     }
