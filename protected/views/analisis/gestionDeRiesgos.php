@@ -107,7 +107,13 @@
     }
     
     function exportarPDF() {
-        
+       // $("#modalProcesando").modal('show');
+        var analisis_id = $("#analisis_id").val();
+        var href = "<?php echo CHtml::normalizeUrl(array('analisis/exportarGestionDeRiegosPDF'))?>";
+        params = 'analisis_id='+analisis_id;
+        url = href + '?' + params;
+        window.open(url);
+      //  $("#modalProcesando").modal('hide');
     }
 </script>
 

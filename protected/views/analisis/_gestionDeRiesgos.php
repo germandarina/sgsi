@@ -1,14 +1,14 @@
-<table class="table">
+<table class="table" border="1">
     <thead>
-        <tr>
-            <th>Activo</th>
-            <th>Riesgo Aceptable</th>
-            <th>Nivel de Riesgo</th>
-            <th>Valor del Activo</th>
-            <th>Valor Confidencialidad</th>
-            <th>Valor Integridad</th>
-            <th>Valor Disponibilidad</th>
-            <th>valor Trazabilidad</th>
+        <tr style="background-color: #bebebe;">
+            <th  style="text-align: center;">Activo</th>
+            <th  style="text-align: center;">Riesgo Aceptable</th>
+            <th  style="text-align: center;">Nivel de Riesgo</th>
+            <th  style="text-align: center;">Valor del Activo</th>
+            <th  style="text-align: center;">Valor Confidencialidad</th>
+            <th  style="text-align: center;">Valor Integridad</th>
+            <th  style="text-align: center;">Valor Disponibilidad</th>
+            <th  style="text-align: center;">Valor Trazabilidad</th>
         </tr>
     </thead>
     <tbody>
@@ -21,14 +21,14 @@
               }
              ?>
              <tr>
-                 <td><?= $detalle->grupoActivo->activo->nombre;?></td>
-                 <td><?= $detalle->analisisRiesgo->riesgo_aceptable?></td>
-                 <td><?= $concepto?></td>
-                 <td><?= $detalle->valor_activo != 0 ? $detalle->valor_activo : "" ?></td>
-                 <td><?= $detalle->valor_confidencialidad != 0 ? $detalle->valor_confidencialidad : ""  ?></td>
-                 <td><?= $detalle->valor_integridad != 0 ? $detalle->valor_integridad : ""  ?></td>
-                 <td><?= $detalle->valor_disponibilidad != 0 ? $detalle->valor_disponibilidad : ""  ?></td>
-                 <td><?= $detalle->valor_trazabilidad != 0 ? $detalle->valor_trazabilidad : ""  ?></td>
+                 <td style="text-align: center;"><?= $detalle->grupoActivo->activo->nombre;?></td>
+                 <td style="text-align: center;"><?= $detalle->analisisRiesgo->riesgo_aceptable?></td>
+                 <td style="text-align: center;"><?= $concepto?></td>
+                 <td style="text-align: center;"><?= $detalle->valor_activo != 0 ? $detalle->valor_activo : "" ?></td>
+                 <td style="text-align: center;"><?= $detalle->valor_confidencialidad != 0 ? $detalle->valor_confidencialidad : ""  ?></td>
+                 <td style="text-align: center;"><?= $detalle->valor_integridad != 0 ? $detalle->valor_integridad : ""  ?></td>
+                 <td style="text-align: center;"><?= $detalle->valor_disponibilidad != 0 ? $detalle->valor_disponibilidad : ""  ?></td>
+                 <td style="text-align: center;"><?= $detalle->valor_trazabilidad != 0 ? $detalle->valor_trazabilidad : ""  ?></td>
              </tr>
          <?php }?>
     </tbody>

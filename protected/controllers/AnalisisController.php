@@ -735,4 +735,26 @@ class AnalisisController extends Controller
         Yii::app()->request->sendFile($nombreArchivo, $content);
         Yii::app()->user->setFlash('success', 'El informe fue generado correctamente');
     }
+
+    public function actionExportarGestionDeRiegosPDF(){
+        ob_clean();
+        $analisis_riesgo = AnalisisRiesgo::model()->findByAttributes(array('analisis_id'=>$_GET['analisis_id']));
+        $detalles = AnalisisRiesgoDetalle::model()->findAllByAttributes(['analisis_riesgo_id'=>$analisis_riesgo->id]);
+
+        $pdf = Yii::createComponent('application.extensions.tcpdf.ETcPdf', 'L', 'cm', 'A4', true, 'UTF-8');
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor("DIME");
+        $pdf->SetTitle('Gestion de Riesgos');
+        $pdf->SetKeywords("GestionDeRiesgos");
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+        $pdf->AliasNbPages();
+        $pdf->AddPage();
+        $pdf->SetFont("times", "", 9);
+//        $pdf->Image(__DIR__ . '/../../images/ladyeva_logo.jpg', 1.5, 1.2, 2.5, 2.5, 'JPG', '', '', false, 300, '', false, false, 0, '', false, false);
+//        $pdf->Rect(10.5, 1, 0, 4, 'DF');
+        $html = $this->renderPartial('_gestionDeRiesgos', array('detalles' => $detalles), true);
+        $pdf->writeHTML($html, true, false, true, false, '');
+        $pdf->Output("Gestion de Riesgos.pdf", "I");
+    }
 }
