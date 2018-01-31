@@ -95,6 +95,20 @@
         });
 
     }
+    
+    function exportarExcel() {
+        $("#modalProcesando").modal('show');
+        var analisis_id = $("#analisis_id").val();
+        var href = "<?php echo CHtml::normalizeUrl(array('analisis/exportarGestionDeRiegosExcel'))?>";
+        params = 'analisis_id='+analisis_id;
+        url = href + '?' + params;
+        window.open(url);
+        $("#modalProcesando").modal('hide');
+    }
+    
+    function exportarPDF() {
+        
+    }
 </script>
 
 <div class="box-header">
@@ -113,6 +127,26 @@
         'size' => 'small',
         'id'=>"botonModal",
         'htmlOptions' => array('onclick' => 'js:evaluarActivos()')
+    ));
+    ?>
+
+    <?php $this->widget('booster.widgets.TbButton', array(
+        'label'=> 'Exportar a Excel',
+        'context'=>'default',
+        'icon'=>'fa fa-file-excel-o',
+        'size' => 'small',
+        'id'=>"botonModal",
+        'htmlOptions' => array('onclick' => 'js:exportarExcel()','style'=>'float:right;')
+    ));
+    ?>
+
+    <?php $this->widget('booster.widgets.TbButton', array(
+        'label'=> 'Exportar a PDF',
+        'context'=>'default',
+        'icon'=>'fa fa-file-pdf-o',
+        'size' => 'small',
+        'id'=>"botonModal",
+        'htmlOptions' => array('onclick' => 'js:exportarPDF()','style'=>'float:right;')
     ));
     ?>
 </div>

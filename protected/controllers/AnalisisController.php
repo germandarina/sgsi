@@ -33,7 +33,8 @@ class AnalisisController extends Controller
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update', 'admin','crearGrupoActivo','crearDependencia',
                                     'verValoracion','gridControles','guardarValorControl','getGrupoActivo','eliminarGrupoActivo',
-                                    'guardarValorAmenaza','guardarRiesgoAceptable','evaluarActivos','getActuacion','crearActualizarActuacion','delete'),
+                                    'guardarValorAmenaza','guardarRiesgoAceptable','evaluarActivos','getActuacion','crearActualizarActuacion',
+                                    'delete','exportarGestionDeRiegosExcel','exportarGestionDeRiegosPDF'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -718,5 +719,20 @@ class AnalisisController extends Controller
             echo CJSON::encode($datos);
             die();
         }
+    }
+
+    public function actionExportarGestionDeRiegosExcel(){
+        $analisis_riesgo = AnalisisRiesgo::model()->findByAttributes(array('analisis_id'=>$_GET['analisis_id']));
+        $detalles = AnalisisRiesgoDetalle::model()->findAllByAttributes(['analisis_riesgo_id'=>$analisis_riesgo->id]);
+
+        set_time_limit(0);
+        ini_set('memory_limit', '20000M');
+        $content = "<br><h3>Gestion de Riesgos</h3>";
+        $content .= "<h3>Fecha: " . date("d/m/Y") . "</h3>";
+        $content .= $this->renderPartial('_gestionDeRiesgos', array('detalles' => $detalles), true);
+        $nombreArchivo = "Gestion de Riesgos.xls";
+
+        Yii::app()->request->sendFile($nombreArchivo, $content);
+        Yii::app()->user->setFlash('success', 'El informe fue generado correctamente');
     }
 }
