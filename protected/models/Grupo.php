@@ -101,6 +101,9 @@ class Grupo extends CustomCActiveRecord
         if(!is_null($usuario->ultimo_proyecto_id)){
             $criteria->compare('proyecto_id',$usuario->ultimo_proyecto_id);
         }
+        if($this->proyecto_id != NULL){
+            $criteria->compare('proyecto_id',$this->proyecto_id);
+        }
 		$criteria->compare('id',$this->id);
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('criterio',$this->criterio,true);

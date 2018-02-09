@@ -64,10 +64,29 @@ class AreaController extends Controller
         $model = new Area;
         if (isset($_POST['Area'])) {
             $model->attributes = $_POST['Area'];
-            if ($model->save()) {
-                Yii::app()->user->setNotification('success', 'El area fue creada con exito');
-                $this->redirect(array('create'));
+            if(Yii::app()->user->model->isAuditor()){
+                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+                if(!is_null($usuario->ultimo_proyecto_id)) {
+                    if ($model->save()) {
+                        $area_proyecto = new AreaProyecto();
+                        $area_proyecto->area_id = $model->id;
+                        $area_proyecto->proyecto_id = $usuario->ultimo_proyecto_id;
+                        if($area_proyecto->save()){
+                            Yii::app()->user->setNotification('success', 'El area fue creada con exito');
+                            $this->redirect(array('create'));
+                        }
+                    }
+                }else{
+                    Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
+                    $this->redirect(array('create'));
+                }
+            }else{
+                if ($model->save()) {
+                    Yii::app()->user->setNotification('success', 'El area fue creada con exito');
+                    $this->redirect(array('create'));
+                }
             }
+
         }
 
         $this->render('create', array(

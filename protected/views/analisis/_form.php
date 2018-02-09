@@ -56,13 +56,16 @@
     </div>
 
     <div class="box-footer">
-        <?php $this->widget('booster.widgets.TbButton', array(
-			'buttonType'=>'submit',
-			'context'=>'primary',
-			'label'=>$model->isNewRecord ? 'Crear' : 'Guardar',
-			'size'=>'small'
-		)); ?>
+        <?php if($model->isNewRecord){ ?>
 
+            <?php $this->widget('booster.widgets.TbButton', array(
+                'buttonType'=>'submit',
+                'context'=>'primary',
+                'label'=>$model->isNewRecord ? 'Crear' : 'Guardar',
+                'size'=>'small'
+            )); ?>
+
+        <?php }?>
 
         <?php $this->widget('booster.widgets.TbButton', array(
             //'buttonType'=>'submit',

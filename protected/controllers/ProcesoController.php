@@ -65,9 +65,27 @@ class ProcesoController extends Controller
 
         if (isset($_POST['Proceso'])) {
             $model->attributes = $_POST['Proceso'];
-            if ($model->save()) {
-                Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
-                $this->redirect(array('create'));
+            if(Yii::app()->user->model->isAuditor()){
+                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+                if(!is_null($usuario->ultimo_proyecto_id)) {
+                    $area_proyecto = AreaProyecto::model()->findByAttributes(['area_id'=>$model->area_id,'proyecto_id'=>$usuario->ultimo_proyecto_id]);
+                    if(is_null($area_proyecto)){
+                        Yii::app()->user->setNotification('error','El area seleccionada no corresponde al proyecto en el que se encuentra trabajando');
+                        $this->redirect(array('create'));
+                    }
+                    if ($model->save()) {
+                        Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
+                        $this->redirect(array('create'));
+                    }
+                }else{
+                    Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
+                    $this->redirect(array('create'));
+                }
+            }else{
+                if ($model->save()) {
+                    Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
+                    $this->redirect(array('create'));
+                }
             }
         }
 
@@ -84,15 +102,29 @@ class ProcesoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->loadModel($id);
-
-// Uncomment the following line if AJAX validation is needed
-// $this->performAjaxValidation($model);
-
         if (isset($_POST['Proceso'])) {
             $model->attributes = $_POST['Proceso'];
-            if ($model->save()) {
-                Yii::app()->user->setNotification('success', 'El proceso fue actualizado con exito');
-                $this->redirect(array('admin'));
+            if(Yii::app()->user->model->isAuditor()){
+                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+                if(!is_null($usuario->ultimo_proyecto_id)) {
+                    $area_proyecto = AreaProyecto::model()->findByAttributes(['area_id'=>$model->area_id,'proyecto_id'=>$usuario->ultimo_proyecto_id]);
+                    if(is_null($area_proyecto)){
+                        Yii::app()->user->setNotification('error','El area seleccionada no corresponde al proyecto en el que se encuentra trabajando');
+                        $this->redirect(array('update','id'=>$model->id));
+                    }
+                    if ($model->save()) {
+                        Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
+                        $this->redirect(array('admin'));
+                    }
+                }else{
+                    Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
+                    $this->redirect(array('update','id'=>$model->id));
+                }
+            }else{
+                if ($model->save()) {
+                    Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
+                    $this->redirect(array('update','id'=>$model->id));
+                }
             }
         }
 

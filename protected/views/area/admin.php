@@ -21,7 +21,7 @@
 	</div>
 
 	<?php
-	if(Yii::app()->user->model->isAdmin()){
+	if(Yii::app()->user->model->isAdmin() || Yii::app()->user->model->isGerencial()){
 		$this->widget('booster.widgets.TbExtendedGridView',array(
 		'id'=>'area-grid',
 		'fixedHeader' => false,
@@ -49,7 +49,8 @@
 			'afterDelete' => 'function(link,success,data) { if (success && data) Lobibox.notify(\'info\', {msg: data }); }'
 		),
 		),
-		)); }else{
+		));
+	}else{
 			$usuario = User::model()->findByPk(Yii::app()->user->model->id);
 			if(!is_null($usuario->ultimo_proyecto_id)) {
 				$this->widget('booster.widgets.TbExtendedGridView',array(

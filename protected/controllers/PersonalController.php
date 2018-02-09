@@ -63,14 +63,30 @@ class PersonalController extends Controller
     {
         $model = new Personal;
 
-// Uncomment the following line if AJAX validation is needed
-// $this->performAjaxValidation($model);
 
         if (isset($_POST['Personal'])) {
             $model->attributes = $_POST['Personal'];
-            if ($model->save()) {
-                Yii::app()->user->setNotification('success', 'El personal fue creado con exito');
-                $this->redirect(array('create'));
+            if(Yii::app()->user->model->isAuditor()){
+                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+                if(!is_null($usuario->ultimo_proyecto_id)) {
+                    $area_proyecto = AreaProyecto::model()->findByAttributes(['area_id'=>$model->area_id,'proyecto_id'=>$usuario->ultimo_proyecto_id]);
+                    if(is_null($area_proyecto)){
+                        Yii::app()->user->setNotification('error','El area seleccionada no corresponde al proyecto en el que se encuentra trabajando');
+                        $this->redirect(array('create'));
+                    }
+                    if ($model->save()) {
+                        Yii::app()->user->setNotification('success', 'El personal fue creado con exito');
+                        $this->redirect(array('admin'));
+                    }
+                }else{
+                    Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
+                    $this->redirect(array('create'));
+                }
+            }else{
+                if ($model->save()) {
+                    Yii::app()->user->setNotification('success', 'El personal fue creado con exito');
+                    $this->redirect(array('create'));
+                }
             }
         }
 
