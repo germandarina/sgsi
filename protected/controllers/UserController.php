@@ -125,7 +125,7 @@ class UserController extends Controller
         foreach (Yii::app()->authManager->roles as $nombrePerfil => $perfil) {
             $perfiles[$nombrePerfil] = $nombrePerfil;
         }
-        $model->setScenario('jornadaLaboral');
+       // $model->setScenario('jornadaLaboral');
 
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];

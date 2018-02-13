@@ -125,6 +125,7 @@ class SiteController extends Controller
             if (isset($_POST['LoginForm'])) {
                 $model->attributes = $_POST['LoginForm'];
                 // validate user input and redirect to the previous page if valid
+
                 if ($model->validate() && $model->login()) {
                     Yii::app()->user->setNotification('success', 'Bienvenido ' . Yii::app()->user->model->username . '!');
                     $this->redirect(Yii::app()->user->returnUrl);

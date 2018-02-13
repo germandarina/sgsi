@@ -40,6 +40,10 @@ class User extends CActiveRecord
     public $repeat_password;
     public $perfil;
 
+    public static $estados = [
+        self::ACTIVO => 'Activo',
+        self::INACTIVO =>'Inactivo',
+    ];
     /**
      * @return string the associated database table name
      */
@@ -57,7 +61,7 @@ class User extends CActiveRecord
         // will receive user inputs.
         return array(
             array('ultimo_proyecto_id,diaDesde, diaHasta, ultimoLoginSucursalId', 'numerical', 'integerOnly' => true),
-            array('username,password,sucursalId', 'required'),
+            array('username,password,sucursalId,estado', 'required'),
             array('username', 'unique'),
             array('username, creaUserStamp, modUserStamp', 'length', 'max' => 50),
             array('password', 'length', 'max' => 255),
@@ -142,12 +146,14 @@ class User extends CActiveRecord
         $criteria->compare('sucursalId',$this->sucursalId);
         $criteria->compare('creaUserStamp', $this->creaUserStamp, true);
         $criteria->compare('creaTimeStamp', $this->creaTimeStamp, true);
-        $criteria->compare('modUserStamp', $this->modUserStamp, true);
-        $criteria->compare('modTimeStamp', $this->modTimeStamp, true);
-        $criteria->compare('horaDesde', $this->horaDesde, true);
-        $criteria->compare('horaHasta', $this->horaHasta, true);
-        $criteria->compare('diaDesde', $this->diaDesde, true);
-        $criteria->compare('diaHasta', $this->diaHasta, true);
+        $criteria->compare('estado', $this->estado);
+
+//        $criteria->compare('modUserStamp', $this->modUserStamp, true);
+//        $criteria->compare('modTimeStamp', $this->modTimeStamp, true);
+//        $criteria->compare('horaDesde', $this->horaDesde, true);
+//        $criteria->compare('horaHasta', $this->horaHasta, true);
+//        $criteria->compare('diaDesde', $this->diaDesde, true);
+//        $criteria->compare('diaHasta', $this->diaHasta, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

@@ -31,9 +31,16 @@
         'columns' => array(
             'id',
             'username',
+            'perfil',
+            [
+                'header'=>'Estado',
+                'name'=>'estado',
+                'value'=>'User::$estados[$data->estado]',
+                'filter'=>User::$estados,
+            ],
             'creaUserStamp',
             'creaTimeStamp',
-            'perfil',
+
             /*
             'modUserStamp',
             'modTimeStamp',

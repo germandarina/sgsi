@@ -49,8 +49,14 @@ class LoginForm extends CFormModel
 		if(!$this->hasErrors())
 		{
 			$this->_identity=new UserIdentity($this->username,$this->password);
-			if(!$this->_identity->authenticate())
-				$this->addError('password','Usuario o contraseña incorrecta.');
+			if(!$this->_identity->authenticate()) {
+                $this->addError('password','Usuario o contraseña incorrecta.');
+            }
+
+            $usuario = User::model()->findByAttributes(['username'=>$_POST['LoginForm']['username']]);
+            if($usuario->estado == User::INACTIVO){
+                $this->addError('password','Ud no tiene permiso para usar el sistema');
+            }
 		}
 	}
 

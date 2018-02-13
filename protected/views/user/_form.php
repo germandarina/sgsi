@@ -76,9 +76,20 @@
             }
             ?>
         </div>
+        <div class="col-sm-6">
+            <?php echo $form->labelEx($model, 'estado', array('class' => 'col-sm-3'));
+            echo $form->dropDownList($model,
+                'estado',
+                $model->getTypeOptionsHabilitar(),
+                array('empty' => 'Seleccionar..',
+                    'class' => 'col-sm-9',
+                    //'style' => 'height:35px'
+                    )
+            ); ?>
+        </div>
     </div>
     <br>
-    <fieldset id="containerJornada" style="<?= $model->isAdmin() ? 'display: none' : '' ?>">
+    <fieldset id="containerJornada" style="display: none">
         <legend>Jornada Laboral</legend>
         <div class="row">
             <div class="col-sm-6">
@@ -137,18 +148,7 @@
             </div>
         </div>
         <br>
-        <div class="row">
-            <div class="col-sm-6">
-                <?php echo $form->labelEx($model, 'estado', array('class' => 'col-sm-3'));
-                echo $form->dropDownList($model,
-                    'estado',
-                    $model->getTypeOptionsHabilitar(),
-                    array('empty' => 'Seleccionar..',
-                        'class' => 'col-sm-9',
-                        'style' => 'height:35px')
-                ); ?>
-            </div>
-        </div>
+
     </fieldset>
 
     <div class="box-footer">
