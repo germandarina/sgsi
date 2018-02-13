@@ -76,31 +76,41 @@
         if(activo_id == ""){
             return Lobibox.notify('error',{msg:'Debe seleccionar un activo'});
         }
-        $.ajax({
-            type: 'POST',
-            url: "<?php echo CController::createUrl('analisis/crearGrupoActivo')?>",
-            data: { 'grupo_id': grupo_id,
-                    'analisis_id':analisis_id,
-                    'activo_id':activo_id,
-                    'confidencialidad':confidencialidad,
-                    'trazabilidad':trazabilidad,
-                    'integridad':integridad,
-                    'disponibilidad':disponibilidad,
-                    'grupo_activo_id':grupo_activo_id
-                },
-            dataType: 'Text',
-            success: function (data) {
-                var datos = jQuery.parseJSON(data);
-                if(datos.error == 1){
-                    Lobibox.notify('error',{msg: datos.msj});
-                }else{
-                    Lobibox.notify('success',{msg: datos.msj});
-                    limpiarModalAsociacion();
+        event.preventDefault();
+        Lobibox.confirm({
+            title:'Confirmar',
+            msg: "Esta seguro de realizar este proceso?",
+            callback: function (lobibox, type) {
+                if (type === 'yes') {
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo CController::createUrl('analisis/crearGrupoActivo')?>",
+                        data: { 'grupo_id': grupo_id,
+                            'analisis_id':analisis_id,
+                            'activo_id':activo_id,
+                            'confidencialidad':confidencialidad,
+                            'trazabilidad':trazabilidad,
+                            'integridad':integridad,
+                            'disponibilidad':disponibilidad,
+                            'grupo_activo_id':grupo_activo_id
+                        },
+                        dataType: 'Text',
+                        success: function (data) {
+                            var datos = jQuery.parseJSON(data);
+                            if(datos.error == 1){
+                                Lobibox.notify('error',{msg: datos.msj});
+                            }else{
+                                Lobibox.notify('success',{msg: datos.msj});
+                                limpiarModalAsociacion();
+                            }
+                            $.fn.yiiGridView.update('asociaciones-grid');
+                        }
+                    });
+                } else {
+                    return false;
                 }
-                $.fn.yiiGridView.update('asociaciones-grid');
             }
         });
-
     }
 
     function getGrupoActivo(event,grupo_activo_id) {
@@ -148,7 +158,7 @@
         event.preventDefault();
         Lobibox.confirm({
             title:'Confirmar',
-            msg: "Esta seguro de realizar este proceso?",
+            msg: "Esta seguro de crear esta asociacion?",
             callback: function (lobibox, type) {
                 if (type === 'yes') {
                     $.ajax({

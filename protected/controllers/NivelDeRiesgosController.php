@@ -31,11 +31,11 @@ class NivelDeRiesgosController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin'),
+                'actions' => array('create', 'update', 'admin','delete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
+                'actions' => array('admin'),
                 'users' => array('admin'),
             ),
             array('deny',  // deny all users
@@ -126,7 +126,7 @@ class NivelDeRiesgosController extends Controller
             try{
                 $grupo_activo = AnalisisRiesgoDetalle::model()->findByAttributes(['nivel_riesgo_id'=>$id]);
                 if(!is_null($grupo_activo)){
-                    throw new Exception("Error. Este Niveld de Riesgo ya posee las asociaciones realizadas");
+                    throw new Exception("Error. Este Nivel de Riesgo esta relacionado a una gestion de riesgos.");
                 }
                 $this->loadModel($id)->delete();
                 $data = "Se elimino correctamente el nivel de riesgo";

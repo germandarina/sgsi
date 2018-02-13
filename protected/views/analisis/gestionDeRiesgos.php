@@ -342,8 +342,8 @@
                                         'options' => [
                                             'format' => 'dd/mm/yyyy',
                                             'autoclose' => true,
-                                            'startDate' => ($actuacion->fecha),
-                                            'endDate' => ($actuacion->fecha),
+                                           // 'startDate' => ($actuacion->fecha),
+                                           // 'endDate' => ($actuacion->fecha),
                                         ],
                                        // 'htmlOptions' => ['readonly' => 'readonly']
                                     ],

@@ -44,7 +44,7 @@ class Activo extends CustomCActiveRecord
 		return array(
 			array('cantidad,areas,nombre, descripcion, tipo_activo_id, personal_id', 'required'),
 			array('proyecto_id,tipo_activo_id, personal_id', 'numerical', 'integerOnly'=>true),
-			array('ubicacion,nombre, creaUserStamp, modUserStamp', 'length', 'max'=>50),
+			array('ubicacion,nombre, creaUserStamp, modUserStamp', 'length', 'max'=>150),
 			array('descripcion', 'length', 'max'=>200),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().

@@ -29,8 +29,8 @@
                     'options' => [
                         'format' => 'dd/mm/yyyy',
                         'autoclose' => true,
-                        'startDate' => ($model->fecha),
-                        'endDate' => ($model->fecha),
+                        //'startDate' => ($model->fecha),
+                        //'endDate' => ($model->fecha),
                     ],
                     'htmlOptions' => ['readonly' => 'readonly']
                 ],

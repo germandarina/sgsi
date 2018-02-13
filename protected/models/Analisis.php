@@ -41,7 +41,7 @@ class Analisis extends CustomCActiveRecord
 		return array(
 			array('nombre, descripcion, fecha, personal_id', 'required'),
 			array('proyecto_id,personal_id', 'numerical', 'integerOnly'=>true),
-			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>50),
+			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>150),
 			array('descripcion', 'length', 'max'=>200),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().

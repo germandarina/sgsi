@@ -127,30 +127,40 @@
         if(activo_padre_id == activo_id){
             return Lobibox.notify('error',{msg: "El activo hijo no puede ser el mismo que el padre. Seleccione otro activo."})
         }
-        $.ajax({
-            type: 'POST',
-            url: "<?php echo CController::createUrl('analisis/crearDependencia')?>",
-            data: { 'activo_padre_id': activo_padre_id,
-                    'analisis_id':analisis_id,
-                    'activo_id':activo_id
-                },
-            dataType: 'Text',
-            success: function (data) {
-                var datos = jQuery.parseJSON(data);
-                if(datos.error == 1){
-                    Lobibox.notify('error',{msg: datos.msj});
-                }else{
-                    Lobibox.notify('success',{msg: datos.msj});
-                    limpiarYTraerDatosDependencia();
-                    $("#divDependencias").empty().html(datos.html);
-                    inicializarTree();
-//                    setTimeout(function () {
-//                        levantarModalDependencias();
-//                    },250)
-                }
 
+        Lobibox.confirm({
+            title:'Confirmar',
+            msg: "Esta seguro de realizar esta dependencia ?",
+            callback: function (lobibox, type) {
+                if (type === 'yes') {
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo CController::createUrl('analisis/crearDependencia')?>",
+                        data: { 'activo_padre_id': activo_padre_id,
+                            'analisis_id':analisis_id,
+                            'activo_id':activo_id
+                        },
+                        dataType: 'Text',
+                        success: function (data) {
+                            var datos = jQuery.parseJSON(data);
+                            if(datos.error == 1){
+                                Lobibox.notify('error',{msg: datos.msj});
+                            }else{
+                                Lobibox.notify('success',{msg: datos.msj});
+                                limpiarYTraerDatosDependencia();
+                                $("#divDependencias").empty().html(datos.html);
+                                inicializarTree();
+                            }
+                        }
+                    });
+                } else {
+                    return false;
+                }
             }
         });
+
+
+
 
     }
 </script>

@@ -37,6 +37,7 @@
 			'header'=>'Tipo Activo',
 			'name'=>'tipo_activo_id',
 			'value'=>'$data->tipoActivo->nombre',
+			'filter'=>CHtml::listData(TipoActivo::model()->findAll(),'id','nombre'),
 		],
 		[
 			'header' => 'Confidencialidad',

@@ -35,7 +35,7 @@ class Proyecto extends CustomCActiveRecord
 		// will receive user inputs.
 		return array(
 			array('nombre, descripcion,areas ,fecha', 'required'),
-			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>50),
+			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>150),
 			array('descripcion', 'length', 'max'=>200),
 			array('usuario_id,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().

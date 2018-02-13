@@ -15,8 +15,8 @@
                     'options' => [
                         'format' => 'dd/mm/yyyy',
                         'autoclose' => true,
-                        'startDate' => ($model->fecha),
-                        'endDate' => ($model->fecha),
+                        //'startDate' => ($model->fecha),
+                        //'endDate' => ($model->fecha),
                     ],
                     'htmlOptions' => ['readonly' => 'readonly']
                 ],
@@ -56,7 +56,6 @@
     </div>
 
     <div class="box-footer">
-        <?php if($model->isNewRecord){ ?>
 
             <?php $this->widget('booster.widgets.TbButton', array(
                 'buttonType'=>'submit',
@@ -65,7 +64,6 @@
                 'size'=>'small'
             )); ?>
 
-        <?php }?>
 
         <?php $this->widget('booster.widgets.TbButton', array(
             //'buttonType'=>'submit',

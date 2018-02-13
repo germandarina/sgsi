@@ -31,11 +31,11 @@ class PersonalController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin'),
+                'actions' => array('create', 'update', 'admin', 'delete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
+                'actions' => array('admin',),
                 'users' => array('admin'),
             ),
             array('deny',  // deny all users
@@ -129,9 +129,14 @@ class PersonalController extends Controller
     {
         if (Yii::app()->request->isPostRequest) {
             try{
-                $grupo_activo = Analisis::model()->findByAttributes(['personal_id'=>$id]);
-                if(!is_null($grupo_activo)){
-                    throw new Exception("Error. Este personal ya posee las asociaciones realizadas");
+                $analisis = Analisis::model()->findByAttributes(['personal_id'=>$id]);
+                if(!is_null($analisis)){
+                    throw new Exception("Error. Este personal esta asociado a un analisis.");
+                }
+
+                $activo = Activo::model()->findByAttributes(['personal_id'=>$id]);
+                if(!is_null($activo)){
+                    throw new Exception("Error. Este personal esta asociado a un activo.");
                 }
                 $this->loadModel($id)->delete();
                 $data = "Se elimino correctamente el personal";

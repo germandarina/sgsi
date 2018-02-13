@@ -16,8 +16,8 @@
             'options' => ['language' => 'es',
                 'format' => 'dd/mm/yyyy',
                 'autoclose' => true,
-                'startDate' => ($controlValor->fecha),
-                'endDate' => ($controlValor->fecha),
+               // 'startDate' => ($controlValor->fecha),
+               // 'endDate' => ($controlValor->fecha),
             ],
             'htmlOptions' => ['readonly' => 'readonly']
         ],

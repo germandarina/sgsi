@@ -129,8 +129,7 @@ class Amenaza extends CustomCActiveRecord
 //		$criteria->compare('modUserStamp',$this->modUserStamp,true);
 //		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
         if($this->tipo_activo_id != ""){
-            $criteria->with = array('tipoActivo');
-            $criteria->compare('tipoActivo.nombre',$this->tipo_activo_id,true);
+            $criteria->compare('tipo_activo_id',$this->tipo_activo_id);
         };
 
 		return new CActiveDataProvider($this, array(
@@ -147,10 +146,13 @@ class Amenaza extends CustomCActiveRecord
         if(!empty($this->nombre)){
             $criteria->addCondition(" t.nombre like '%".$this->nombre."%'  ");
         }
-
+        if(!empty($this->activo_nombre)){
+            $criteria->addCondition(" a.nombre like '%".$this->activo_nombre."%'  ");
+        }
         if(!empty($this->grupo_nombre)){
             $criteria->compare(" g.id",$this->grupo_nombre);
         }
+
         if(!empty($this->tipo_activo_id)){
             $criteria->compare(" ta.id ",$this->tipo_activo_id);
         }

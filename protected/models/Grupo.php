@@ -39,7 +39,7 @@ class Grupo extends CustomCActiveRecord
 		return array(
 		    array('tipo_activo_id,nombre,criterio','required'),
 			array('proyecto_id,tipo_activo_id', 'numerical', 'integerOnly'=>true),
-			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>50),
+			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>150),
 			array('criterio', 'length', 'max'=>200),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
