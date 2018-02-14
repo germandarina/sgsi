@@ -52,6 +52,8 @@
     
     function getActuacion(event,analisis_riesgo_detalle_id) {
         event.preventDefault();
+        $("#divReduccion").css('display','none');
+        $("#divTransferir").css('display','none');
         $("#analisis_riesgo_detalle_id").val(analisis_riesgo_detalle_id);
         $.ajax({
             type: 'POST',
@@ -62,10 +64,14 @@
             dataType: 'Text',
             success: function (data) {
                 var datos = jQuery.parseJSON(data);
-                   $("#ActuacionRiesgo_fecha").val(datos.fecha);
-                   $("#ActuacionRiesgo_descripcion").val(datos.descripcion);
-
-
+                var actuacion = datos.actuacion;
+                   $("#ActuacionRiesgo_fecha").val(actuacion.fecha);
+                   $("#ActuacionRiesgo_descripcion").val(actuacion.descripcion);
+                   $("#ActuacionRiesgo_accion").select2('val',actuacion.accion);
+                   $("#ActuacionRiesgo_accion").val(actuacion.accion);
+                   $("#ActuacionRiesgo_accion_transferir").val(actuacion.accion_transferir);
+                   $("#ActuacionRiesgo_accion_transferir").select2('val',actuacion.accion_transferir);
+                getAccion();
                 $("#modalActuacion").modal('show');
             }
         });
@@ -74,13 +80,22 @@
        var fecha = $("#ActuacionRiesgo_fecha").val();
        var descripcion = $("#ActuacionRiesgo_descripcion").val();
        var analisis_riesgo_detalle_id = $("#analisis_riesgo_detalle_id").val();
+       var accion = $("#ActuacionRiesgo_accion").val();
+       var accion_transferir = $("#ActuacionRiesgo_accion_transferir").val();
+
+        if(accion == "" || accion == null || descripcion == "" || descripcion == null
+          || fecha == "" || fecha == null  ){
+            return Lobibox.notify('error',{msg: "Debe completar el formulario"});
+       }
         $.ajax({
             type: 'POST',
             url: "<?php echo CController::createUrl('analisis/crearActualizarActuacion')?>",
             data: {
                 'analisis_riesgo_detalle_id': analisis_riesgo_detalle_id,
                 'fecha':fecha,
-                'descripcion':descripcion
+                'descripcion':descripcion,
+                'accion':accion,
+                'accion_transferir':accion_transferir,
             },
             dataType: 'Text',
             success: function (data) {
@@ -91,6 +106,7 @@
                     Lobibox.notify('error',{msg: datos.msj});
                 }
                 $("#modalActuacion").modal('hide');
+                $.fn.yiiGridView.update('activos-grid');
             }
         });
 
@@ -107,13 +123,43 @@
     }
     
     function exportarPDF() {
-       // $("#modalProcesando").modal('show');
         var analisis_id = $("#analisis_id").val();
         var href = "<?php echo CHtml::normalizeUrl(array('analisis/exportarGestionDeRiegosPDF'))?>";
         params = 'analisis_id='+analisis_id;
         url = href + '?' + params;
         window.open(url);
-      //  $("#modalProcesando").modal('hide');
+    }
+    
+    function getAccion() {
+        var accion = $("#ActuacionRiesgo_accion").val();
+        var analisis_id = $("#analisis_id").val();
+        var analisis_riesgo_detalle_id = $("#analisis_riesgo_detalle_id").val();
+        $("#divReduccion").css('display','none');
+        $("#divTransferir").css('display','none');
+
+        if(accion == 1 || accion == "1"){
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo CController::createUrl('control/getControlesEnRiesgo')?>",
+                data: {
+                    'analisis_id': analisis_id,
+                    'analisis_riesgo_detalle_id': analisis_riesgo_detalle_id
+                },
+                dataType: 'Text',
+                success: function (data) {
+                    var datos = jQuery.parseJSON(data);
+                    $("#divReduccion").empty().html(datos.html);
+                    $("#divReduccion").css('display','block');
+                    $("#divTransferir").css('display','none');
+                }
+            });
+        }
+
+        if(accion == 2 || accion == "2"){
+            $("#divReduccion").css('display','none');
+            $("#divTransferir").css('display','block');
+        }
+
     }
 </script>
 
@@ -209,16 +255,6 @@
                 }else{
                     return "";
                 }
-
-//                $analisis_riesgo = AnalisisRiesgo::model()->findByPk($data->analisis_riesgo_id);
-//                if($analisis_riesgo->riesgo_aceptable < $data->valor_activo){
-//                }
-//                if($analisis_riesgo->riesgo_aceptable > $data->valor_activo){
-//                    return "<i class='".$label."' style='color:green' aria-hidden='true'></i>&nbsp;".$data->valor_activo;
-//                }
-//                if($analisis_riesgo->riesgo_aceptable == $data->valor_activo){
-//                    return "<i class='".$label."' style='color:green' aria-hidden='true'></i>&nbsp;".$data->valor_activo;
-//                }
             }
         ),
         array(
@@ -228,7 +264,7 @@
             'value'=>function($data){
                 if($data->valor_confidencialidad != 0 && !is_null($data->valor_confidencialidad)){
                     $labelFlecha = $data->getClaseFlechaRiesgoAceptable();
-                    $label = $data->getClaseNivelDeValores($data->valor_confidencialidad);
+                    $label = $data->getClaseNivelDeValores($data->valor_confidencialidad,$data->proyecto_id);
                     return "<i class='".$labelFlecha."' style='color:green' aria-hidden='true'></i>&nbsp;"."<span class='".$label."' style='font-size: 12px;' >".$data->valor_confidencialidad."</span>";
 
                 }else{
@@ -243,7 +279,7 @@
             'value'=>function($data){
                 if($data->valor_integridad != 0 && !is_null($data->valor_integridad)){
                     $labelFlecha = $data->getClaseFlechaRiesgoAceptable();
-                    $label = $data->getClaseNivelDeValores($data->valor_integridad);
+                    $label = $data->getClaseNivelDeValores($data->valor_integridad,$data->proyecto_id);
                     return "<i class='".$labelFlecha."' style='color:green' aria-hidden='true'></i>&nbsp;"."<span class='".$label."' style='font-size: 12px;' >".$data->valor_integridad."</span>";
 
                 }else{
@@ -258,7 +294,7 @@
             'value'=>function($data){
                 if($data->valor_disponibilidad != 0 && !is_null($data->valor_disponibilidad)){
                     $labelFlecha = $data->getClaseFlechaRiesgoAceptable();
-                    $label = $data->getClaseNivelDeValores($data->valor_disponibilidad);
+                    $label = $data->getClaseNivelDeValores($data->valor_disponibilidad,$data->proyecto_id);
                     return "<i class='".$labelFlecha."' style='color:green' aria-hidden='true'></i>&nbsp;"."<span class='".$label."' style='font-size: 12px;' >".$data->valor_disponibilidad."</span>";
 
                 }else{
@@ -273,7 +309,7 @@
             'value'=>function($data){
                 if($data->valor_trazabilidad != 0 && !is_null($data->valor_trazabilidad)){
                     $labelFlecha = $data->getClaseFlechaRiesgoAceptable();
-                    $label = $data->getClaseNivelDeValores($data->valor_trazabilidad);
+                    $label = $data->getClaseNivelDeValores($data->valor_trazabilidad,$data->proyecto_id);
                     return "<i class='".$labelFlecha."' style='color:green' aria-hidden='true'></i>&nbsp;"."<span class='".$label."' style='font-size: 12px;' >".$data->valor_trazabilidad."</span>";
 
                 }else{
@@ -281,6 +317,11 @@
                 }
             },
         ),
+        [
+            'header'=>'Valor Actuacion',
+            'name'=>'id',
+            'value'=>'$data->getActuacion()',
+        ],
         [
             'header' => 'Actuaciones',
             'type' => 'raw',
@@ -355,7 +396,48 @@
                                 <?php echo $form->labelEx($actuacion,'descripcion',array('class'=>'col-sm-3')); ?>
                                 <?php echo $form->textArea($actuacion,'descripcion',array('class'=>'col-sm-9','rows'=>6, 'cols'=>75)); ?>
                             </div>
+                            <div class="col-sm-12">
+                                <?php echo $form->select2Group(
+                                    $actuacion, 'accion',
+                                    [
+                                        'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                                        'widgetOptions' => [
+                                            'asDropDownList' => true,
+                                            'data' => ActuacionRiesgo::$acciones,
+                                            'options' => [
+                                                'minimumResultsForSearch' => 10,
+                                                'placeholder' => '--Seleccione--'
+                                            ],
+                                            'htmlOptions' => ['onChange'=>'getAccion()'],
+                                        ],
+                                    ]
+                                );
+                                ?>
+                            </div>
+                            <div class="col-sm-12" style="display: none;" id="divReduccion">
+
+                            </div>
                         </div>
+                        <div class="row" style="display: none" id="divTransferir">
+                            <div class="col-sm-12">
+                                <?php echo $form->select2Group(
+                                    $actuacion, 'accion_transferir',
+                                    [
+                                        'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                                        'widgetOptions' => [
+                                            'asDropDownList' => true,
+                                            'data' => ActuacionRiesgo::$accionesTransferir,
+                                            'options' => [
+                                                'minimumResultsForSearch' => 10,
+                                                'placeholder' => '--Seleccione--'
+                                            ],
+                                         //   'htmlOptions' => ['onChange'=>'getAccion()'],
+                                        ],
+                                    ]
+                                );
+                                ?>                            </div>
+                        </div>
+
                     <?php $this->endWidget(); ?>
                 </div>
             </div>

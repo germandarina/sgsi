@@ -8,6 +8,8 @@
  * @property integer $analisis_riesgo_detalle_id
  * @property string $fecha
  * @property string $descripcion
+ * @property integer $accion
+ * @property integer $accion_transferir
  * @property string $creaUserStamp
  * @property string $creaTimeStamp
  * @property string $modUserStamp
@@ -21,6 +23,28 @@ class ActuacionRiesgo extends CustomCActiveRecord
 	/**
 	 * @return string the associated database table name
 	 */
+
+	const ACCION_RETENCION = 0;
+    const ACCION_REDUCION = 1;
+    const ACCION_TRANSFERIR = 2;
+    const ACCION_EVITAR = 3;
+
+    const ACCION_TRANSFERIR_PROVEEDORES = 0;
+    const ACCION_TRANSFERIR_TERCEROS = 1;
+    const ACCION_TRANSFERIR_SEGUROS = 2;
+
+    public static $acciones = [
+        self::ACCION_RETENCION => 'Retencion',
+        self::ACCION_REDUCION => 'Reduccion',
+        self::ACCION_TRANSFERIR => 'Transferir',
+        self::ACCION_EVITAR => 'Evitar',
+    ];
+
+    public static $accionesTransferir = [
+        self::ACCION_TRANSFERIR_PROVEEDORES => 'Proveedores',
+        self::ACCION_TRANSFERIR_TERCEROS => 'Terceros',
+        self::ACCION_TRANSFERIR_SEGUROS => 'Seguros',
+    ];
 	public function tableName()
 	{
 		return 'actuacion_riesgo';
@@ -34,14 +58,14 @@ class ActuacionRiesgo extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('analisis_riesgo_detalle_id, fecha, descripcion', 'required'),
-			array('analisis_riesgo_detalle_id', 'numerical', 'integerOnly'=>true),
+			array('accion,analisis_riesgo_detalle_id, fecha, descripcion', 'required'),
+			array('accion_transferir,analisis_riesgo_detalle_id', 'numerical', 'integerOnly'=>true),
 			array('descripcion', 'length', 'max'=>200),
 			array('creaUserStamp, modUserStamp', 'length', 'max'=>50),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, analisis_riesgo_detalle_id, fecha, descripcion, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('accion_transferir,accion,id, analisis_riesgo_detalle_id, fecha, descripcion, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 

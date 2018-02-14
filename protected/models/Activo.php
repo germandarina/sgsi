@@ -178,11 +178,11 @@ class Activo extends CustomCActiveRecord
         return $hijos;
     }
 
-    public function getNivelDeRiesgo($valor_riesgo_activo){
-        $nivelesRiesgo = NivelDeRiesgos::model()->findAll();
+    public function getNivelDeRiesgo($valor_riesgo_activo,$proyecto_id){
+        $nivelesRiesgo = NivelDeRiesgos::model()->findAllByAttributes(['proyecto_id'=>$proyecto_id]);
         foreach ($nivelesRiesgo as $nivel){
-            if($nivel->valor_minimo <= $valor_riesgo_activo && $valor_riesgo_activo<= $nivel->valor_maximo){
-                return $nivel->id;
+            if($valor_riesgo_activo >= $nivel->valor_minimo && $valor_riesgo_activo <= $nivel->valor_maximo){
+                return $nivel->concepto;
             }
         }
     }

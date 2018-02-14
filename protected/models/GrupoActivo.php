@@ -42,6 +42,7 @@ class GrupoActivo extends CustomCActiveRecord
     public $nivel_riesgo_id;
     public $analisis_riesgo_id;
     public $analisis_riesgo_detalle_id;
+    public $proyecto_id;
 
     const VALOR_ALTO = 3;
     const VALOR_MEDIO = 2;
@@ -149,17 +150,14 @@ class GrupoActivo extends CustomCActiveRecord
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria=new CDbCriteria;
-        $criteria->select = 't.activo_id, ard.*, ard.id as analisis_riesgo_detalle_id ';
-        $criteria->join = " inner join analisis_riesgo_detalle ard  on ard.grupo_activo_id = t.id ";
+        $criteria->compare('t.analisis_id',$this->analisis_id);
+
+        $criteria->select = 't.activo_id, ard.*, ard.id as analisis_riesgo_detalle_id, a.proyecto_id as proyecto_id ';
+        $criteria->join = " inner join analisis_riesgo_detalle ard  on ard.grupo_activo_id = t.id
+                            inner join analisis_riesgo ar on ar.id = ard.analisis_riesgo_id 
+                            inner join analisis a on a.id = ar.analisis_id ";
 
         $criteria->compare('t.activo_id',$this->activo_id);
-//        $criteria->compare('t.grupo_id',$this->grupo_id);
-//        $criteria->compare('t.analisis_id',$this->analisis_id);
-//        $criteria->compare('t.confidencialidad',$this->confidencialidad);
-//        $criteria->compare('t.integridad',$this->integridad);
-//        $criteria->compare('t.disponibilidad',$this->disponibilidad);
-//        $criteria->compare('t.trazabilidad',$this->trazabilidad);
-//        $criteria->order = " g.id, g.tipo_activo_id ";
         return new CActiveDataProvider($this, array(
             'criteria'=>$criteria,'sort'=>false,'pagination'=>['pageSize'=>20]
         ));
@@ -262,9 +260,18 @@ class GrupoActivo extends CustomCActiveRecord
         }
     }
 
-    public function getClaseNivelDeValores($valor){
-       $nivel_riesgo_id = Activo::model()->getNivelDeRiesgo($valor);
+    public function getClaseNivelDeValores($valor,$proyecto_id){
+       $nivel_riesgo_id = Activo::model()->getNivelDeRiesgo($valor,$proyecto_id);
        $this->nivel_riesgo_id = $nivel_riesgo_id;
        return $this->getClaseNivelDeRiesgo();
+    }
+
+    public function getActuacion(){
+        $actuacion = ActuacionRiesgo::model()->findByAttributes(['analisis_riesgo_detalle_id'=>$this->analisis_riesgo_detalle_id]);
+        if(is_null($actuacion)){
+            return "Sin Actuacion";
+        }else{
+            return ActuacionRiesgo::$acciones[$actuacion->accion];
+        }
     }
 }

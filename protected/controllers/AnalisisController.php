@@ -103,6 +103,7 @@ class AnalisisController extends Controller
         $dependenciasPadres = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>NULL));
         $model->fecha = Utilities::ViewDateFormat($model->fecha);
         $amenaza = new Amenaza();
+        $amenaza->analisis_id = $model->id;
         if(isset($_GET['Amenaza'])){
             $amenaza->nombre = $_GET['Amenaza']['nombre'];
             $amenaza->grupo_nombre = $_GET['Amenaza']['grupo_nombre'];
@@ -614,6 +615,7 @@ class AnalisisController extends Controller
             try{
                 $transaction = Yii::app()->db->beginTransaction();
                 $analisis_riesgo = AnalisisRiesgo::model()->findByAttributes(array('analisis_id'=>$_POST['analisis_id']));
+                $analisis = Analisis::model()->findByPk($_POST['analisis_id']);
                 if(is_null($analisis_riesgo)) {
                     $analisis_riesgo = new AnalisisRiesgo();
                     $analisis_riesgo->riesgo_aceptable = "";
@@ -641,13 +643,13 @@ class AnalisisController extends Controller
                             $analisis_riesgo_detalle = AnalisisRiesgoDetalle::model()->findByAttributes(array('analisis_riesgo_id'=>$analisis_riesgo->id
                                                                                                                 ,'grupo_activo_id'=>$ga->id));
                             if(!is_null($analisis_riesgo_detalle)){
-                                if($valor_riesgo_activo != $analisis_riesgo_detalle->valor_activo){
+                                if($analisis_riesgo_detalle->nivel_riesgo_id != Activo::model()->getNivelDeRiesgo($valor_riesgo_activo,$analisis->proyecto_id)){
                                     $analisis_riesgo_detalle->valor_activo = $valor_riesgo_activo;
                                     $analisis_riesgo_detalle->valor_confidencialidad = $ga->confidencialidad * $valor_amenaza * $valor_vulnerabilidad;
                                     $analisis_riesgo_detalle->valor_disponibilidad = $ga->disponibilidad * $valor_amenaza * $valor_vulnerabilidad;
                                     $analisis_riesgo_detalle->valor_integridad =$ga->integridad * $valor_amenaza * $valor_vulnerabilidad;
                                     $analisis_riesgo_detalle->valor_trazabilidad = $ga->trazabilidad * $valor_amenaza * $valor_vulnerabilidad;
-                                    $analisis_riesgo_detalle->nivel_riesgo_id = Activo::model()->getNivelDeRiesgo($valor_riesgo_activo);
+                                    $analisis_riesgo_detalle->nivel_riesgo_id = Activo::model()->getNivelDeRiesgo($valor_riesgo_activo,$analisis->proyecto_id);
                                     if(!$analisis_riesgo_detalle->save()){
                                         throw new Exception("Error al crear analisis de riesgo detalle");
                                     }
@@ -662,7 +664,7 @@ class AnalisisController extends Controller
                                 $analisis_riesgo_detalle->valor_disponibilidad = $ga->disponibilidad * $valor_amenaza * $valor_vulnerabilidad;
                                 $analisis_riesgo_detalle->valor_integridad =$ga->integridad * $valor_amenaza * $valor_vulnerabilidad;
                                 $analisis_riesgo_detalle->valor_trazabilidad = $ga->trazabilidad * $valor_amenaza * $valor_vulnerabilidad;
-                                $analisis_riesgo_detalle->nivel_riesgo_id = Activo::model()->getNivelDeRiesgo($valor_riesgo_activo);
+                                $analisis_riesgo_detalle->nivel_riesgo_id = Activo::model()->getNivelDeRiesgo($valor_riesgo_activo,$analisis->proyecto_id);
                                 if(!$analisis_riesgo_detalle->save()){
                                     throw new Exception("Error al crear analisis de riesgo detalle");
                                 }
@@ -691,11 +693,15 @@ class AnalisisController extends Controller
         if(isset($_POST['analisis_riesgo_detalle_id'])){
             $actuacion = ActuacionRiesgo::model()->findByAttributes(['analisis_riesgo_detalle_id'=>$_POST['analisis_riesgo_detalle_id']]);
             if(!is_null($actuacion)){
-                $datos = ['fecha'=>Utilities::ViewDateFormat($actuacion->fecha),'descripcion'=>$actuacion->descripcion];
+                $actuacion->fecha = Utilities::ViewDateFormat($actuacion->fecha);
+
+                $datos = ['actuacion'=>$actuacion];
                 echo CJSON::encode($datos);
                 die();
             }
-            $datos = ['fecha'=>"",'descripcion'=>""];
+            $actuacion = new ActuacionRiesgo();
+
+            $datos = ['actuacion'=>$actuacion];
             echo CJSON::encode($datos);
             die();
         }
@@ -710,6 +716,10 @@ class AnalisisController extends Controller
             }
             $actuacion->fecha = Utilities::MysqlDateFormat($_POST['fecha']);
             $actuacion->descripcion = $_POST['descripcion'];
+            $actuacion->accion = $_POST['accion'];
+            if($actuacion->accion == ActuacionRiesgo::ACCION_TRANSFERIR){
+                $actuacion->accion_transferir = $_POST['accion_transferir'];
+            }
             if(!$actuacion->save()){
                 $datos = ['error'=>1,'msj'=>'Error al crear/actualizar actuacion'];
                 echo CJSON::encode($datos);

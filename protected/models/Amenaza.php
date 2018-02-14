@@ -143,6 +143,8 @@ class Amenaza extends CustomCActiveRecord
         $criteria->select = " t.*, g.id as grupo_id, g.nombre as grupo_nombre, ga.analisis_id as analisis_id, 
                               a.nombre as activo_nombre, a.id as activo_id , ga.id as grupo_activo_id  ";
 
+        $criteria->compare('ga.analisis_id',$this->analisis_id);
+
         if(!empty($this->nombre)){
             $criteria->addCondition(" t.nombre like '%".$this->nombre."%'  ");
         }

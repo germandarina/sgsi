@@ -32,7 +32,7 @@ class ControlController extends Controller
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update', 'admin','delete','getControlValor','eliminarControlValor'
-                                   ,'guardarControlValor'),
+                                   ,'guardarControlValor','getControlesEnRiesgo'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -214,6 +214,26 @@ class ControlController extends Controller
                 echo CJSON::encode($datos);
                 die();
             }
+        }
+    }
+
+    public function actionGetControlesEnRiesgo(){
+        if(isset($_POST['analisis_riesgo_detalle_id'])){
+            $analisis_riesgo_detalle = AnalisisRiesgoDetalle::model()->findByPk($_POST['analisis_riesgo_detalle_id']);
+            $analisis_riesgo = $analisis_riesgo_detalle->analisisRiesgo;
+            $grupo_activo = $analisis_riesgo_detalle->grupoActivo;
+            $analisis_control = AnalisisControl::model()->findAllByAttributes(['analisis_id'=>$analisis_riesgo->analisis_id,'grupo_activo_id'=>$grupo_activo->id]);
+            $arrayControles = [];
+            if(!empty($analisis_control)){
+                foreach ($analisis_control as $ac){
+                    if($ac->valor == GrupoActivo::VALOR_ALTO){
+                        $arrayControles[] = $ac;
+                    }
+                }
+            }
+            $html = $this->renderPartial('_controlesEnRiesgo',array('arrayControles'=>$arrayControles),true);
+            $datos =['html'=>$html];
+            echo CJSON::encode($datos);
         }
     }
 }
