@@ -1,4 +1,9 @@
-
+<script>
+	$(function () {
+		$("#analisis-grid_c8").empty().html('Crear Plan Tratamiento');
+		$("#analisis-grid_c9").empty().html('Ver Planes Tratamiento');
+	});
+</script>
 
 <div class="box">
 	<div class="box-header">
@@ -122,12 +127,10 @@
 						'template' => '{crear}',
 						'buttons' => array(
 							'crear' => array(
+								'header'=>'Crear',
+								'title'=>'Crear',
 								'label' => 'Crear Plan de Tratamiento',
-								//'click' => 'function () {if(!confirm("Esta seguro de anular la factura?")) {return false;}}',
 								'url' => 'Yii::app()->createUrl("/plan/create", array("analisis_id"=>$data->id))',
-//							'visible' => function ($row, Factura $data) {
-//								return $data->puedeAnularFacturaCompra();
-//							},
 								'icon' => 'fa fa-plus-square',
 							),
 						),
