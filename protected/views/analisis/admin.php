@@ -57,6 +57,31 @@
 					'template'=>'{update}{delete}',
 					'afterDelete' => 'function(link,success,data) { if (success && data) Lobibox.notify(\'info\', {msg: data }); }'
 				),
+				array('class' => 'booster.widgets.TbButtonColumn',
+					'template' => '{crear}',
+					'buttons' => array(
+						'crear' => array(
+							'label' => 'Crear Plan de Tratamiento',
+							//'click' => 'function () {if(!confirm("Esta seguro de anular la factura?")) {return false;}}',
+							'url' => 'Yii::app()->createUrl("/plan/create", array("analisis_id"=>$data->id))',
+//							'visible' => function ($row, Factura $data) {
+//								return $data->puedeAnularFacturaCompra();
+//							},
+							'icon' => 'fa fa-plus-square',
+						),
+					),
+					),
+				array('class' => 'booster.widgets.TbButtonColumn',
+					'template' => '{ver}',
+					'buttons' => array(
+						'ver' => array(
+							'label' => 'Ver/Actualizar Plan de Tratamiento',
+							'url' => 'Yii::app()->createUrl("/plan/verPlanes", array("analisis_id"=>$data->id))',
+							'visible' => '$data->tienePlanDeTratamiento()',
+							'icon' => 'fa fa-eye',
+						),
+					),
+					),
 			),
 		));
 	}else{
@@ -93,6 +118,31 @@
 						'template'=>'{update}{delete}',
 						'afterDelete' => 'function(link,success,data) { if (success && data) Lobibox.notify(\'info\', {msg: data }); }'
 					),
+					array('class' => 'booster.widgets.TbButtonColumn',
+						'template' => '{crear}',
+						'buttons' => array(
+							'crear' => array(
+								'label' => 'Crear Plan de Tratamiento',
+								//'click' => 'function () {if(!confirm("Esta seguro de anular la factura?")) {return false;}}',
+								'url' => 'Yii::app()->createUrl("/plan/create", array("analisis_id"=>$data->id))',
+//							'visible' => function ($row, Factura $data) {
+//								return $data->puedeAnularFacturaCompra();
+//							},
+								'icon' => 'fa fa-plus-square',
+							),
+						),
+						),
+					array('class' => 'booster.widgets.TbButtonColumn',
+						'template' => '{ver}',
+						'buttons' => array(
+							'ver' => array(
+								'label' => 'Ver/Actualizar Planes de Tratamiento',
+								'url' => 'Yii::app()->createUrl("/plan/verPlanes", array("analisis_id"=>$data->id))',
+								'visible' => '$data->tienePlanDeTratamiento()', //  SI NO TIENE PLAN NO MOSTRAR EL ICONO;
+								'icon' => 'fa fa-eye',
+							),
+						),
+						),
 				),
 			));
 		}

@@ -39,8 +39,8 @@ class Vulnerabilidad extends CustomCActiveRecord
 		return array(
 			array('nombre, descripcion, amenaza_id', 'required'),
 			array('amenaza_id', 'numerical', 'integerOnly'=>true),
-			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>150),
-			array('descripcion', 'length', 'max'=>200),
+			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>250),
+			array('descripcion', 'length', 'max'=>800),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.

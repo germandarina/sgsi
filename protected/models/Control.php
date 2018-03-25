@@ -43,8 +43,8 @@ class Control extends CustomCActiveRecord
 		return array(
 			array('nombre, descripcion, numeracion, vulnerabilidad_id', 'required'),
 			array('vulnerabilidad_id', 'numerical', 'integerOnly'=>true),
-			array('nombre, numeracion, creaUserStamp, modUserStamp', 'length', 'max'=>150),
-			array('descripcion', 'length', 'max'=>200),
+			array('nombre, numeracion, creaUserStamp, modUserStamp', 'length', 'max'=>250),
+			array('descripcion', 'length', 'max'=>800),
 			array('creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.

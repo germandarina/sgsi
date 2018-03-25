@@ -1,32 +1,33 @@
 <?php
 
 /**
- * This is the model class for table "grupo".
+ * This is the model class for table "plan_detalle".
  *
- * The followings are the available columns in table 'grupo':
+ * The followings are the available columns in table 'plan_detalle':
  * @property integer $id
- * @property string $nombre
- * @property string $criterio
- * @property integer $tipo_activo_id
- * @property integer $proyecto_id
+ * @property integer $plan_id
+ * @property integer $analisis_control_id
+ * @property string $fecha_posible_inicio
+ * @property string $fecha_posible_fin
+ * @property string $fecha_real_inicio
+ * @property string $fecha_real_fin
  * @property string $creaUserStamp
  * @property string $creaTimeStamp
  * @property string $modUserStamp
  * @property string $modTimeStamp
  *
  * The followings are the available model relations:
- * @property TipoActivo $tipoActivo
- * @property GrupoActivo[] $grupoActivos
- * @property Proyecto $proyecto
+ * @property Plan $plan
+ * @property AnalisisControl $analisisControl
  */
-class Grupo extends CustomCActiveRecord
+class PlanDetalle extends CustomCActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'grupo';
+		return 'plan_detalle';
 	}
 
 	/**
@@ -37,14 +38,13 @@ class Grupo extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-		    array('tipo_activo_id,nombre,criterio','required'),
-			array('proyecto_id,tipo_activo_id', 'numerical', 'integerOnly'=>true),
-			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>250),
-			array('criterio', 'length', 'max'=>800),
-			array('creaTimeStamp, modTimeStamp', 'safe'),
+			array('plan_id, analisis_control_id', 'numerical', 'integerOnly'=>true),
+			array('creaUserStamp, modUserStamp', 'length', 'max'=>50),
+            array('fecha_posible_inicio, fecha_posible_fin','required','on'=>'guardarValores'),
+			array('fecha_posible_inicio, fecha_posible_fin, fecha_real_inicio, fecha_real_fin, creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('proyecto_id,id, nombre, criterio, tipo_activo_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('id, plan_id, analisis_control_id, fecha_posible_inicio, fecha_posible_fin, fecha_real_inicio, fecha_real_fin, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,10 +56,9 @@ class Grupo extends CustomCActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'tipoActivo' => array(self::BELONGS_TO, 'TipoActivo', 'tipo_activo_id'),
-			'grupoActivos' => array(self::HAS_MANY, 'GrupoActivo', 'grupo_id'),
-            'proyecto' => array(self::BELONGS_TO, 'Proyecto', 'proyecto_id'),
-        );
+			'plan' => array(self::BELONGS_TO, 'Plan', 'plan_id'),
+			'analisisControl' => array(self::BELONGS_TO, 'AnalisisControl', 'analisis_control_id'),
+		);
 	}
 
 	/**
@@ -69,14 +68,16 @@ class Grupo extends CustomCActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'nombre' => 'Nombre',
-			'criterio' => 'Criterio',
-			'tipo_activo_id' => 'Tipo Activo',
+			'plan_id' => 'Plan',
+			'analisis_control_id' => 'Analisis Control',
+			'fecha_posible_inicio' => 'Fecha Posible Inicio',
+			'fecha_posible_fin' => 'Fecha Posible Fin',
+			'fecha_real_inicio' => 'Fecha Real Inicio',
+			'fecha_real_fin' => 'Fecha Real Fin',
 			'creaUserStamp' => 'Crea User Stamp',
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
-            'proyecto_id'=>'Proyecto'
 		);
 	}
 
@@ -97,24 +98,21 @@ class Grupo extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-        if(!is_null($usuario->ultimo_proyecto_id)){
-            $criteria->compare('proyecto_id',$usuario->ultimo_proyecto_id);
-        }
-        if($this->proyecto_id != NULL){
-            $criteria->compare('proyecto_id',$this->proyecto_id);
-        }
-		$criteria->compare('id',$this->id);
-		$criteria->compare('nombre',$this->nombre,true);
-		$criteria->compare('criterio',$this->criterio,true);
-		$criteria->compare('tipo_activo_id',$this->tipo_activo_id);
-		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
-		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
+
+		//$criteria->compare('id',$this->id);
+		$criteria->compare('plan_id',$this->plan_id);
+//		$criteria->compare('analisis_control_id',$this->analisis_control_id);
+//		$criteria->compare('fecha_posible_inicio',$this->fecha_posible_inicio,true);
+//		$criteria->compare('fecha_posible_fin',$this->fecha_posible_fin,true);
+//		$criteria->compare('fecha_real_inicio',$this->fecha_real_inicio,true);
+//		$criteria->compare('fecha_real_fin',$this->fecha_real_fin,true);
+//		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
+//		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
 //		$criteria->compare('modUserStamp',$this->modUserStamp,true);
 //		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
 
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+			'criteria'=>$criteria,'sort'=>false,'pagination'=>false,
 		));
 	}
 
@@ -122,20 +120,10 @@ class Grupo extends CustomCActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Grupo the static model class
+	 * @return PlanDetalle the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
-
-	public static function getGruposDelAnalisis($analisis_id){
-        $query = "select g.nombre, g.id
-                    from grupo g
-                    inner join grupo_activo ga on ga.grupo_id = g.id
-                    where analisis_id = ".$analisis_id."  ";
-        $command = Yii::app()->db->createCommand($query);
-        $resultado = $command->queryAll($query);
-        return $resultado;
-    }
 }

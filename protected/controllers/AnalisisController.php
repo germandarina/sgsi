@@ -100,7 +100,7 @@ class AnalisisController extends Controller
         $grupo_activo->analisis_id = $model->id;
         $dependencia = new Dependencia();
         $dependencia->analisis_id = $model->id;
-        $dependenciasPadres = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>NULL));
+        $dependenciasPadres = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>NULL,'analisis_id'=>$model->id));
         $model->fecha = Utilities::ViewDateFormat($model->fecha);
         $amenaza = new Amenaza();
         $amenaza->analisis_id = $model->id;
