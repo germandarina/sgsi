@@ -1,6 +1,6 @@
 <?php
 
-class PlanController extends Controller
+class ReporteController extends Controller
 {
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -32,7 +32,7 @@ class PlanController extends Controller
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update', 'admin', 'delete','verPlanes','gridDetalles','getPlanDetalle',
-                                    'actualizarControles','guardarValoresDetalle','getActivosAfectados'),
+                                    'actualizarControles','guardarValoresDetalle'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -286,26 +286,6 @@ class PlanController extends Controller
                 }
             }
             $datos =['error'=>0,'msj'=>'Controles actualizados con exito'];
-            echo CJSON::encode($datos);
-            die();
-        }
-    }
-
-    public function actionGetActivosAfectados(){
-        if(isset($_POST['plan_detalle_id'])){
-            $query = "select al.nombre as nombre_analisis, a.nombre as nombre_activo, ta.nombre as nombre_tipo_activo
-                            from plan_detalle pl
-                            inner join plan p on p.id =pl.plan_id
-                            inner join analisis al on al.id = p.analisis_id
-                            inner join analisis_control ac on ac.id = pl.analisis_control_id
-                            inner join grupo_activo ga on ga.id = ac.grupo_activo_id
-                            inner join activo a on a.id = ga.activo_id
-                            inner join tipo_activo ta on ta.id = a.tipo_activo_id
-                            where pl.id = ".$_POST['plan_detalle_id']."  ";
-            $command = Yii::app()->db->createCommand($query);
-            $resultados = $command->queryAll($query);
-            $html = $this->renderPartial('_activosAfectados',['resultados'=>$resultados],true);
-            $datos = ['html'=>$html];
             echo CJSON::encode($datos);
             die();
         }

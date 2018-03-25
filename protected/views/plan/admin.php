@@ -74,6 +74,22 @@
 			}
 		});
 	}
+
+	function verActivos(avent,plan_detalle_id) {
+		$.ajax({
+			type: 'POST',
+			url: "<?php echo CController::createUrl('plan/getActivosAfectados')?>",
+			data: {
+				'plan_detalle_id': plan_detalle_id
+			},
+			dataType: 'Text',
+			success: function (data) {
+				var datos = jQuery.parseJSON(data);
+				$("#divActivosAfectados").empty().html(datos.html);
+				$("#modalActivos").modal('show');
+			}
+		});
+	}
 </script>
 <?php
 $this->widget(
@@ -148,6 +164,21 @@ $this->widget(
 				<button type="button" onclick="js:guardarValores()" class="btn btn-success" id="botonModal">
 					Guardar Datos
 				</button>
+				<button type="button" data-dismiss="modal" class="btn btn-default">Cerrar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalActivos" tabindex="-1" role="dialog" aria-hidden="true" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="cabeceraModal">Activos Afectados</h4>
+			</div>
+			<div class="modal-body" id="divActivosAfectados">
+			</div>
+			<div class="modal-footer">
 				<button type="button" data-dismiss="modal" class="btn btn-default">Cerrar</button>
 			</div>
 		</div>

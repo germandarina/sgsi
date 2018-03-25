@@ -6,6 +6,9 @@
 	.glyphicon.glyphicon-pencil {
 		color: white !important;
 	}
+	.glyphicon.glyphicon-eye-open {
+		color: white !important;
+	}
 </style>
 <script>
 
@@ -53,6 +56,12 @@
 			'header' => 'Accion',
 			'type' => 'raw',
 			'value' => '"<a style=\"cursor: pointer;\" onclick=\"levantarModalPlanDetalle(event,$data->id) \" title=\"Presione para Valorar\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-pencil\"></i></a>"',
+			'htmlOptions'=>['style'=>'width:5%;'],
+		],
+		[
+		'header' => 'Ver Activos',
+			'type' => 'raw',
+			'value' => '"<a style=\"cursor: pointer;\" onclick=\"verActivos(event,$data->id) \" title=\"Ver Activos\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-eye-open\"></i></a>"',
 			'htmlOptions'=>['style'=>'width:5%;'],
 		]
 	),
