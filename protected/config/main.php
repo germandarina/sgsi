@@ -9,13 +9,15 @@
 Yii::setPathOfAlias('adminlte', 'protected/vendor/almasaeed2010/adminlte');
 Yii::setPathOfAlias('vendor', 'protected/vendor');
 YII::setPathOfAlias('components.gii.bootstrap.BootstrapCode', 'protected/components/gii/bootstrap/BootstrapCode');
+Yii::setPathOfAlias('chartjs', dirname(__FILE__).'/../extensions/yii-chartjs');
+
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
     'name' => 'DIME-SGSI',
 
     // preloading 'log' component
     //'preload' => array('log', 'booster'),
-    'preload' => strpos($_SERVER['REQUEST_URI'], 'rbam') ? array('log') : array('log', 'booster'),
+    'preload' => strpos($_SERVER['REQUEST_URI'], 'rbam') ? array('log') : array('log', 'booster','chartjs'),
     // autoloading model and component classes
     'import' => array(
         'application.models.*',
@@ -45,6 +47,7 @@ return array(
     ),
     // application components
     'components' => array(
+        'chartjs' => array('class' => 'chartjs.components.ChartJs'),
         'booster' => array(
             'class' => 'vendor.clevertech.yii-booster.src.components.Booster',
         ),

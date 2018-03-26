@@ -34,7 +34,7 @@ class AnalisisController extends Controller
                 'actions' => array('create', 'update', 'admin','crearGrupoActivo','crearDependencia',
                                     'verValoracion','gridControles','guardarValorControl','getGrupoActivo','eliminarGrupoActivo',
                                     'guardarValorAmenaza','guardarRiesgoAceptable','evaluarActivos','getActuacion','crearActualizarActuacion',
-                                    'delete','exportarGestionDeRiegosExcel','exportarGestionDeRiegosPDF'),
+                                    'delete','exportarGestionDeRiegosExcel','exportarGestionDeRiegosPDF','buscarPorNombre'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -766,5 +766,27 @@ class AnalisisController extends Controller
         $html = $this->renderPartial('_gestionDeRiesgos', array('detalles' => $detalles), true);
         $pdf->writeHTML($html, true, false, true, false, '');
         $pdf->Output("Gestion de Riesgos.pdf", "I");
+    }
+
+    public function actionBuscarPorNombre(){
+        if (isset($_GET['q'])) {
+            $data = array();
+            $criteria = new CDbCriteria;
+            $criteria->addCondition('t.nombre LIKE :param ');
+            $criteria->params = array(':param' => "%" . $_GET['q'] . "%");
+            $analisis = Analisis::model()->findAll($criteria);
+            if (empty($analisis)) {
+                $datos["existe"] = 0;
+            } else {
+                $data = array();
+                foreach ($analisis as $fila) {
+                    $data[] = array(
+                        'id' => $fila->id,
+                        'text' => $fila->nombre,
+                    );
+                }
+            }
+            echo CJSON::encode($data);
+        }
     }
 }
