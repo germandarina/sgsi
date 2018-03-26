@@ -772,6 +772,10 @@ class AnalisisController extends Controller
         if (isset($_GET['q'])) {
             $data = array();
             $criteria = new CDbCriteria;
+            if(Yii::app()->user->model->isAuditor()){
+                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+                $criteria->addCondition('t.proyecto_id = '.$usuario->ultimo_proyecto_id);
+            }
             $criteria->addCondition('t.nombre LIKE :param ');
             $criteria->params = array(':param' => "%" . $_GET['q'] . "%");
             $analisis = Analisis::model()->findAll($criteria);

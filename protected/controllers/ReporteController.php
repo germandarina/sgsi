@@ -77,7 +77,9 @@ class ReporteController extends Controller
             $analisis->id = $aux->id;
             $analisis->nombre =$aux->nombre;
             $datos = Analisis::model()->getValoresGrafico($analisis->id);
-
+            if(empty($datos)){
+                Yii::app()->user->setNotification('info','El analisis no tiene datos cargados');
+            }
         }
         $this->render('activosPorRiesgo', array(
             'analisis' => $analisis,'datos'=>$datos,

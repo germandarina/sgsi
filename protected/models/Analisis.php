@@ -197,145 +197,150 @@ class Analisis extends CustomCActiveRecord
         $command = Yii::app()->db->createCommand($queryIntegridad);
         $valores = $command->queryAll($queryIntegridad);
         $cantidadTotal = count($valores);
-        $arrayValores = [];
-        $analisis = Analisis::model()->findByPk($analisis_id);
-        $nivelesRiesgos = NivelDeRiesgos::model()->findAllByAttributes(['proyecto_id'=>$analisis->proyecto_id]);
-        foreach ($nivelesRiesgos as $nr){
-            $cantidadIntegridad =0;
-            $cantidadDisponibilidad =0;
-            $cantidadConfidencialidad =0;
-            $cantidadTrazabilidad=0;
-            foreach ($valores as $valor){
-                if($nr->valor_minimo<= $valor['valor_integridad'] && $nr->valor_maximo >= $valor['valor_integridad']){
-                    $cantidadIntegridad +=1;
+        if($cantidadTotal > 0){
+            $arrayValores = [];
+            $analisis = Analisis::model()->findByPk($analisis_id);
+            $nivelesRiesgos = NivelDeRiesgos::model()->findAllByAttributes(['proyecto_id'=>$analisis->proyecto_id]);
+            foreach ($nivelesRiesgos as $nr){
+                $cantidadIntegridad =0;
+                $cantidadDisponibilidad =0;
+                $cantidadConfidencialidad =0;
+                $cantidadTrazabilidad=0;
+                foreach ($valores as $valor){
+                    if($nr->valor_minimo<= $valor['valor_integridad'] && $nr->valor_maximo >= $valor['valor_integridad']){
+                        $cantidadIntegridad +=1;
+                    }
+                    if($nr->valor_minimo<= $valor['valor_disponibilidad'] && $nr->valor_maximo >= $valor['valor_disponibilidad']){
+                        $cantidadDisponibilidad +=1;
+                    }
+                    if($nr->valor_minimo<= $valor['valor_confidencialidad'] && $nr->valor_maximo >= $valor['valor_confidencialidad']){
+                        $cantidadConfidencialidad +=1;
+                    }
+                    if($nr->valor_minimo<= $valor['valor_trazabilidad'] && $nr->valor_maximo >= $valor['valor_trazabilidad']){
+                        $cantidadTrazabilidad +=1;
+                    }
                 }
-                if($nr->valor_minimo<= $valor['valor_disponibilidad'] && $nr->valor_maximo >= $valor['valor_disponibilidad']){
-                    $cantidadDisponibilidad +=1;
-                }
-                if($nr->valor_minimo<= $valor['valor_confidencialidad'] && $nr->valor_maximo >= $valor['valor_confidencialidad']){
-                    $cantidadConfidencialidad +=1;
-                }
-                if($nr->valor_minimo<= $valor['valor_trazabilidad'] && $nr->valor_maximo >= $valor['valor_trazabilidad']){
-                    $cantidadTrazabilidad +=1;
-                }
+                $arrayValores['integridad'][NivelDeRiesgos::$arrayConceptos[$nr->concepto]] = $cantidadIntegridad;
+                $arrayValores['disponibilidad'][NivelDeRiesgos::$arrayConceptos[$nr->concepto]] = $cantidadDisponibilidad;
+                $arrayValores['confidencialidad'][NivelDeRiesgos::$arrayConceptos[$nr->concepto]] = $cantidadConfidencialidad;
+                $arrayValores['trazabilidad'][NivelDeRiesgos::$arrayConceptos[$nr->concepto]] = $cantidadTrazabilidad;
             }
-            $arrayValores['integridad'][NivelDeRiesgos::$arrayConceptos[$nr->concepto]] = $cantidadIntegridad;
-            $arrayValores['disponibilidad'][NivelDeRiesgos::$arrayConceptos[$nr->concepto]] = $cantidadDisponibilidad;
-            $arrayValores['confidencialidad'][NivelDeRiesgos::$arrayConceptos[$nr->concepto]] = $cantidadConfidencialidad;
-            $arrayValores['trazabilidad'][NivelDeRiesgos::$arrayConceptos[$nr->concepto]] = $cantidadTrazabilidad;
+
+            $arrayGraficoIntegridad =[];
+            $arrayGraficoDispo =[];
+            $arrayGraficoConfi =[];
+            $arrayGraficoTraza =[];
+
+            // INTEGRIDAD
+            $filaGrafico = array();
+            $porcentajeNoAceptable = round($arrayValores['integridad']['No Aceptable']*100/ $cantidadTotal,2);
+
+            $filaGrafico['value'] =  $porcentajeNoAceptable;
+            $filaGrafico['color'] = "rgba(255,0,0)";
+            $filaGrafico['label'] =  'No Aceptable ('.$porcentajeNoAceptable.' %)' ;
+            $arrayGraficoIntegridad[] = $filaGrafico;
+
+            $filaGrafico = array();
+            $porcentajeAceptableConPrecaucion = round($arrayValores['integridad']['Aceptable con Precaucion']*100/ $cantidadTotal,2);
+
+            $filaGrafico['value'] =  $porcentajeAceptableConPrecaucion;
+            $filaGrafico['color'] = "rgb(255, 180, 68)";
+            $filaGrafico['label'] =  'Aceptable con Precaucion ('.$porcentajeAceptableConPrecaucion.' %)';
+            $arrayGraficoIntegridad[] = $filaGrafico;
+
+            $filaGrafico = array();
+            $porcentajeAceptable = round($arrayValores['integridad']['Aceptable']*100/ $cantidadTotal,2);
+
+            $filaGrafico['value'] =  $porcentajeAceptable;
+            $filaGrafico['color'] = "rgb(1, 136, 3)";
+            $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
+            $arrayGraficoIntegridad[] = $filaGrafico;
+
+
+            // DISPONIBILIDAD
+            $filaGrafico = array();
+            $porcentajeNoAceptable = round($arrayValores['disponibilidad']['No Aceptable']*100/ $cantidadTotal,2);
+
+            $filaGrafico['value'] =  $porcentajeNoAceptable;
+            $filaGrafico['color'] = "rgba(255,0,0)";
+            $filaGrafico['label'] =  'No Aceptable ('.$porcentajeNoAceptable.' %)' ;
+            $arrayGraficoDispo[] = $filaGrafico;
+
+            $filaGrafico = array();
+            $porcentajeAceptableConPrecaucion = round($arrayValores['disponibilidad']['Aceptable con Precaucion']*100/ $cantidadTotal,2);
+
+            $filaGrafico['value'] =  $porcentajeAceptableConPrecaucion;
+            $filaGrafico['color'] = "rgb(255, 180, 68)";
+            $filaGrafico['label'] =  'Aceptable con Precaucion ('.$porcentajeAceptableConPrecaucion.' %)';
+            $arrayGraficoDispo[] = $filaGrafico;
+
+            $filaGrafico = array();
+            $porcentajeAceptable = round($arrayValores['disponibilidad']['Aceptable']*100/ $cantidadTotal,2);
+
+            $filaGrafico['value'] =  $porcentajeAceptable;
+            $filaGrafico['color'] = "rgb(1, 136, 3)";
+            $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
+            $arrayGraficoDispo[] = $filaGrafico;
+
+
+            // CONFIDENCIALIDAD
+
+            $filaGrafico = array();
+            $porcentajeNoAceptable = round($arrayValores['confidencialidad']['No Aceptable']*100/ $cantidadTotal,2);
+
+            $filaGrafico['value'] =  $porcentajeNoAceptable;
+            $filaGrafico['color'] = "rgba(255,0,0)";
+            $filaGrafico['label'] =  'No Aceptable ('.$porcentajeNoAceptable.' %)' ;
+            $arrayGraficoConfi[] = $filaGrafico;
+
+            $filaGrafico = array();
+            $porcentajeAceptableConPrecaucion = round($arrayValores['confidencialidad']['Aceptable con Precaucion']*100/ $cantidadTotal,2);
+
+            $filaGrafico['value'] =  $porcentajeAceptableConPrecaucion;
+            $filaGrafico['color'] = "rgb(255, 180, 68)";
+            $filaGrafico['label'] =  'Aceptable con Precaucion ('.$porcentajeAceptableConPrecaucion.' %)';
+            $arrayGraficoConfi[] = $filaGrafico;
+
+            $filaGrafico = array();
+            $porcentajeAceptable = round($arrayValores['confidencialidad']['Aceptable']*100/ $cantidadTotal,2);
+
+            $filaGrafico['value'] =  $porcentajeAceptable;
+            $filaGrafico['color'] = "rgb(1, 136, 3)";
+            $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
+            $arrayGraficoConfi[] = $filaGrafico;
+
+
+            // TRAZABILIDAD
+
+            $filaGrafico = array();
+            $porcentajeNoAceptable = round($arrayValores['trazabilidad']['No Aceptable']*100/ $cantidadTotal,2);
+
+            $filaGrafico['value'] =  $porcentajeNoAceptable;
+            $filaGrafico['color'] = "rgba(255,0,0)";
+            $filaGrafico['label'] =  'No Aceptable ('.$porcentajeNoAceptable.' %)' ;
+            $arrayGraficoTraza[] = $filaGrafico;
+
+            $filaGrafico = array();
+            $porcentajeAceptableConPrecaucion = round($arrayValores['trazabilidad']['Aceptable con Precaucion']*100/ $cantidadTotal,2);
+
+            $filaGrafico['value'] =  $porcentajeAceptableConPrecaucion;
+            $filaGrafico['color'] = "rgb(255, 180, 68)";
+            $filaGrafico['label'] =  'Aceptable con Precaucion ('.$porcentajeAceptableConPrecaucion.' %)';
+            $arrayGraficoTraza[] = $filaGrafico;
+
+            $filaGrafico = array();
+            $porcentajeAceptable = round($arrayValores['trazabilidad']['Aceptable']*100/ $cantidadTotal,2);
+
+            $filaGrafico['value'] =  $porcentajeAceptable;
+            $filaGrafico['color'] = "rgb(1, 136, 3)";
+            $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
+            $arrayGraficoTraza[] = $filaGrafico;
+
+
+            return compact('arrayGraficoTraza','arrayGraficoConfi','arrayGraficoDispo','arrayGraficoIntegridad');
+        }else{
+            return [];
         }
 
-        $arrayGraficoIntegridad =[];
-        $arrayGraficoDispo =[];
-        $arrayGraficoConfi =[];
-        $arrayGraficoTraza =[];
-
-        // INTEGRIDAD
-        $filaGrafico = array();
-        $porcentajeNoAceptable = round($arrayValores['integridad']['No Aceptable']*100/ $cantidadTotal,2);
-
-        $filaGrafico['value'] =  $porcentajeNoAceptable;
-        $filaGrafico['color'] = "rgba(255,0,0)";
-        $filaGrafico['label'] =  'No Aceptable ('.$porcentajeNoAceptable.' %)' ;
-        $arrayGraficoIntegridad[] = $filaGrafico;
-
-        $filaGrafico = array();
-        $porcentajeAceptableConPrecaucion = round($arrayValores['integridad']['Aceptable con Precaucion']*100/ $cantidadTotal,2);
-
-        $filaGrafico['value'] =  $porcentajeAceptableConPrecaucion;
-        $filaGrafico['color'] = "rgb(255, 180, 68)";
-        $filaGrafico['label'] =  'Aceptable con Precaucion ('.$porcentajeAceptableConPrecaucion.' %)';
-        $arrayGraficoIntegridad[] = $filaGrafico;
-
-        $filaGrafico = array();
-        $porcentajeAceptable = round($arrayValores['integridad']['Aceptable']*100/ $cantidadTotal,2);
-
-        $filaGrafico['value'] =  $porcentajeAceptable;
-        $filaGrafico['color'] = "rgb(1, 136, 3)";
-        $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
-        $arrayGraficoIntegridad[] = $filaGrafico;
-
-
-        // DISPONIBILIDAD
-        $filaGrafico = array();
-        $porcentajeNoAceptable = round($arrayValores['disponibilidad']['No Aceptable']*100/ $cantidadTotal,2);
-
-        $filaGrafico['value'] =  $porcentajeNoAceptable;
-        $filaGrafico['color'] = "rgba(255,0,0)";
-        $filaGrafico['label'] =  'No Aceptable ('.$porcentajeNoAceptable.' %)' ;
-        $arrayGraficoDispo[] = $filaGrafico;
-
-        $filaGrafico = array();
-        $porcentajeAceptableConPrecaucion = round($arrayValores['disponibilidad']['Aceptable con Precaucion']*100/ $cantidadTotal,2);
-
-        $filaGrafico['value'] =  $porcentajeAceptableConPrecaucion;
-        $filaGrafico['color'] = "rgb(255, 180, 68)";
-        $filaGrafico['label'] =  'Aceptable con Precaucion ('.$porcentajeAceptableConPrecaucion.' %)';
-        $arrayGraficoDispo[] = $filaGrafico;
-
-        $filaGrafico = array();
-        $porcentajeAceptable = round($arrayValores['disponibilidad']['Aceptable']*100/ $cantidadTotal,2);
-
-        $filaGrafico['value'] =  $porcentajeAceptable;
-        $filaGrafico['color'] = "rgb(1, 136, 3)";
-        $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
-        $arrayGraficoDispo[] = $filaGrafico;
-
-
-        // CONFIDENCIALIDAD
-
-        $filaGrafico = array();
-        $porcentajeNoAceptable = round($arrayValores['confidencialidad']['No Aceptable']*100/ $cantidadTotal,2);
-
-        $filaGrafico['value'] =  $porcentajeNoAceptable;
-        $filaGrafico['color'] = "rgba(255,0,0)";
-        $filaGrafico['label'] =  'No Aceptable ('.$porcentajeNoAceptable.' %)' ;
-        $arrayGraficoConfi[] = $filaGrafico;
-
-        $filaGrafico = array();
-        $porcentajeAceptableConPrecaucion = round($arrayValores['confidencialidad']['Aceptable con Precaucion']*100/ $cantidadTotal,2);
-
-        $filaGrafico['value'] =  $porcentajeAceptableConPrecaucion;
-        $filaGrafico['color'] = "rgb(255, 180, 68)";
-        $filaGrafico['label'] =  'Aceptable con Precaucion ('.$porcentajeAceptableConPrecaucion.' %)';
-        $arrayGraficoConfi[] = $filaGrafico;
-
-        $filaGrafico = array();
-        $porcentajeAceptable = round($arrayValores['confidencialidad']['Aceptable']*100/ $cantidadTotal,2);
-
-        $filaGrafico['value'] =  $porcentajeAceptable;
-        $filaGrafico['color'] = "rgb(1, 136, 3)";
-        $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
-        $arrayGraficoConfi[] = $filaGrafico;
-
-
-        // TRAZABILIDAD
-
-        $filaGrafico = array();
-        $porcentajeNoAceptable = round($arrayValores['trazabilidad']['No Aceptable']*100/ $cantidadTotal,2);
-
-        $filaGrafico['value'] =  $porcentajeNoAceptable;
-        $filaGrafico['color'] = "rgba(255,0,0)";
-        $filaGrafico['label'] =  'No Aceptable ('.$porcentajeNoAceptable.' %)' ;
-        $arrayGraficoTraza[] = $filaGrafico;
-
-        $filaGrafico = array();
-        $porcentajeAceptableConPrecaucion = round($arrayValores['trazabilidad']['Aceptable con Precaucion']*100/ $cantidadTotal,2);
-
-        $filaGrafico['value'] =  $porcentajeAceptableConPrecaucion;
-        $filaGrafico['color'] = "rgb(255, 180, 68)";
-        $filaGrafico['label'] =  'Aceptable con Precaucion ('.$porcentajeAceptableConPrecaucion.' %)';
-        $arrayGraficoTraza[] = $filaGrafico;
-
-        $filaGrafico = array();
-        $porcentajeAceptable = round($arrayValores['trazabilidad']['Aceptable']*100/ $cantidadTotal,2);
-
-        $filaGrafico['value'] =  $porcentajeAceptable;
-        $filaGrafico['color'] = "rgb(1, 136, 3)";
-        $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
-        $arrayGraficoTraza[] = $filaGrafico;
-
-
-        return compact('arrayGraficoTraza','arrayGraficoConfi','arrayGraficoDispo','arrayGraficoIntegridad');
     }
 }
