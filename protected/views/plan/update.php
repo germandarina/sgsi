@@ -54,6 +54,22 @@
 			}
 		});
 	}
+
+	function verActivos(avent,plan_detalle_id) {
+		$.ajax({
+			type: 'POST',
+			url: "<?php echo CController::createUrl('plan/getActivosAfectados')?>",
+			data: {
+				'plan_detalle_id': plan_detalle_id
+			},
+			dataType: 'Text',
+			success: function (data) {
+				var datos = jQuery.parseJSON(data);
+				$("#divActivosAfectados").empty().html(datos.html);
+				$("#modalActivos").modal('show');
+			}
+		});
+	}
 </script>
 <?php
 //$this->widget(
