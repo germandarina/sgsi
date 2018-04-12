@@ -2,6 +2,7 @@
 <div class="box">
     <div class="row">
         <div class="col-sm-6">
+            <h3>Integridad</h3>
             <?php
             $this->widget(
                 'chartjs.widgets.ChPie',
@@ -17,6 +18,7 @@
             ?>
         </div>
         <div class="col-sm-6">
+            <h3>Disponibilidad</h3>
             <?php
             $this->widget(
                 'chartjs.widgets.ChPie',
@@ -35,6 +37,7 @@
     <br>
     <div class="row">
         <div class="col-sm-6">
+            <h3>Confidencialidad</h3>
             <?php
             $this->widget(
                 'chartjs.widgets.ChPie',
@@ -50,6 +53,7 @@
             ?>
         </div>
         <div class="col-sm-6">
+            <h3>Trazabilidad</h3>
             <?php
             $this->widget(
                 'chartjs.widgets.ChPie',
