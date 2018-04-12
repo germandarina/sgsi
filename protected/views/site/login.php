@@ -1,6 +1,7 @@
 <style>
 	.login-page, .register-page {
 		background-image: url(<?= Yii::app()->baseUrl.'/images/fondo2.jpg' ?>) !important;
+		background-repeat: round;
 	}
 </style>
 |
