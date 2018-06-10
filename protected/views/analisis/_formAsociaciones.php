@@ -19,7 +19,7 @@
                     'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
                     'widgetOptions' => [
                         'asDropDownList' => true,
-                        'data' => CHtml::listData(Grupo::model()->findAll(), 'id', 'nombre'),
+                        'data' => CHtml::listData(Grupo::model()->findAllByAttributes(['proyecto_id'=>$model->proyecto_id]), 'id', 'nombre'),
                         'options' => [
                             'minimumResultsForSearch' => 10,
                             'placeholder' => '--Seleccione--'
@@ -39,12 +39,12 @@
                     'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
                     'widgetOptions' => [
                         'asDropDownList' => true,
-                        'data' => CHtml::listData(Activo::model()->findAll(), 'id', 'nombre'),
+                        'data' => CHtml::listData(Activo::model()->findAllByAttributes(['proyecto_id'=>$model->proyecto_id]), 'id', 'nombre'),
                         'options' => [
                             'minimumResultsForSearch' => 10,
                             'placeholder' => '--Seleccione--'
                         ],
-                       // 'htmlOptions' => ['multiple'=>'multiple'],
+                        'htmlOptions' => ['onChange'=>'getActivos()'],
                     ],
                 ]
             );

@@ -8,7 +8,7 @@
         $("#grupo_activo_id").val("");
         $("#GrupoActivo_grupo_id").select2('val',"");
         $("#GrupoActivo_confidencialidad").select2('val',"");
-
+        $("#GrupoActivo_activo_id").select2('val',"");
         $("#GrupoActivo_trazabilidad").select2('val',"");
         $("#GrupoActivo_integridad").select2('val',"");
         $("#GrupoActivo_disponibilidad").select2('val',"");
@@ -31,13 +31,19 @@
                 var datos = jQuery.parseJSON(data);
                 var activos = datos.activos;
                 var tipoActivo = datos.tipoActivo;
-                $("#GrupoActivo_activo_id").find('option').remove();
-                $("#GrupoActivo_activo_id").select2('val', null);
-                if(activos.length >0){
-                    $.each(activos, function (i, activo) {
-                        $("#GrupoActivo_activo_id").append('<option value="' + activo.id + '">' + activo.nombre + '</option>');
-                    });
+
+                if(activo_id != "" && activo_id != 0){
+                    $("#GrupoActivo_activo_id").select2('val',activo_id);
+                }else{
+                    $("#GrupoActivo_activo_id").find('option').remove();
+                    $("#GrupoActivo_activo_id").select2('val', null);
+                    if(activos.length >0){
+                        $.each(activos, function (i, activo) {
+                            $("#GrupoActivo_activo_id").append('<option value="' + activo.id + '">' + activo.nombre + '</option>');
+                        });
+                    }
                 }
+
                 if(tipoActivo.disponibilidad == "1"){
                     $("#divDisponibilidad").css('display','block');
                 }else{
@@ -45,7 +51,6 @@
                 }
                 if(tipoActivo.confidencialidad == "1"){
                     $("#divConfidencialidad").css('display','block');
-
                 }else{
                     $("#divConfidencialidad").css('display','none');
                 }
