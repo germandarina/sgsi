@@ -157,7 +157,11 @@ class Activo extends CustomCActiveRecord
                             inner join analisis an on an.id=d.analisis_id
                             where an.id = ".$analisis_id." and an.proyecto_id = ".$proyecto_id." and d.activo_padre_id is not null
                             )consulta on consulta.activo_padre_id = a.id
-                            where consulta.activo_padre_id is null ";
+                            where consulta.activo_padre_id is null
+                            and ga.analisis_id = ".$analisis_id."
+                            and a.proyecto_id= ".$proyecto_id."
+                            group by a.id
+                            order by nombre;";
        $command = Yii::app()->db->createCommand($queryPadres);
        $padres = $command->queryAll($queryPadres);
        return $padres;
@@ -169,10 +173,12 @@ class Activo extends CustomCActiveRecord
                             inner join tipo_activo ta on ta.id = a.tipo_activo_id
                             inner join grupo_activo ga on  ga.activo_id = a.id
                             inner join analisis an on an.id = ga.analisis_id
-                            left join dependencia d on (d.activo_id = ga.activo_id )
-                            where d.id is null                    
-                            and  an.id = ".$analisis_id."
-                            and an.proyecto_id = ".$proyecto_id." ";
+                            left join dependencia d on d.activo_id = ga.activo_id
+                            where (d.id is null or (d.id is not null and d.activo_padre_id is not null))
+                            and a.proyecto_id = ".$proyecto_id."
+                            and ga.analisis_id = ".$analisis_id."
+                            group by a.id
+                            order by nombre ";
         $command = Yii::app()->db->createCommand($queryHijos);
         $hijos = $command->queryAll($queryHijos);
         return $hijos;

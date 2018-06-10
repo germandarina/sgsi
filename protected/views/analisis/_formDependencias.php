@@ -18,7 +18,7 @@
                     'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
                     'widgetOptions' => [
                         'asDropDownList' => true,
-                        'data' => CHtml::listData(Activo::model()->getPadresDisponibles($model->id,$model->proyecto_id), 'id', 'nombre'),
+                        'data' => [],//CHtml::listData(Activo::model()->getPadresDisponibles($model->id,$model->proyecto_id), 'id', 'nombre'),
                         'options' => [
                             'minimumResultsForSearch' => 10,
                             'placeholder' => '--Seleccione--'
@@ -38,7 +38,7 @@
                     'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
                     'widgetOptions' => [
                         'asDropDownList' => true,
-                        'data' => CHtml::listData(Activo::model()->getHijosDisponibles($model->id,$model->proyecto_id), 'id', 'nombre'),
+                        'data' => [],//CHtml::listData(Activo::model()->getHijosDisponibles($model->id,$model->proyecto_id), 'id', 'nombre'),
                         'options' => [
                             'minimumResultsForSearch' => 10,
                             'placeholder' => '--Seleccione--'

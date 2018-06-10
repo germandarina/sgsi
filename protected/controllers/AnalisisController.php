@@ -364,7 +364,7 @@ class AnalisisController extends Controller
                     }
                 }
                 $transaction->commit();
-                $dependenciasPadres = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>NULL));
+                $dependenciasPadres = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>NULL,'analisis_id'=>$_POST['analisis_id']));
                 $html = $this->renderPartial('dependenciasPadres', array('dependenciasPadres'=>$dependenciasPadres), true);
                 $datos = ['error'=>0,'msj'=>'Dependencias creadas con exito','html'=>$html];
                 echo CJSON::encode($datos);
