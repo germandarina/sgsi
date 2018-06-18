@@ -1,34 +1,24 @@
 <?php
 
 /**
- * This is the model class for table "dependencia".
+ * This is the model class for table "numerador".
  *
- * The followings are the available columns in table 'dependencia':
+ * The followings are the available columns in table 'numerador':
  * @property integer $id
- * @property integer $activo_id
- * @property integer $activo_padre_id
- * @property integer $analisis_id
+ * @property integer $numero
  * @property string $creaUserStamp
  * @property string $creaTimeStamp
  * @property string $modUserStamp
  * @property string $modTimeStamp
- * @property integer $numero
- *
- * The followings are the available model relations:
- * @property Activo $activo
- * @property Activo $activoPadre
- * @property Analisis $analisis
  */
-class Dependencia extends CustomCActiveRecord
+class Numerador extends CustomCActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
-
-	public $activo_rama_id;
 	public function tableName()
 	{
-		return 'dependencia';
+		return 'numerador';
 	}
 
 	/**
@@ -39,13 +29,13 @@ class Dependencia extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('activo_id, analisis_id', 'required'),
-			array('numero,activo_id, activo_padre_id, analisis_id', 'numerical', 'integerOnly'=>true),
-			array('creaUserStamp, modUserStamp', 'length', 'max'=>50),
-			array('activo_rama_id,creaTimeStamp, modTimeStamp', 'safe'),
+			array('creaTimeStamp', 'required'),
+			array('numero', 'numerical', 'integerOnly'=>true),
+			array('creaUserStamp, modUserStamp', 'length', 'max'=>100),
+			array('modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('activo_rama_id,numero,id, activo_id, activo_padre_id, analisis_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('id, numero, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,10 +47,6 @@ class Dependencia extends CustomCActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'activo' => array(self::BELONGS_TO, 'Activo', 'activo_id'),
-			'activoPadre' => array(self::BELONGS_TO, 'Activo', 'activo_padre_id'),
-			'analisis' => array(self::BELONGS_TO, 'Analisis', 'analisis_id'),
-            'hijos' => array(self::HAS_MANY, 'Activo', 'activo_padre_id'),
 		);
 	}
 
@@ -71,14 +57,11 @@ class Dependencia extends CustomCActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'activo_id' => 'Activo',
-			'activo_padre_id' => 'Activo Padre',
-			'analisis_id' => 'Analisis',
+			'numero' => 'Numero',
 			'creaUserStamp' => 'Crea User Stamp',
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
-            'activo_rama_id' => 'Ramal',
 		);
 	}
 
@@ -101,9 +84,7 @@ class Dependencia extends CustomCActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('activo_id',$this->activo_id);
-		$criteria->compare('activo_padre_id',$this->activo_padre_id);
-		$criteria->compare('analisis_id',$this->analisis_id);
+		$criteria->compare('numero',$this->numero);
 		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
 		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
 		$criteria->compare('modUserStamp',$this->modUserStamp,true);
@@ -118,24 +99,10 @@ class Dependencia extends CustomCActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Dependencia the static model class
+	 * @return Numerador the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
-
-
-    public function getHijos(&$arrayHijosIds = []){
-        $hijos = Dependencia::model()->findAllByAttributes(['analisis_id'=>$this->analisis_id,'activo_padre_id'=>$this->activo_id,'numero'=>$this->numero]);
-        if(!empty($hijos)){
-            foreach ($hijos as $hijo){
-                $arrayHijosIds[] = $hijo->id;
-                $hijo->getHijos($arrayHijosIds);
-            }
-            return $arrayHijosIds;
-        }else{
-            return $arrayHijosIds;
-        }
-    }
 }

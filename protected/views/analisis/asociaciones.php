@@ -138,7 +138,7 @@
                     $("#GrupoActivo_activo_id").select2('val',grupo_activo.activo_id);
                 }
                 getActivos();
-                $("#analisis_id").val(grupo_activo_id.analisis_id);
+                $("#analisis_id").val(grupo_activo.analisis_id);
                 $("#GrupoActivo_confidencialidad").select2('val',grupo_activo.confidencialidad);
                 $("#GrupoActivo_confidencialidad").val(grupo_activo.confidencialidad);
                 $("#GrupoActivo_trazabilidad").select2('val',grupo_activo.trazabilidad);
@@ -152,9 +152,6 @@
                     $("#GrupoActivo_activo_id").select2('val',grupo_activo.activo_id);
                     $("#modalAsociaciones").modal('show');
                 },500);
-
-
-
             }
         });
     }
@@ -177,6 +174,10 @@
                         if(datos.error == "0"){
                             Lobibox.notify('success', {msg: "El proceso se realizo con exito"});
                             $.fn.yiiGridView.update('asociaciones-grid');
+                            limpiarYTraerDatosDependencia();
+                            $("#divDependencias").empty().html(datos.html);
+                            $.fn.yiiGridView.update('asociaciones-grid');
+                            inicializarTree();
                         }else{
                             Lobibox.notify('error', {msg: datos.msj});
                         }
@@ -261,12 +262,14 @@
         [
         'header' => 'Acciones',
         'type' => 'raw',
-        'value' => '"<a onclick=\"getGrupoActivo(event,$data->id) \" title=\"Presione para ver\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-pencil\"></i></a>&nbsp;&nbsp;<a onclick=\"eliminarGrupoActivo(event,$data->id) \" title=\"Presione para eliminar\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-trash\"></i></a>"',
-        ]
-//        array(
-//            'class'=>'booster.widgets.TbButtonColumn',
-//            'template'=>'{delete}'
-//        ),
+        'value' => function($data){
+            if($data->tieneDependepencia()){
+                return "<a style=\"cursor: pointer;\"  onclick=\"eliminarGrupoActivo(event, $data->id) \" title=\"Presione para eliminar\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-trash\"></i></a>";
+            }else{
+                return "<a style=\"cursor: pointer;\" onclick=\"getGrupoActivo(event,$data->id) \" title=\"Presione para ver\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-pencil\"></i></a>&nbsp;&nbsp;
+                                               <a style=\"cursor: pointer;\"  onclick=\"eliminarGrupoActivo(event,$data->id) \" title=\"Presione para eliminar\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-trash\"></i></a>";
+            }
+        }]
     ),
 )); ?>
 

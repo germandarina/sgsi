@@ -23,7 +23,27 @@
                             'minimumResultsForSearch' => 10,
                             'placeholder' => '--Seleccione--'
                         ],
-                       // 'htmlOptions' => ['multiple'=>'multiple'],
+                        'htmlOptions' => ['onchange'=>'tieneMultiplesPadres()'],
+                    ],
+                ]
+            );
+            ?>
+        </div>
+    </div>
+    <div class="row" id="divActivoRamaId" style="display: none;">
+        <div class="col-sm-12">
+            <?php echo $form->select2Group(
+                $dependencia, 'activo_rama_id',
+                [
+                    'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                    'widgetOptions' => [
+                        'asDropDownList' => true,
+                        'data' => [],//CHtml::listData(Activo::model()->getPadresDisponibles($model->id,$model->proyecto_id), 'id', 'nombre'),
+                        'options' => [
+                            'minimumResultsForSearch' => 10,
+                            'placeholder' => '--Seleccione--'
+                        ],
+//                        'htmlOptions' => ['onchange'=>'tieneMultiplesPadres()'],
                     ],
                 ]
             );

@@ -217,6 +217,7 @@ class AnalisisController extends Controller
             try{
                 $transaction = Yii::app()->db->beginTransaction();
                 $analisis = Analisis::model()->findByPk($_POST['analisis_id']);
+                $nuevogrupo = false;
                 if(!empty($_POST['grupo_id'])){
                     $grupo_id = $_POST['grupo_id'];
                 }else{
@@ -234,6 +235,7 @@ class AnalisisController extends Controller
                         throw new Exception("El activo seleccionado ya se encuentra asociado.");
                     }
                     $grupo_activo = new GrupoActivo();
+                    $nuevogrupo = true;
                 }
 
                 $grupo_activo->analisis_id = $analisis->id;
@@ -273,14 +275,15 @@ class AnalisisController extends Controller
                 }else{
                     $valor_anterior = 0;
                 }
-                $grupo_activo_log = new GrupoActivoLog();
-                $grupo_activo_log->grupo_activo_id = $grupo_activo->id;
-                $grupo_activo_log->valor_anterior = $valor_anterior;
-                $grupo_activo_log->valor_nuevo = $grupo_activo->valor;
-                if(!$grupo_activo_log->save()){
-                    throw new Exception("Error al guardar log de grupo activo");
+                if($nuevogrupo){
+                    $grupo_activo_log = new GrupoActivoLog();
+                    $grupo_activo_log->grupo_activo_id = $grupo_activo->id;
+                    $grupo_activo_log->valor_anterior = $valor_anterior;
+                    $grupo_activo_log->valor_nuevo = $grupo_activo->valor;
+                    if(!$grupo_activo_log->save()){
+                        throw new Exception("Error al guardar log de grupo activo");
+                    }
                 }
-
                 $transaction->commit();
                 $datos = array('error'=>0,'msj'=>"Grupo Activo creado con exito");
                 echo CJSON::encode($datos);
@@ -299,19 +302,39 @@ class AnalisisController extends Controller
         if($_POST['analisis_id']){
             try{
                 $transaction = Yii::app()->db->beginTransaction();
+                foreach ($_POST['activo_id'] as $hijo_id){
+                    $dependenciaError = Dependencia::model()->findByAttributes(['activo_padre_id'=>$hijo_id,'activo_id'=>$_POST['activo_padre_id']]);
+                    if(!is_null($dependenciaError)){
+                        throw new Exception("No se puede crear este tipo de dependencia. ");
+                    }
+                }
                 $arrayValoresHijos = [];
-                $arrayIdHijos = [];
                 $grupo_activo_padre = GrupoActivo::model()->findByAttributes(array('activo_id'=>$_POST['activo_padre_id'],'analisis_id'=>$_POST['analisis_id']));
 
-                $dependenciaPadreExistente = Dependencia::model()->findByAttributes(array('activo_id'=>$_POST['activo_padre_id'],
-                                                                                            'analisis_id'=>$_POST['analisis_id']));
-                if(is_null($dependenciaPadreExistente)){
+                if($_POST['activo_rama_id'] != ""){
+                    $dependeciaRama = Dependencia::model()->findByPk($_POST['activo_rama_id']);
+
+                    $dependenciaPadre = Dependencia::model()->findByAttributes(array('activo_id'=>$_POST['activo_padre_id'],
+                                                                                    'analisis_id'=>$_POST['analisis_id']
+                                                                                    ,'numero'=>$dependeciaRama->numero));
+                }else{
+                    $dependenciaPadre = Dependencia::model()->findByAttributes(array('activo_id'=>$_POST['activo_padre_id'],
+                                                                        'analisis_id'=>$_POST['analisis_id']));
+                }
+
+                if(is_null($dependenciaPadre)){
+                    $numerador = Numerador::model()->findByPk(1);
                     $dependenciaPadre = new Dependencia();
                     $dependenciaPadre->analisis_id = $_POST['analisis_id'];
                     $dependenciaPadre->activo_id = $_POST['activo_padre_id'];
                     $dependenciaPadre->activo_padre_id = NULL;
+                    $dependenciaPadre->numero = $numerador->numero;
                     if(!$dependenciaPadre->save()){
                         throw new Exception("Error al crear dependencia");
+                    }
+                    $numerador->numero = $numerador->numero +1;
+                    if(!$numerador->save()){
+                        throw new Exception("Error al actualizar numerador");
                     }
                 }
 
@@ -320,47 +343,82 @@ class AnalisisController extends Controller
                     $dependenciaHija->analisis_id = $_POST['analisis_id'];
                     $dependenciaHija->activo_id = $hijo_id;
                     $dependenciaHija->activo_padre_id = $_POST['activo_padre_id'];
+                    $dependenciaHija->numero = $dependenciaPadre->numero;
                     if(!$dependenciaHija->save()){
                         throw new Exception("Error al crear dependencia");
                     }
                     $grupo_activo_hijo = GrupoActivo::model()->findByAttributes(array('activo_id'=>$hijo_id,'analisis_id'=>$_POST['analisis_id']));
-                    if($grupo_activo_hijo->valor < $grupo_activo_padre->valor){
-                        $arrayValoresHijos[] = $grupo_activo_hijo->valor;
-                        $arrayIdHijos[] = $grupo_activo_hijo->activo_id;
-                    }
+                    $arrayValoresHijos[$grupo_activo_hijo->id] = $grupo_activo_hijo->valor;
+                    $arrayDependenciasHijas[] = $dependenciaHija->id;
+                }
+                $valores = "";
+                $valoresPadres = GrupoActivo::getValoresPadres($_POST['analisis_id'],$dependenciaPadre->activo_padre_id,$valores);
+                if($valoresPadres == "Es Padre"){
+                    $mayor_valor = $grupo_activo_padre->valor;
+                }else{
+                    $valoresPadres = explode('/',$valoresPadres);
+                    $mayor_valor = max($valoresPadres);
                 }
                 if(!empty($arrayValoresHijos)){
-                    $menor_valor = min($arrayValoresHijos);
-                    $grupos_activos = GrupoActivo::model()->findAllByAttributes(array('analisis_id'=>$_POST['analisis_id'],'valor'=>$menor_valor));
-                    foreach ($grupos_activos as $gp){
-                        foreach ($_POST['activo_id'] as $hijo_id){
-                            if($gp->activo_id == $hijo_id){
-                                $gp->valor = $grupo_activo_padre->valor;
-                                if(!$gp->save()){
-                                    throw new Exception("Error al actualizar valor de dependencia");
+                    foreach ($arrayValoresHijos as $i => $fila){
+                        $gah = GrupoActivo::model()->findByPk($i);
+                        if((int)$mayor_valor > (int)$fila){
+                            // busco si ese activo esta como hijo en otra rama distinta. traigo el valor de esa rama
+                            // comparo los valores,si el valor de la rama nueva es mayor, el activo toma ese valor.
+                            $id_dependencias = implode(',',$arrayDependenciasHijas);
+                            $id_dependencias .= ', '.$dependenciaPadre->id;
+                            $id_dependencias = trim($id_dependencias,',');
+                            $queryOtrasDependencias = "select * from dependencia
+                                                        where id not in (".$id_dependencias.")
+                                                        and activo_id <>".$gah->activo_id."
+                                                        and analisis_id = ".$_POST['analisis_id']."
+                                                        ";
+                            $command = Yii::app()->db->createCommand($queryOtrasDependencias);
+                            $otrasDependencias = $command->queryAll($queryOtrasDependencias);
+
+                            if(!empty($otrasDependencias)){
+                                 $valores = "";
+                                 $arrayMayoresValores = [];
+                                 foreach ($otrasDependencias as $dep){
+                                     $valoresPadres = GrupoActivo::getValoresPadres($_POST['analisis_id'],$dep['activo_padre_id'],$valores);
+                                     $grupo_aux =GrupoActivo::model()->findByAttributes(['activo_id'=>$dep['activo_id'],'analisis_id'=>$_POST['analisis_id']]);
+                                     if($valoresPadres == "Es Padre"){
+                                         $arrayMayoresValores[] = $grupo_aux->valor;
+                                     }else{
+                                         $valoresPadres = explode('/',$valoresPadres);
+                                         $arrayMayoresValores[] = max($valoresPadres);
+                                     }
+                                 }
+                                 $maximoValor = max($arrayMayoresValores);
+                                 if($maximoValor >= $mayor_valor) {
+                                     $gah->valor = $maximoValor;
+                                 }else {
+                                     $gah->valor = $mayor_valor;
+                                 }
+                                 if(!$gah->save()){
+                                     throw new Exception("Error al actualizar valor de activo hijo");
+                                 }
+                                 $grupo_activo_log = new GrupoActivoLog();
+                                 $grupo_activo_log->grupo_activo_id = $gah->id;
+                                 $grupo_activo_log->valor_anterior = $fila;
+                                 $grupo_activo_log->valor_nuevo = $mayor_valor;
+                                 if(!$grupo_activo_log->save()){
+                                     throw new Exception("Error al guardar log de grupo activo");
+                                 }
+                            }else{
+                                $gah->valor= $mayor_valor;
+                                if(!$gah->save()){
+                                    throw new Exception("Error al actualizar valor de activo hijo");
                                 }
                                 $grupo_activo_log = new GrupoActivoLog();
-                                $grupo_activo_log->grupo_activo_id = $gp->id;
-                                $grupo_activo_log->valor_anterior = $menor_valor;
-                                $grupo_activo_log->valor_nuevo = $gp->valor;
+                                $grupo_activo_log->grupo_activo_id = $gah->id;
+                                $grupo_activo_log->valor_anterior = $fila;
+                                $grupo_activo_log->valor_nuevo = $mayor_valor;
                                 if(!$grupo_activo_log->save()){
                                     throw new Exception("Error al guardar log de grupo activo");
                                 }
                             }
                         }
-                    }
-
-                    $valor_anterior_padre = $grupo_activo_padre->valor;
-                    $grupo_activo_padre->valor = $menor_valor;
-                    if(!$grupo_activo_padre->save()){
-                        throw new Exception("Error al actualizar valor de dependencia");
-                    }
-                    $grupo_activo_log = new GrupoActivoLog();
-                    $grupo_activo_log->grupo_activo_id = $grupo_activo_padre->id;
-                    $grupo_activo_log->valor_anterior = $valor_anterior_padre;
-                    $grupo_activo_log->valor_nuevo = $grupo_activo_padre->valor;
-                    if(!$grupo_activo_log->save()){
-                        throw new Exception("Error al guardar log de grupo activo");
                     }
                 }
                 $transaction->commit();
@@ -530,21 +588,107 @@ class AnalisisController extends Controller
 
     public function actionEliminarGrupoActivo(){
         if(isset($_POST['grupo_activo_id'])){
-            $grupo_activo = GrupoActivo::model()->findByPk($_POST['grupo_activo_id']);
-            $dependencia = Dependencia::model()->findByAttributes(['analisis_id'=>$grupo_activo->analisis_id,'activo_id'=>$grupo_activo->activo_id]);
-            if(!empty($dependencia)){
-                $datos = ['error'=>1,'msj'=>"Existe una dependencia relacionada al grupo activo seleccionado"];
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $grupo_activo = GrupoActivo::model()->findByPk($_POST['grupo_activo_id']);
+
+                $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(['grupo_activo_id'=>$grupo_activo->id]);
+                if(!is_null($analisis_amenaza)){
+                    throw new Exception("Error al eliminar asociacion. Ya posee datos cargados relacionados a las amenazas");
+                }
+
+                $analisis_control = AnalisisControl::model()->findByAttributes(['grupo_activo_id'=>$grupo_activo->id]);
+                if(!is_null($analisis_control)){
+                    throw new Exception("Error al eliminar asociacion. Ya posee datos cargados relacionados a los controles");
+                }
+
+                $analisis_vulne = AnalisisVulnerabilidad::model()->findByAttributes(['grupo_activo_id'=>$grupo_activo->id]);
+                if(!is_null($analisis_vulne)){
+                    throw new Exception("Error al eliminar asociacion. Ya posee datos cargados relacionados a las vulnerabilidades");
+                }
+
+                $analisis_rd = AnalisisRiesgoDetalle::model()->findByAttributes(['grupo_activo_id'=>$grupo_activo->id]);
+                if(!is_null($analisis_rd)){
+                    throw new Exception("Error al eliminar asociacion. Ya posee datos cargados relacionados a la gestion de riesgos");
+                }
+
+                $arrayHijosIds =[];
+                $dependencias = Dependencia::model()->findAllByAttributes(['activo_id'=>$grupo_activo->activo_id,'analisis_id'=>$grupo_activo->analisis_id]);
+                foreach ($dependencias as $dep){
+                    $dep->getHijos($arrayHijosIds);
+                    if(!in_array($dep->id,$arrayHijosIds)){
+                        $arrayHijosIds[] = $dep->id;
+                    }
+                }
+                if(!empty($arrayHijosIds)){
+                    foreach ($arrayHijosIds as $ids){
+
+                        $dependencia = Dependencia::model()->findByPk($ids);
+                        $grupo_activo_colateral = GrupoActivo::model()->findByAttributes(['activo_id'=>$dependencia->activo_id,'analisis_id'=>$grupo_activo->analisis_id]);
+
+                        $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(['grupo_activo_id'=>$grupo_activo_colateral->id]);
+                        if(!is_null($analisis_amenaza)){
+                            throw new Exception("Error al eliminar asociacion. Ya posee datos cargados relacionados a las amenazas");
+                        }
+
+                        $analisis_control = AnalisisControl::model()->findByAttributes(['grupo_activo_id'=>$grupo_activo_colateral->id]);
+                        if(!is_null($analisis_control)){
+                            throw new Exception("Error al eliminar asociacion. Ya posee datos cargados relacionados a los controles");
+                        }
+
+                        $analisis_vulne = AnalisisVulnerabilidad::model()->findByAttributes(['grupo_activo_id'=>$grupo_activo_colateral->id]);
+                        if(!is_null($analisis_vulne)){
+                            throw new Exception("Error al eliminar asociacion. Ya posee datos cargados relacionados a las vulnerabilidades");
+                        }
+
+                        $analisis_rd = AnalisisRiesgoDetalle::model()->findByAttributes(['grupo_activo_id'=>$grupo_activo_colateral->id]);
+                        if(!is_null($analisis_rd)){
+                            throw new Exception("Error al eliminar asociacion. Ya posee datos cargados relacionados a la gestion de riesgos");
+                        }
+
+                        if(!$grupo_activo_colateral->save()){
+                            throw new Exception("Error al actualizar valor grupo activo");
+                        }
+
+                        $primerLog = GrupoActivoLog::model()->findByAttributes(['valor_anterior'=>0,'grupo_activo_id'=>$grupo_activo_colateral->id]);
+                        $grupo_activo_colateral->valor = $primerLog->valor_nuevo;
+
+                        $logs_colaterales = GrupoActivoLog::model()->findAllByAttributes(['grupo_activo_id'=>$grupo_activo_colateral->id]);
+                        foreach ($logs_colaterales as $lc){
+                            if($lc->id != $primerLog->id){
+                                if(!$lc->delete()){
+                                    throw new Exception("Error al eliminar log colateral");
+                                }
+                            }
+                        }
+                        if(!$dependencia->delete()){
+                            throw new Exception("Error al eliminar dependencias");
+                        }
+                    }
+                }
+                $logs = GrupoActivoLog::model()->findAllByAttributes(['grupo_activo_id'=>$grupo_activo->id]);
+                if(!empty($logs)){
+                    foreach ($logs as $log){
+                        if(!$log->delete()){
+                            throw new Exception("Error al eliminar log de grupo activo");
+                        }
+                    }
+                }
+
+                if(!$grupo_activo->delete()){
+                    throw new Exception("Error al eliminar grupo activo");
+                }
+
+                $transaction->commit();
+                $datos = ['error'=>0,'msj'=>'Grupo activo eliminado con exito'];
+                echo CJSON::encode($datos);
+                die();
+            }catch (Exception $exception){
+                $transaction->rollBack();
+                $datos = ['error'=>1,'msj'=>$exception->getMessage()];
                 echo CJSON::encode($datos);
                 die();
             }
-            if(!$grupo_activo->delete()){
-                $datos = ['error'=>1,'msj'=>'Error al eliminar grupo activo'];
-                echo CJSON::encode($datos);
-                die();
-            }
-            $datos = ['error'=>0,'msj'=>'Grupo activo eliminado con exito'];
-            echo CJSON::encode($datos);
-            die();
         }
     }
 

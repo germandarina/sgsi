@@ -71,6 +71,7 @@
         $("#Dependencia_activo_id").select2('val',"");
         $("#Dependencia_activo_padre_id").select2('val',"");
         var analisis_id = $("#analisis_id").val();
+        $("#divActivoRamaId").css('display','none');
         $.ajax({
             type: 'POST',
             url: "<?php echo CController::createUrl('activo/getPadresEHijos')?>",
@@ -103,10 +104,10 @@
         var activo_padre_id = $("#Dependencia_activo_padre_id").val();
         var activo_id = $("#Dependencia_activo_id").val();
         var analisis_id = $("#analisis_id").val();
-        if(activo_padre_id == activo_id){
+        if(activo_padre_id == activo_id){ // aca corregrir esta validacion, deja cargar mismo padre e hijo en multiples
             return Lobibox.notify('error',{msg: "El activo hijo no puede ser el mismo que el padre. Seleccione otro activo."})
         }
-
+        var activo_rama_id = $("#Dependencia_activo_rama_id").val();
         Lobibox.confirm({
             title:'Confirmar',
             msg: "Esta seguro de realizar esta dependencia ?",
@@ -117,7 +118,8 @@
                         url: "<?php echo CController::createUrl('analisis/crearDependencia')?>",
                         data: { 'activo_padre_id': activo_padre_id,
                             'analisis_id':analisis_id,
-                            'activo_id':activo_id
+                            'activo_id':activo_id,
+                            'activo_rama_id':activo_rama_id
                         },
                         dataType: 'Text',
                         success: function (data) {
@@ -128,6 +130,7 @@
                                 Lobibox.notify('success',{msg: datos.msj});
                                 limpiarYTraerDatosDependencia();
                                 $("#divDependencias").empty().html(datos.html);
+                                $.fn.yiiGridView.update('asociaciones-grid');
                                 inicializarTree();
                             }
                         }
@@ -137,10 +140,35 @@
                 }
             }
         });
-
-
-
-
+    }
+    
+    function tieneMultiplesPadres() {
+        var activo_padre_id = $("#Dependencia_activo_padre_id").val();
+        var analisis_id = $("#analisis_id").val();
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo CController::createUrl('activo/getPadresMultiples')?>",
+            data: {'analisis_id': analisis_id,
+                    'activo_padre_id':activo_padre_id},
+            dataType: 'Text',
+            success: function (data) {
+                var datos = jQuery.parseJSON(data);
+                var padres = datos.padres;
+                var cantidad = datos.cantidad;
+                if(cantidad > 1){
+                    $("#divActivoRamaId").css('display','block');
+                    if(padres.length >0){
+                        $("#Dependencia_activo_rama_id").find('option').remove();
+                        $("#Dependencia_activo_rama_id").select2('val', null);
+                        $.each(padres, function (i, activo) {
+                            $("#Dependencia_activo_rama_id").append('<option value="' + activo.dependencia_id + '">' + activo.nombre + '</option>');
+                        });
+                    }else{
+                        $("#divActivoRamaId").css('display','none');
+                    }
+                }
+            }
+        });
     }
 </script>
 <style>
@@ -172,7 +200,8 @@
         line-height:2em;
         color:#369;
         font-weight:700;
-        position:relative
+        position:relative;
+        cursor: pointer;
     }
     .tree ul li:before {
         content:"";
@@ -197,6 +226,7 @@
     .tree li a {
         text-decoration: none;
         color:#369;
+        cursor: pointer;
     }
     .tree li button, .tree li button:active, .tree li button:focus {
         text-decoration: none;

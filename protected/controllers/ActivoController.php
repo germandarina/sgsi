@@ -31,7 +31,7 @@ class ActivoController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','delete','getActivosPorTipo','getPadresEHijos'),
+                'actions' => array('create', 'update', 'admin','delete','getActivosPorTipo','getPadresEHijos','getPadresMultiples'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -260,6 +260,22 @@ class ActivoController extends Controller
             $padres = Activo::model()->getPadresDisponibles($analisis->id,$analisis->proyecto_id);
             $hijos = Activo::model()->getHijosDisponibles($analisis->id,$analisis->proyecto_id);
             $datos = ['hijos'=>$hijos,'padres'=>$padres];
+            echo CJSON::encode($datos);
+            die();
+        }
+    }
+    public function actionGetPadresMultiples(){
+        if(isset($_POST['activo_padre_id'])){
+            $queryPadres = "select a.*, d.id as dependencia_id from 
+                             dependencia d 
+                             inner join activo a on d.activo_padre_id = a.id
+                             where d.activo_id =".$_POST['activo_padre_id']." 
+                             and d.analisis_id =".$_POST['analisis_id']."
+                             group by d.numero
+                             ";
+            $command = Yii::app()->db->createCommand($queryPadres);
+            $padres = $command->queryAll($queryPadres);
+            $datos = ['cantidad'=>count($padres),'padres'=>$padres];
             echo CJSON::encode($datos);
             die();
         }

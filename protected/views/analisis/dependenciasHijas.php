@@ -2,7 +2,7 @@
     <?php foreach($hijos as $hijo) {?>
         <li>
             <?= $hijo->activo->nombre ?>
-            <?php $hijos2 = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>$hijo->activo_id));
+            <?php $hijos2 = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>$hijo->activo_id,'numero'=>$hijo->numero));
                 if(count($hijos2)) {?>
                 <?php echo $this->renderPartial('dependenciasHijas', array('hijos'=>$hijos2), true)?>
             <?php }?>

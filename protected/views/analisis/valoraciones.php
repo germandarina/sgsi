@@ -93,7 +93,7 @@ $this->widget('booster.widgets.TbExtendedGridView',array(
         [
             'header' => 'Accion',
             'type' => 'raw',
-            'value' => '"<a onclick=\"valorarAmenaza(event, $data->id, $data->analisis_id, $data->grupo_activo_id,$data->activo_id) \" title=\"Valorar Amenaza\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-pencil\"></i></a>"',
+            'value' => '"<a style=\"cursor: pointer;\" onclick=\"valorarAmenaza(event, $data->id, $data->analisis_id, $data->grupo_activo_id,$data->activo_id) \" title=\"Valorar Amenaza\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-pencil\"></i></a>"',
         ],
         array(
             'class' => 'booster.widgets.TbButtonColumn',

@@ -138,6 +138,7 @@ class GrupoActivo extends CustomCActiveRecord
 		$criteria->compare('t.integridad',$this->integridad);
 		$criteria->compare('t.disponibilidad',$this->disponibilidad);
 		$criteria->compare('t.trazabilidad',$this->trazabilidad);
+
         $criteria->join = " left join grupo g  on g.id = t.grupo_id ";
         $criteria->order = " g.id, g.tipo_activo_id ";
 		return new CActiveDataProvider($this, array(
@@ -272,6 +273,60 @@ class GrupoActivo extends CustomCActiveRecord
             return "Sin Actuacion";
         }else{
             return ActuacionRiesgo::$acciones[$actuacion->accion];
+        }
+    }
+
+    public function tieneDependepencia(){
+        $dependenciaPadre = Dependencia::model()->findByAttributes(['activo_padre_id'=>$this->activo_id]);
+        if(!is_null($dependenciaPadre)){
+            return true;
+        }
+        $dependenciaHija = Dependencia::model()->findByAttributes(['activo_id'=>$this->activo_id]);
+        if(!is_null($dependenciaHija)){
+            return true;
+        }
+        return false;
+    }
+    public static function getValoresPadres($analisis_id,$activo_padre_id,$valores,$id=""){
+        if(is_null($activo_padre_id) && $valores == ""){
+            if(!empty($id)){
+                $dependencia = Dependencia::model()->findByAttributes(['activo_id'=>$id,'analisis_id'=>$analisis_id]);
+                $ga = GrupoActivo::model()->findByAttributes(['activo_id'=>$dependencia->activo_id,'analisis_id'=>$analisis_id]);
+                return $ga->valor;
+            }else{
+                return "Es Padre";
+            }
+        }else{
+            $dependencia = Dependencia::model()->findByAttributes(['activo_id'=>$activo_padre_id,'analisis_id'=>$analisis_id]);
+            if (!is_null($dependencia)) {
+                $ga = GrupoActivo::model()->findByAttributes(['activo_id'=>$dependencia->activo_id,'analisis_id'=>$analisis_id]);
+                $valores .= $ga->valor . "/";
+                return GrupoActivo::getValoresPadres($analisis_id,$dependencia->activo_padre_id, $valores);
+            } else {
+                return trim($valores, "/");
+            }
+        }
+    }
+
+    public function getPadres($padreId, $padres, $id = "")
+    {
+
+        if (is_null($padreId) && $padres == "") {
+            if (!empty($id)) {
+                $cat = Categoria::model()->findByPk($id);
+                return $cat->descripcion;
+            } else {
+                return "Es Padre";
+            }
+
+        } else {
+            $categoria = Categoria::model()->findByPk($padreId);
+            if (!is_null($categoria)) {
+                $padres .= $categoria->descripcion . "/";
+                return $this->getPadres($categoria->padreId, $padres);
+            } else {
+                return substr($padres, 0, count($padreId) - 1);
+            }
         }
     }
 }
