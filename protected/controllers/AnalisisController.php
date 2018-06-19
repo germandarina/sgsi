@@ -591,7 +591,7 @@ class AnalisisController extends Controller
             try{
                 $transaction = Yii::app()->db->beginTransaction();
                 $grupo_activo = GrupoActivo::model()->findByPk($_POST['grupo_activo_id']);
-
+                $analisis_id = $grupo_activo->analisis_id;
                 $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(['grupo_activo_id'=>$grupo_activo->id]);
                 if(!is_null($analisis_amenaza)){
                     throw new Exception("Error al eliminar asociacion. Ya posee datos cargados relacionados a las amenazas");
@@ -680,7 +680,9 @@ class AnalisisController extends Controller
                 }
 
                 $transaction->commit();
-                $datos = ['error'=>0,'msj'=>'Grupo activo eliminado con exito'];
+                $dependenciasPadres = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>NULL,'analisis_id'=>$analisis_id));
+                $html = $this->renderPartial('dependenciasPadres', array('dependenciasPadres'=>$dependenciasPadres), true);
+                $datos = ['error'=>0,'msj'=>'Grupo activo eliminado con exito','html'=>$html];
                 echo CJSON::encode($datos);
                 die();
             }catch (Exception $exception){
