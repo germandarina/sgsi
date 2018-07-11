@@ -266,7 +266,7 @@ class ActivoController extends Controller
     }
     public function actionGetPadresMultiples(){
         if(isset($_POST['activo_padre_id'])){
-            $queryPadres = "select a.*, d.id as dependencia_id from 
+            $queryPadres = "select a.*, d.id as getActivosPorTipo from 
                              dependencia d 
                              inner join activo a on d.activo_padre_id = a.id
                              where d.activo_id =".$_POST['activo_padre_id']." 

@@ -18,7 +18,7 @@
         $("#divIntegridad").css('display','none');
     }
 
-    function getActivos() {
+    function getActivos(parametro) {
         var grupo_id = $("#GrupoActivo_grupo_id").val();
         var activo_id = $("#GrupoActivo_activo_id").val();
         $.ajax({
@@ -32,16 +32,19 @@
                 var activos = datos.activos;
                 var tipoActivo = datos.tipoActivo;
 
-                if(activo_id != "" && activo_id != 0){
+                if(parametro == 'activo'){
                     $("#GrupoActivo_activo_id").select2('val',activo_id);
                 }else{
                     $("#GrupoActivo_activo_id").find('option').remove();
                     $("#GrupoActivo_activo_id").select2('val', null);
                     if(activos.length >0){
+                        $("#GrupoActivo_activo_id").append('<option value="0">Seleccione un activo...</option>');
                         $.each(activos, function (i, activo) {
                             $("#GrupoActivo_activo_id").append('<option value="' + activo.id + '">' + activo.nombre + '</option>');
                         });
                     }
+                    $("#GrupoActivo_activo_id").select2('val',"0");
+                    $("#GrupoActivo_activo_id").val(0);
                 }
 
                 if(tipoActivo.disponibilidad == "1"){
@@ -61,7 +64,6 @@
                 }
                 if(tipoActivo.integridad == "1"){
                     $("#divIntegridad").css('display','block');
-
                 }else{
                     $("#divIntegridad").css('display','none');
                 }
@@ -78,7 +80,7 @@
         var disponibilidad = $("#GrupoActivo_disponibilidad").val();
         var analisis_id = $("#analisis_id").val();
         var grupo_activo_id = $("#grupo_activo_id").val();
-        if(activo_id == ""){
+        if(activo_id == "" || activo_id ==0){
             return Lobibox.notify('error',{msg:'Debe seleccionar un activo'});
         }
         event.preventDefault();

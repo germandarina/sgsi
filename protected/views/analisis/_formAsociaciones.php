@@ -24,7 +24,7 @@
                             'minimumResultsForSearch' => 10,
                             'placeholder' => '--Seleccione--'
                         ],
-                        'htmlOptions' => ['onChange'=>'getActivos()'],
+                        'htmlOptions' => ['onChange'=>'getActivos("grupo")'],
                     ],
                 ]
             );
@@ -44,7 +44,7 @@
                             'minimumResultsForSearch' => 10,
                             'placeholder' => '--Seleccione--'
                         ],
-                        'htmlOptions' => ['onChange'=>'getActivos()'],
+                        'htmlOptions' => ['onChange'=>'getActivos("activo")'],
                     ],
                 ]
             );
