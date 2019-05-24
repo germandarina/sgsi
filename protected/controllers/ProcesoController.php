@@ -31,7 +31,7 @@ class ProcesoController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','delete'),
+                'actions' => array('create', 'update', 'admin','delete','getActivosModal'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -209,6 +209,16 @@ class ProcesoController extends Controller
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'proceso-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
+        }
+    }
+
+    public function actionGetActivosModal(){
+        if(isset($_POST['proceso_id'])){
+           $proceso = $this->loadModel($_POST['proceso_id']);
+           $activos = $proceso->getActivos();
+           $html = $this->renderPartial('_activosPorProceso', array('activos'=>$activos), true);
+           echo CJSON::encode(['html'=>$html]);
+           die();
         }
     }
 }

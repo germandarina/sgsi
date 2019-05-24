@@ -138,4 +138,17 @@ class Grupo extends CustomCActiveRecord
         $resultado = $command->queryAll($query);
         return $resultado;
     }
+
+    public function getActivosPorGrupo(){
+	    $grupoActivos = $this->grupoActivos;
+        $array_activos = [];
+	    if(!empty($grupoActivos)){
+	        foreach ($grupoActivos as $relacional){
+                if(!array_key_exists($relacional->activo_id,$array_activos)){
+                    $array_activos[$relacional->activo_id] = $relacional->activo;
+                }
+	        }
+        }
+	    return $array_activos;
+    }
 }

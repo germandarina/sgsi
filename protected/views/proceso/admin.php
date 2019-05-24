@@ -1,8 +1,23 @@
-
+<script>
+    function mostrarActivos(event,proceso_id) {
+        event.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo CController::createUrl('proceso/getActivosModal')?>",
+            data: {'proceso_id': proceso_id},
+            dataType: 'Text',
+            success: function (data) {
+                var datos = jQuery.parseJSON(data);
+                $("#cuerpo").empty().html(datos.html);
+                $("#modalActivos").modal('show');
+            }
+        });
+    }
+</script>
 
 <div class="box">
 	<div class="box-header">
-		<h3 clas="box-title">Admin Procesos</h3>
+		<h3 class="box-title">Gestion de Procesos</h3>
 		<?php $this->widget(
 			'booster.widgets.TbButtonGroup',
 			array(
@@ -34,7 +49,14 @@
 			'selectableRows' => 1,
 			'filter' => $model,
 			'columns'=>array(
-				'nombre',
+				 [
+                    'name'=>'nombre',
+                    'header'=>'Nombre',
+                    'type'=>'raw',
+                    'value'=>function($data){
+                       return "<a style='cursor: pointer' onclick='mostrarActivos(event,".$data->id.")'>".$data->nombre."</a>";
+                    }
+                ],
 				'descripcion',
 				array(
 					'name'=>'area_id',
@@ -69,7 +91,14 @@
 				'selectableRows' => 1,
 				'filter' => $model,
 				'columns'=>array(
-					'nombre',
+					 [
+                    'name'=>'nombre',
+                    'header'=>'Nombre',
+                    'type'=>'raw',
+                    'value'=>function($data){
+                       return "<a style='cursor: pointer' onclick='mostrarActivos(event,".$data->id.")'>".$data->nombre."</a>";
+                    }
+                ],
 					'descripcion',
 					array(
 						'name'=>'area_id',
@@ -91,6 +120,22 @@
 			));
 		}
 	}?>
+</div>
+
+<div class="modal fade" id="modalActivos" tabindex="-1" role="dialog" aria-hidden="true" style="padding-right: 15px;">
+    <div class="modal-dialog" style="width: 900px !important;">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <h4 class="modal-title" id="cabeceraModal">Activos Relacionados</h4>
+            </div>
+            <div class="modal-body" id="cuerpo">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cerrar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 

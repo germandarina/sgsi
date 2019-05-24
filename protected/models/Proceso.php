@@ -122,4 +122,17 @@ class Proceso extends CustomCActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	public function getActivos(){
+	    $activos_areas = ActivoArea::model()->findAllByAttributes(['area_id'=>$this->area_id]);
+        $array_activos=[];
+	    if(!empty($activos_areas)){
+	        foreach ($activos_areas as $relacional){
+                if(!array_key_exists($relacional->activo_id,$array_activos)){
+                    $array_activos[$relacional->activo_id] = $relacional->activo;
+                }
+            }
+        }
+	    return $array_activos;
+    }
 }

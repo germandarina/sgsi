@@ -31,7 +31,7 @@ class AreaController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','delete','getProcesos','getPersonal'),
+                'actions' => array('create', 'update', 'admin','delete','getProcesos','getPersonal','getProcesosModal'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -196,7 +196,8 @@ class AreaController extends Controller
     }
     public function actionGetProcesos(){
         if(isset($_POST['area_id'])){
-            $procesos = Proceso::model()->findAllByAttributes(array('area_id'=>$_POST['area_id']));
+            $model = $this->loadModel($_POST['area_id']);
+            $procesos = $model->procesos; //Proceso::model()->findAllByAttributes(array('area_id'=>$_POST['area_id']));
             if(!empty($procesos)){
                 $datos = ['procesos'=>$procesos];
             }else{
@@ -219,6 +220,16 @@ class AreaController extends Controller
            }
            $datos = ['personal'=>$arrayPersonal];
            echo CJSON::encode($datos);
+        }
+    }
+
+    public function actionGetProcesosModal(){
+        if (isset($_POST['area_id'])){
+            $model = $this->loadModel($_POST['area_id']);
+            $procesos = $model->procesos;
+            $html = $this->renderPartial('_procesosPorArea', array('procesos'=>$procesos), true);
+            echo CJSON::encode(['html'=>$html]);
+            die();
         }
     }
 }

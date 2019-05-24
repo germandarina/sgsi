@@ -31,7 +31,7 @@ class GrupoController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete'),
+                'actions' => array('create', 'update', 'admin', 'delete','getActivosModal'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -191,6 +191,16 @@ class GrupoController extends Controller
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'grupo-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
+        }
+    }
+
+    public function actionGetActivosModal(){
+        if (isset($_POST['grupo_id'])){
+            $model = $this->loadModel($_POST['grupo_id']);
+            $activos = $model->getActivosPorGrupo();
+            $html = $this->renderPartial('_activosPorGrupo', array('activos'=>$activos), true);
+            echo CJSON::encode(['html'=>$html]);
+            die();
         }
     }
 }

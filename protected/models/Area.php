@@ -133,20 +133,16 @@ class Area extends CustomCActiveRecord
             return $this->findAll();
         }else{
             $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+            $arrayAreas = [];
             if(!is_null($usuario->ultimo_proyecto_id)){
                 $area_proyecto = AreaProyecto::model()->findAllByAttributes(['proyecto_id'=>$usuario->ultimo_proyecto_id]);
                 if(!empty($area_proyecto)){
-                    $arrayAreas = [];
                     foreach ($area_proyecto as $ap){
                         $arrayAreas[] = Area::model()->findByPk($ap->area_id);
                     }
-                    return $arrayAreas;
-                }else{
-                    return [];
                 }
-            }else{
-                return [];
             }
+            return $arrayAreas;
         }
     }
 }
