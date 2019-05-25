@@ -31,7 +31,7 @@ class VulnerabilidadController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','delete'),
+                'actions' => array('create', 'update', 'admin','delete','getAmenazas'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -173,6 +173,16 @@ class VulnerabilidadController extends Controller
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'vulnerabilidad-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
+        }
+    }
+
+    public function actionGetAmenazas(){
+        if(isset($_POST['tipo_activo_id'])){
+            $tipo_activo = TipoActivo::model()->findByPk($_POST['tipo_activo_id']);
+            $amenazas = $tipo_activo->amenazas;
+            $datos = ['amenazas'=>$amenazas];
+            echo CJSON::encode($datos);
+            die();
         }
     }
 }

@@ -21,7 +21,9 @@ class Vulnerabilidad extends CustomCActiveRecord
 {
     public $fecha_valor_vulnerabilidad;
     public $valor_vulnerabilidad;
-	/**
+	public $tipo_activo_id;
+
+    /**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -41,10 +43,10 @@ class Vulnerabilidad extends CustomCActiveRecord
 			array('amenaza_id', 'numerical', 'integerOnly'=>true),
 			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>250),
 			array('descripcion', 'length', 'max'=>800),
-			array('creaTimeStamp, modTimeStamp', 'safe'),
+			array('tipo_activo_id,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, nombre, descripcion, amenaza_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('tipo_activo_id,id, nombre, descripcion, amenaza_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -75,6 +77,7 @@ class Vulnerabilidad extends CustomCActiveRecord
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
+            'tipo_activo_id' => 'Tipo Activo',
 		);
 	}
 
