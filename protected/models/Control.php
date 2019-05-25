@@ -28,6 +28,9 @@ class Control extends CustomCActiveRecord
     public $grupo_activo_id;
     public $analisis_amenaza_id;
 
+    public $tipo_activo_id;
+    public $amenaza_id;
+
 	public function tableName()
 	{
 		return 'control';
@@ -45,10 +48,10 @@ class Control extends CustomCActiveRecord
 			array('vulnerabilidad_id', 'numerical', 'integerOnly'=>true),
 			array('nombre, numeracion, creaUserStamp, modUserStamp', 'length', 'max'=>250),
 			array('descripcion', 'length', 'max'=>800),
-			array('creaTimeStamp, modTimeStamp', 'safe'),
+			array('tipo_activo_id,amenaza_id,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, nombre, descripcion, numeracion, vulnerabilidad_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('tipo_activo_id,amenaza_id,id, nombre, descripcion, numeracion, vulnerabilidad_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -79,6 +82,8 @@ class Control extends CustomCActiveRecord
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
+            'tipo_activo_id' =>'Tipo Activo',
+            'amenaza_id' => 'Amenaza',
 		);
 	}
 

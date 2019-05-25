@@ -1,92 +1,56 @@
 <script>
-//    function levantarModal() {
-//        $("#ControlValor_fecha").val("");
-//        $("#ControlValor_valor").val(0);
-//        $("#ControlValor_valor").attr('min',0);
-//        $("#modalFormDetalle").modal("show");
-//    }
-//    function mostrarValor(control_valor_id) {
-//        $.ajax({
-//            type: 'POST',
-//            url: "<?php //echo CController::createUrl('control/getControlValor')?>//",
-//            data: {'control_valor_id': control_valor_id},
-//            dataType: 'Text',
-//            success: function (data) {
-//                var datos = jQuery.parseJSON(data);
-//                var control_valor = datos.controlValor;
-//                $("#ControlValor_valor").attr('min',0);
-//                $("#ControlValor_fecha").val(control_valor.fecha);
-//                $("#ControlValor_valor").val(control_valor.valor);
-//                $("#modalFormDetalle").modal("show");
-//            }
-//        });
-//    }
-//
-//    function eliminarDetalle(control_valor_id) {
-//
-//        Lobibox.confirm({
-//            title: 'Confirmar',
-//            msg : 'Esta seguro de eliminar el valor?',
-//            callback: function (lobibox,type) {
-//                if(type == 'yes'){
-//                    $.ajax({
-//                        type: 'POST',
-//                        url: "<?php //echo CController::createUrl('control/eliminarControlValor')?>//",
-//                        data: {'control_valor_id': control_valor_id},
-//                        dataType: 'Text',
-//                        success: function (data) {
-//                            var datos = jQuery.parseJSON(data);
-//                            if(datos.error == 1){
-//                                 Lobibox.notify('error',{msg: "Error al eliminar, intentelo de nuevo."});
-//                            }else{
-//                                Lobibox.notify('success',{msg: "Se elimino correctamente"});
-//                            }
-//                            $.fn.yiiGridView.update('control-valor-grid');
-//                        }
-//                    });
-//                }else{
-//                    return false;
-//                }
-//            }
-//        });
-//
-//    }
-//    function guardarValores() {
-//        var fecha = $("#ControlValor_fecha").val();
-//        var valor = $("#ControlValor_valor").val();
-//        if(fecha == "" || valor == ""){
-//            return Lobibox.notify('error',{msg: "Debe completar el formulario"})
-//        }
-//        var control_id = $("#control_id").val();
-//        var control_valor_id = $("#control_valor_id").val();
-//        $.ajax({
-//            type: 'POST',
-//            url: "<?php //echo CController::createUrl('control/guardarControlValor')?>//",
-//            data: { 'fecha': fecha,
-//                    'valor': valor,
-//                    'control_id':control_id,
-//                    'control_valor_id':control_valor_id
-//                },
-//            dataType: 'Text',
-//            success: function (data) {
-//                var datos = jQuery.parseJSON(data);
-//                if(datos.error == 1){
-//                    Lobibox.notify('error',{msg: "Error al guardar, intentelo de nuevo."});
-//                }else{
-//                    Lobibox.notify('success',{msg: "Se guardo correctamente"});
-//                    $("#modalFormDetalle").modal("hide");
-//                }
-//                $.fn.yiiGridView.update('control-valor-grid');
-//
-//            }
-//        });
-//    }
-</script>
-<style>
-    a.linkCredito {
-        cursor: pointer;
+    $(function () {
+        getAmenazas();
+    });
+    function getAmenazas() {
+        var tipo_activo_id = $("#Control_tipo_activo_id").val();
+        if(tipo_activo_id != "" && tipo_activo_id != 0  && tipo_activo_id != null && tipo_activo_id != undefined){
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo CController::createUrl('vulnerabilidad/getAmenazas')?>",
+                data: {'tipo_activo_id': tipo_activo_id},
+                dataType: 'Text',
+                success: function (data) {
+                    var datos = jQuery.parseJSON(data);
+                    var amenazas = datos.amenazas;
+
+                    if(amenazas.length >0){
+                        $("#Control_amenaza_id").find('option').remove();
+                        $("#Control_amenaza_id").select2('val', null);
+                        $.each(amenazas, function (i, amenaza) {
+                            $("#Control_amenaza_id").append('<option value="' + amenaza.id + '">' + amenaza.nombre + '</option>');
+                        });
+                    }
+                }
+            });
+        }
     }
-</style>
+    
+    function getVulnerabilidades() {
+        var amenaza_id = $("#Control_amenaza_id").val();
+        if(amenaza_id != "" && amenaza_id != 0  && amenaza_id != null && amenaza_id != undefined){
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo CController::createUrl('control/getVulnerabilidades')?>",
+                data: {'amenaza_id': amenaza_id},
+                dataType: 'Text',
+                success: function (data) {
+                    var datos = jQuery.parseJSON(data);
+                    var vulnerabilidades = datos.vulnerabilidades;
+
+                    if(vulnerabilidades.length >0){
+                        $("#Control_vulnerabilidad_id").find('option').remove();
+                        $("#Control_vulnerabilidad_id").select2('val', null);
+                        $.each(vulnerabilidades, function (i, vulnerabilidad) {
+                            $("#Control_vulnerabilidad_id").append('<option value="' + vulnerabilidad.id + '">' + vulnerabilidad.nombre + '</option>');
+                        });
+                    }
+                }
+            });
+        }
+    }
+</script>
+
 <div class="box-body">
     <?php $form=$this->beginWidget('booster.widgets.TbActiveForm',array(
 	'id'=>'control-form',
@@ -97,6 +61,51 @@
     <p class="help-block">Campos con <span class="required">*</span> son requeridos.</p>
 
     <?php echo $form->errorSummary($model); ?>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <?php echo $form->select2Group(
+                $model, 'tipo_activo_id',
+                [
+                    'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                    'widgetOptions' => [
+                        'asDropDownList' => true,
+                        'data' => CHtml::listData(TipoActivo::model()->findAll(), 'id', 'nombre'),
+                        'options' => [
+                            'minimumResultsForSearch' => 10,
+                            'placeholder' => '--Seleccione--'
+                        ],
+                        'htmlOptions' => ['onChange'=>'getAmenazas()'],
+                    ],
+                ]
+            );
+            ?>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <?php echo $form->select2Group(
+                $model, 'amenaza_id',
+                [
+                    'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                    'widgetOptions' => [
+                        'asDropDownList' => true,
+                        'data' => [],
+                        'options' => [
+                            'minimumResultsForSearch' => 10,
+                            'placeholder' => '--Seleccione--'
+                        ],
+                        'htmlOptions' => ['onChange'=>'getVulnerabilidades()'],
+                    ],
+                ]
+            );
+            ?>
+        </div>
+    </div>
+
+
+
     <div class="row">
         <div class="col-sm-6">
             <?php echo $form->select2Group(

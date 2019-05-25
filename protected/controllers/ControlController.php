@@ -32,7 +32,7 @@ class ControlController extends Controller
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update', 'admin','delete','getControlValor','eliminarControlValor'
-                                   ,'guardarControlValor','getControlesEnRiesgo'),
+                                   ,'guardarControlValor','getControlesEnRiesgo','getVulnerabilidades'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -244,6 +244,15 @@ class ControlController extends Controller
             $html = $this->renderPartial('_controlesEnRiesgo',array('arrayControles'=>$arrayControles),true);
             $datos =['html'=>$html];
             echo CJSON::encode($datos);
+        }
+    }
+
+    public function actionGetVulnerabilidades(){
+        if(isset($_POST['amenaza_id'])){
+            $vulnerabilidades = Vulnerabilidad::model()->findAllByAttributes(['amenaza_id'=>$_POST['amenaza_id']]);
+            $datos = ['vulnerabilidades'=>$vulnerabilidades];
+            echo CJSON::encode($datos);
+            die();
         }
     }
 }
