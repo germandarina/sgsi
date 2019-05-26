@@ -21,6 +21,8 @@ class Proceso extends CustomCActiveRecord
 	/**
 	 * @return string the associated database table name
 	 */
+
+	public $area_id_2;
 	public function tableName()
 	{
 		return 'proceso';
@@ -38,10 +40,10 @@ class Proceso extends CustomCActiveRecord
 			array('area_id', 'numerical', 'integerOnly'=>true),
 			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>250),
 			array('descripcion', 'length', 'max'=>800),
-			array('creaTimeStamp, modTimeStamp', 'safe'),
+			array('area_id_2,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, nombre, descripcion, area_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('area_id_2,id, nombre, descripcion, area_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -100,6 +102,11 @@ class Proceso extends CustomCActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('descripcion',$this->descripcion,true);
+        if($this->area_id_2 != ""){
+            $criteria->together = true;
+            $criteria->with = array('area');
+            $criteria->compare('area.id',$this->area_id_2,true);
+        }
         if($this->area_id != ""){
             $criteria->together = true;
             $criteria->with = array('area');

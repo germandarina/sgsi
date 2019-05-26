@@ -16,7 +16,7 @@ $('.search-form form').submit(function(){
 
 <div class="box">
     <div class="box-header">
-        <h3 clas="box-title">Administracion de Sucursales</h3>
+        <h3 class="box-title">Administracion de Sucursales</h3>
 <?php
 $this->widget(
     'booster.widgets.TbButtonGroup',

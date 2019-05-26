@@ -101,7 +101,7 @@ $this->widget(
 ?>
 <div class="box">
 	<div class="box-header">
-		<h3 clas="box-title">Planes de Tratamiento</h3>
+		<h3 class="box-title">Planes de Tratamiento</h3>
 	</div>
 
 	<?php $this->widget('booster.widgets.TbExtendedGridView',array(

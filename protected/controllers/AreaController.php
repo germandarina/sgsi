@@ -102,7 +102,8 @@ class AreaController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->loadModel($id);
-
+        $proceso = new Proceso();
+        $proceso->area_id_2 = $model->id;
         if (isset($_POST['Area'])) {
             $model->attributes = $_POST['Area'];
             if ($model->save()) {
@@ -112,7 +113,7 @@ class AreaController extends Controller
         }
 
         $this->render('update', array(
-            'model' => $model,
+            'model' => $model,'proceso'=>$proceso
         ));
     }
 

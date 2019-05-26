@@ -8,7 +8,7 @@
 
 <div class="box">
 	<div class="box-header">
-		<h3 clas="box-title">Admin <?php echo $this->pluralize($this->class2name($this->modelClass)); ?></h3>
+		<h3 class="box-title">Admin <?php echo $this->pluralize($this->class2name($this->modelClass)); ?></h3>
 		<?php
 		echo "<?php \$this->widget(
 			'booster.widgets.TbButtonGroup',

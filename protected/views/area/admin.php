@@ -54,7 +54,7 @@
                     'header'=>'Nombre',
                     'type'=>'raw',
                     'value'=>function($data){
-                       return "<a style='cursor: pointer' onclick='mostrarProcesos(event,".$data->id.")'>".$data->nombre."</a>";
+                       return "<a title='Ver Procesos' style='cursor: pointer' onclick='mostrarProcesos(event,".$data->id.")'>".$data->nombre."</a>";
                     }
                 ],
                 'descripcion',
