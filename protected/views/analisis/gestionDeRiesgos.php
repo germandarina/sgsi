@@ -325,7 +325,7 @@
         [
             'header' => 'Actuaciones',
             'type' => 'raw',
-            'value' => '"<a onclick=\"getActuacion(event, $data->analisis_riesgo_detalle_id) \" title=\"Actuacion de Activo\" class=\"linkCredito\"><i class=\"fa fa-cogs \"></i></a>"',
+            'value' => '"<a style=\"cursor: pointer;\" onclick=\"getActuacion(event, $data->analisis_riesgo_detalle_id) \" title=\"Actuacion de Activo\" class=\"linkCredito\"><i class=\"fa fa-cogs \"></i></a>"',
         ],
     ),
 )); ?>

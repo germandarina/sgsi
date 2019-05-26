@@ -255,11 +255,30 @@
             'header'=>'Personal',
             'value'=>'$data->activo->getPersonal()',
         ),
-
-        'confidencialidad',
-        'integridad',
-        'disponibilidad',
-        'trazabilidad',
+        [
+            'name'=>'confidencialidad',
+            'header'=>'Confidencialidad',
+            'value'=>'$data->confidencialidad',
+            'htmlOptions'=>['style'=>'text-align:center;'],
+        ],
+        [
+            'name'=>'integridad',
+            'header'=>'Integridad',
+            'value'=>'$data->integridad',
+            'htmlOptions'=>['style'=>'text-align:center;'],
+        ],
+        [
+            'name'=>'disponibilidad',
+            'header'=>'Disponibilidad',
+            'value'=>'$data->disponibilidad',
+            'htmlOptions'=>['style'=>'text-align:center;'],
+        ],
+        [
+            'name'=>'trazabilidad',
+            'header'=>'Trazabilidad',
+            'value'=>'$data->trazabilidad',
+            'htmlOptions'=>['style'=>'text-align:center;'],
+        ],
         'valor',
         [
         'header' => 'Acciones',

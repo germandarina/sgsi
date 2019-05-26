@@ -2,7 +2,7 @@
 
 <div class="box">
 	<div class="box-header">
-		<h3 clas="box-title">Admin Controles</h3>
+		<h3 class="box-title">Admin Controles</h3>
 		<?php $this->widget(
 			'booster.widgets.TbButtonGroup',
 			array(
