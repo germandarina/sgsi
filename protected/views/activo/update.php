@@ -15,3 +15,24 @@ $this->widget(
 
 	<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
 </div>
+<div class="box">
+    <div class="box-body">
+        <div class="col-md-12">
+            <br>
+            <?php $this->widget(
+                'booster.widgets.TbTabs',
+                array(
+                    'type' => 'tabs', // 'tabs' or 'pills'
+                    'htmlOptions' => ['class' => 'nav-tabs-custom'],
+                    'tabs' => array(
+                        array('label' => 'Procesos',
+                            'content' => $this->renderPartial('procesos', array('proceso'=>$proceso), true),
+                            'active' => true,
+                        ),
+                    ),
+                )
+            );
+            ?>
+        </div>
+    </div>
+</div>

@@ -31,7 +31,8 @@ class ActivoController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','delete','getActivosPorTipo','getPadresEHijos','getPadresMultiples'),
+                'actions' => array('create', 'update', 'admin','delete','getActivosPorTipo','getPadresEHijos',
+                                    'getPadresMultiples','getProcesosModal'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -112,6 +113,8 @@ class ActivoController extends Controller
         foreach ($activos_areas as $relacion){
             $model->areas[] = $relacion->area_id;
         }
+        $proceso = new Proceso();
+        $proceso->activo_id = $model->id;
         if (isset($_POST['Activo'])) {
             try{
                 $transaction = Yii::app()->db->beginTransaction();
@@ -154,7 +157,7 @@ class ActivoController extends Controller
         }
 
         $this->render('update', array(
-            'model' => $model,
+            'model' => $model,'proceso'=>$proceso
         ));
     }
 
@@ -277,6 +280,16 @@ class ActivoController extends Controller
             $padres = $command->queryAll($queryPadres);
             $datos = ['cantidad'=>count($padres),'padres'=>$padres];
             echo CJSON::encode($datos);
+            die();
+        }
+    }
+
+    public function actionGetProcesosModal(){
+        if(isset($_POST['activo_id'])){
+            $activo = $this->loadModel($_POST['activo_id']);
+            $procesos = $activo->getProcesos();
+            $html = $this->renderPartial('_procesosPorActivo', array('procesos'=>$procesos), true);
+            echo CJSON::encode(['html'=>$html]);
             die();
         }
     }

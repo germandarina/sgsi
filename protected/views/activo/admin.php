@@ -1,3 +1,19 @@
+<script>
+    function mostrarProcesos(event,activo_id) {
+        event.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo CController::createUrl('activo/getProcesosModal')?>",
+            data: {'activo_id': activo_id},
+            dataType: 'Text',
+            success: function (data) {
+                var datos = jQuery.parseJSON(data);
+                $("#cuerpo").empty().html(datos.html);
+                $("#modalProcesos").modal('show');
+            }
+        });
+    }
+</script>
 
 
 <div class="box">
@@ -33,7 +49,14 @@
 				'selectableRows' => 1,
 				'filter' => $model,
 				'columns'=>array(
-					'nombre',
+                    [
+                        'name'=>'nombre',
+                        'header'=>'Nombre',
+                        'type'=>'raw',
+                        'value'=>function($data){
+                            return "<a title='Ver Procesos' style='cursor: pointer' onclick='mostrarProcesos(event,".$data->id.")'>".$data->nombre."</a>";
+                        }
+                    ],
 					'descripcion',
 					array(
 						'header'=>'Tipo Activo',
@@ -72,6 +95,22 @@
 			));
 	} ?>
 
+</div>
+
+<div class="modal fade" id="modalProcesos" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="cabeceraModal">Procesos Relacionados</h4>
+            </div>
+            <div class="modal-body" id="cuerpo">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cerrar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 

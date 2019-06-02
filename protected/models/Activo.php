@@ -222,4 +222,22 @@ class Activo extends CustomCActiveRecord
             }
         }
     }
+
+    public function getProcesos(){
+        $activos_areas = ActivoArea::model()->findAllByAttributes(['activo_id'=>$this->id]);
+        $array_procesos=[];
+        if(!empty($activos_areas)){
+            foreach ($activos_areas as $relacional){
+                $procesos = Proceso::model()->findAllByAttributes(['area_id'=>$relacional->area_id]);
+                if(!empty($procesos)){
+                    foreach ($procesos as $proceso){
+                        if(!array_key_exists($proceso->id,$array_procesos)){
+                            $array_procesos[$proceso->id] = $proceso;
+                        }
+                    }
+                }
+            }
+        }
+        return $array_procesos;
+    }
 }

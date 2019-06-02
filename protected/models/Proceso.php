@@ -23,6 +23,7 @@ class Proceso extends CustomCActiveRecord
 	 */
 
 	public $area_id_2;
+	public $activo_id;
 	public function tableName()
 	{
 		return 'proceso';
@@ -40,10 +41,10 @@ class Proceso extends CustomCActiveRecord
 			array('area_id', 'numerical', 'integerOnly'=>true),
 			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>250),
 			array('descripcion', 'length', 'max'=>800),
-			array('area_id_2,creaTimeStamp, modTimeStamp', 'safe'),
+			array('activo_id,area_id_2,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('area_id_2,id, nombre, descripcion, area_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('activo_id,area_id_2,id, nombre, descripcion, area_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -118,6 +119,22 @@ class Proceso extends CustomCActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+	public function searchPorActivo(){
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria=new CDbCriteria;
+        $criteria->select = " t.* ";
+        $criteria->join = " inner join area a on a.id = t.area_id
+                            inner join activo_area aa on aa.area_id = a.id
+                          ";
+        $criteria->addCondition(" aa.activo_id = ".$this->activo_id );
+        $criteria->group = " t.id ";
+
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,
+        ));
+    }
 
 	/**
 	 * Returns the static model of the specified AR class.
