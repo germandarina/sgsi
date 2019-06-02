@@ -102,6 +102,8 @@ class ProcesoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->loadModel($id);
+        $activo = new Activo();
+        $activo->area_id = $model->area_id;
         if (isset($_POST['Proceso'])) {
             $model->attributes = $_POST['Proceso'];
             if(Yii::app()->user->model->isAuditor()){
@@ -129,7 +131,7 @@ class ProcesoController extends Controller
         }
 
         $this->render('update', array(
-            'model' => $model,
+            'model' => $model,'activo'=>$activo
         ));
     }
 

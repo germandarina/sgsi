@@ -118,7 +118,7 @@
         <div class="pull-right hidden-xs">
             <b>Version</b> 2.0
         </div>
-        <strong>Copyright &copy; 2018 </strong> Todos los derechos reservados.
+        <strong>Copyright &copy; <?= Date('Y')?> </strong> Todos los derechos reservados.
     </footer>
 
     <!-- Control Sidebar -->

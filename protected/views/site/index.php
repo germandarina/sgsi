@@ -4,7 +4,7 @@
             type: 'POST',
             url: "<?php echo CController::createUrl('proyecto/asignarProyecto')?>",
             data: {
-                'proyecto_id': proyecto_id,
+                'proyecto_id': proyecto_id
             },
             dataType: 'Text',
             success: function (data) {
@@ -29,7 +29,7 @@
    </div>
 </div>
 
-<?php if(Yii::app()->user->model->isAuditor()) {?>
+<?php if(!Yii::app()->user->model->isGerencial() && !Yii::app()->user->model->isDataEntry() ) {?>
 
 <div class="box">
 

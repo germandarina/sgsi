@@ -1,5 +1,3 @@
-
-
 <div class="box">
 	<div class="box-header">
 		<h3 class="box-title">Admin Proyectos</h3>

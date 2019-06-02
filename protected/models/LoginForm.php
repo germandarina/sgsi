@@ -54,7 +54,7 @@ class LoginForm extends CFormModel
             }
 
             $usuario = User::model()->findByAttributes(['username'=>$_POST['LoginForm']['username']]);
-            if($usuario->estado == User::INACTIVO){
+            if(!is_null($usuario) && $usuario->estado == User::INACTIVO){
                 $this->addError('password','Ud no tiene permiso para usar el sistema');
             }
 		}

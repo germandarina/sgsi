@@ -1,13 +1,13 @@
 <ul class="nav navbar-nav">
     <!-- Messages: style can be found in dropdown.less-->
-    <?php if(Yii::app()->user->model->isAuditor()){?>
-    <?php   $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+    <?php if(Yii::app()->user->model->isAuditor() || Yii::app()->user->model->isAdmin()){
+            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
             $proyecto = Proyecto::model()->findByPk($usuario->ultimo_proyecto_id); ?>
-    <li class="dropdown messages-menu" style="float: left;">
-        <?php if(!is_null($proyecto)) {?>
-            <h5 style="color: white; margin-right: 10%;">Proyecto seleccionado: <?= $proyecto->nombre; ?></h5>
-        <?php } ?>
-    </li>
+            <li class="dropdown messages-menu" style="float: left;">
+                <?php if(!is_null($proyecto)) {?>
+                    <h5 style="color: white; margin-right: 10%;">Proyecto actual: <?= $proyecto->nombre; ?></h5>
+                <?php } ?>
+            </li>
     <?php }?>
     <!-- Notifications: style can be found in dropdown.less -->
     <li class="dropdown notifications-menu" style="display:none;">

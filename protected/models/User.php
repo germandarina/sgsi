@@ -263,6 +263,16 @@ class User extends CActiveRecord
         return $isAdmin;
     }
 
+    public function isDataEntry(){
+        $isAdmin = false;
+        $rolesUsuario = array_keys(Yii::app()->authManager->getAuthAssignments($this->id));
+
+        if (in_array('dataentry', $rolesUsuario))
+            $isAdmin = true;
+
+        return $isAdmin;
+    }
+
     public function isAuditor(){
         $isAdmin = false;
         $rolesUsuario = array_keys(Yii::app()->authManager->getAuthAssignments($this->id));

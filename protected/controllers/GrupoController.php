@@ -92,7 +92,8 @@ class GrupoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->loadModel($id);
-
+        $activo = new Activo();
+        $activo->grupo_id = $model->id;
         if (isset($_POST['Grupo'])) {
             $model->attributes = $_POST['Grupo'];
 
@@ -111,7 +112,7 @@ class GrupoController extends Controller
         }
 
         $this->render('update', array(
-            'model' => $model,
+            'model' => $model,'activo'=>$activo
         ));
     }
 

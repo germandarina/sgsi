@@ -29,6 +29,8 @@ class Activo extends CustomCActiveRecord
 	 * @return string the associated database table name
 	 */
 	public $areas = [];
+	public $area_id;
+	public $grupo_id;
 	public function tableName()
 	{
 		return 'activo';
@@ -46,10 +48,10 @@ class Activo extends CustomCActiveRecord
 			array('proyecto_id,tipo_activo_id, personal_id', 'numerical', 'integerOnly'=>true),
 			array('ubicacion,nombre, creaUserStamp, modUserStamp', 'length', 'max'=>250),
 			array('descripcion', 'length', 'max'=>800),
-			array('creaTimeStamp, modTimeStamp', 'safe'),
+			array('grupo_id,area_id,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('proyecto_id,id, nombre, descripcion, tipo_activo_id, personal_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('grupo_id,area_id,proyecto_id,id, nombre, descripcion, tipo_activo_id, personal_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -84,7 +86,9 @@ class Activo extends CustomCActiveRecord
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
-            'proyecto_id'=>'Proyecto'
+            'proyecto_id'=>'Proyecto',
+            'area_id'=>'Area',
+            'grupo_id'=>'Grupo'
 		);
 	}
 
@@ -130,6 +134,32 @@ class Activo extends CustomCActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+	public function searchPorArea(){
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria=new CDbCriteria;
+        $criteria->select = " t.* ";
+        $criteria->join = " inner join activo_area aa on aa.activo_id = t.id ";
+        $criteria->addCondition(" aa.area_id = ".$this->area_id);
+        $criteria->group = " t.id ";
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,
+        ));
+    }
+
+    public function searchPorGrupo(){
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria=new CDbCriteria;
+        $criteria->select = " t.* ";
+        $criteria->join = " inner join grupo_activo ga on ga.activo_id = t.id ";
+        $criteria->addCondition(" ga.grupo_id = ".$this->grupo_id);
+        $criteria->group = " t.id ";
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,
+        ));
+    }
 
 	/**
 	 * Returns the static model of the specified AR class.

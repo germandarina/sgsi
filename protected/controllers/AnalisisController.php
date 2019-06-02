@@ -198,13 +198,13 @@ class AnalisisController extends Controller
         if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
         }
-//        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-//        if(!is_null($usuario)){
-//           if($model->proyecto_id != $usuario->ultimo_proyecto_id){
-//               Yii::app()->user->setNotification('error','Acceso denegado');
-//               $this->redirect(array('admin'));
-//           }
-//        }
+        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        if(!is_null($usuario)){
+           if($model->proyecto_id != $usuario->ultimo_proyecto_id){
+               Yii::app()->user->setNotification('error','Acceso denegado');
+               $this->redirect(array('admin'));
+           }
+        }
 
         return $model;
     }
