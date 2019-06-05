@@ -31,7 +31,10 @@
 <div class="box-body">
     <?php $form=$this->beginWidget('booster.widgets.TbActiveForm',array(
 	'id'=>'vulnerabilidad-form',
-	'enableAjaxValidation'=>false,
+        'enableClientValidation'=>true,
+        'clientOptions'=>array(
+            'validateOnSubmit'=>true,
+        ),
 	'type' => 'horizontal'
 )); ?>
 

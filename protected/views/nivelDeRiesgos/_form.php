@@ -1,7 +1,10 @@
 <div class="box-body">
     <?php $form=$this->beginWidget('booster.widgets.TbActiveForm',array(
 	'id'=>'nivel-de-riesgos-form',
-	'enableAjaxValidation'=>false,
+        'enableClientValidation'=>true,
+        'clientOptions'=>array(
+            'validateOnSubmit'=>true,
+        ),
 	'type' => 'horizontal'
 )); ?>
 

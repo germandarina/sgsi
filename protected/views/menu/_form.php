@@ -24,6 +24,10 @@
         'booster.widgets.TbActiveForm',
         array(
             'id' => 'verticalForm',
+            'enableClientValidation'=>true,
+            'clientOptions'=>array(
+                'validateOnSubmit'=>true,
+            ),
             'type' => 'horizontal',
             // 'htmlOptions' => array('class' => 'well'), // for inset effect
         )

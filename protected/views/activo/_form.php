@@ -23,8 +23,12 @@
 <div class="box-body">
     <?php $form=$this->beginWidget('booster.widgets.TbActiveForm',array(
 	'id'=>'activo-form',
-	'enableAjaxValidation'=>false,
-	'type' => 'horizontal'
+//	'enableAjaxValidation'=>false,
+	'type' => 'horizontal',
+    'enableClientValidation'=>true,
+	'clientOptions'=>array(
+		'validateOnSubmit'=>true,
+	),
 )); ?>
 
     <p class="help-block">Campos con <span class="required">*</span> son requeridos.</p>

@@ -1,7 +1,10 @@
 <div class="box-body">
     <?php $form=$this->beginWidget('booster.widgets.TbActiveForm',array(
   'id'=>'user-form',
-  'enableAjaxValidation'=>false,
+        'enableClientValidation'=>true,
+        'clientOptions'=>array(
+            'validateOnSubmit'=>true,
+        ),
   'type' => 'horizontal'
 )); ?>
     <h1>Cambiar Contraseña Usuario <?php echo $model->username; ?></h1>
