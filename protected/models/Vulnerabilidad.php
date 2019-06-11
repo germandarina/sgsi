@@ -102,11 +102,15 @@ class Vulnerabilidad extends CustomCActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('descripcion',$this->descripcion,true);
-		$criteria->compare('amenaza_id',$this->amenaza_id);
-		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
-		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
-		$criteria->compare('modUserStamp',$this->modUserStamp,true);
-		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
+        if(!empty($this->amenaza_id)){
+            $criteria->together = true;
+            $criteria->with = ['amenaza'];
+            $criteria->addCondition("amenaza.nombre LIKE '%".$this->amenaza_id."%' ");
+        }
+		//$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
+		//$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
+		//$criteria->compare('modUserStamp',$this->modUserStamp,true);
+		//$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
