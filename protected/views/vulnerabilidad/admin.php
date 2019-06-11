@@ -39,7 +39,7 @@
 			'value'=>'$data->amenaza->nombre',
 		),
 		'creaUserStamp',
-		'creaTimeStamp',
+		//'creaTimeStamp',
 	array(
 	'class'=>'booster.widgets.TbButtonColumn',
 		'template'=>'{update}{delete}',
