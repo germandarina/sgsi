@@ -36,8 +36,7 @@
 	</div>
 
 	<?php
-        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-        if(!is_null($usuario->ultimo_proyecto_id) || Yii::app()->user->model->isGerencial()) {
+       if(Yii::app()->user->model->isAdmin() || Yii::app()->user->model->isGerencial()) {
             $this->widget('booster.widgets.TbExtendedGridView',array(
                 'id'=>'area-grid',
                 'fixedHeader' => false,

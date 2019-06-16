@@ -38,7 +38,8 @@
 
         <?php
         $proyecto = new Proyecto();
-        $proyecto->usuario_id = Yii::app()->user->model->id;
+        if(!Yii::app()->user->model->isAdmin())
+            $proyecto->usuario_id = Yii::app()->user->model->id;
 
         $this->widget('booster.widgets.TbExtendedGridView',array(
             'id'=>'proyecto-grid',
@@ -71,8 +72,8 @@
                     'value'=>'$data->getAreas()',
                     'filter'=>false,
                 ),
-                'creaUserStamp',
-                'creaTimeStamp',
+//                'creaUserStamp',
+//                'creaTimeStamp',
             ),
         )); ?>
     </div>

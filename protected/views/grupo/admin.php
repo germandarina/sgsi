@@ -32,51 +32,50 @@
 					),
 				),
 			)
-		); ?>	</div>
+		); ?>
+    </div>
 	<?php
-	    $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-		if(!is_null($usuario->ultimo_proyecto_id)){
-			$this->widget('booster.widgets.TbExtendedGridView',array(
-				'id'=>'grupo-grid',
-				'fixedHeader' => false,
-				'headerOffset' => 10,
-				// 40px is the height of the main navigation at bootstrap
-				'type' => 'striped hover condensed',
-				'dataProvider' => $model->search(),
-				'responsiveTable' => true,
-				'template' => "{summary}\n{items}\n{pager}",
-				'selectableRows' => 1,
-				'filter' => $model,
-				'columns'=>array(
-                    [
-                        'name'=>'nombre',
-                        'header'=>'Nombre',
-                        'type'=>'raw',
-                        'value'=>function($data){
-                            return "<a style='cursor: pointer' onclick='mostrarActivos(event,".$data->id.")'>".$data->nombre."</a>";
-                        }
-                    ],
-					'criterio',
-					array(
-						'name'=>'tipo_activo_id',
-						'header'=>'Tipo Activo',
-						'value'=>'$data->tipoActivo->nombre',
-						'filter'=>CHtml::listData(TipoActivo::model()->findAll(),'id','nombre'),
-					),
-					'creaUserStamp',
-					'creaTimeStamp',
-					/*
-                    'modUserStamp',
-                    'modTimeStamp',
-                    */
-					array(
-						'class'=>'booster.widgets.TbButtonColumn',
-						'template'=>'{update}{delete}',
-						'afterDelete' => 'function(link,success,data) { if (success && data) Lobibox.notify(\'info\', {msg: data }); }'
-					),
-				),
-			));
-	}
+
+        $this->widget('booster.widgets.TbExtendedGridView',array(
+            'id'=>'grupo-grid',
+            'fixedHeader' => false,
+            'headerOffset' => 10,
+            // 40px is the height of the main navigation at bootstrap
+            'type' => 'striped hover condensed',
+            'dataProvider' => $model->search(),
+            'responsiveTable' => true,
+            'template' => "{summary}\n{items}\n{pager}",
+            'selectableRows' => 1,
+            'filter' => $model,
+            'columns'=>array(
+                [
+                    'name'=>'nombre',
+                    'header'=>'Nombre',
+                    'type'=>'raw',
+                    'value'=>function($data){
+                        return "<a style='cursor: pointer' onclick='mostrarActivos(event,".$data->id.")'>".$data->nombre."</a>";
+                    }
+                ],
+                'criterio',
+                array(
+                    'name'=>'tipo_activo_id',
+                    'header'=>'Tipo Activo',
+                    'value'=>'$data->tipoActivo->nombre',
+                    'filter'=>CHtml::listData(TipoActivo::model()->findAll(),'id','nombre'),
+                ),
+                'creaUserStamp',
+                'creaTimeStamp',
+                /*
+                'modUserStamp',
+                'modTimeStamp',
+                */
+                array(
+                    'class'=>'booster.widgets.TbButtonColumn',
+                    'template'=>'{update}{delete}',
+                    'afterDelete' => 'function(link,success,data) { if (success && data) Lobibox.notify(\'info\', {msg: data }); }'
+                ),
+            ),
+        ));
 	 ?>
 </div>
 

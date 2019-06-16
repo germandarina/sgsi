@@ -104,6 +104,7 @@ class AreaController extends Controller
         $model = $this->loadModel($id);
         $proceso = new Proceso();
         $proceso->area_id_2 = $model->id;
+
         if (isset($_POST['Area'])) {
             $model->attributes = $_POST['Area'];
             if ($model->save()) {
@@ -163,6 +164,12 @@ class AreaController extends Controller
     {
         $model = new Area('search');
         $model->unsetAttributes();  // clear any default values
+        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        if(is_null($usuario->ultimo_proyecto_id)){
+            Yii::app()->user->setNotification('error','Tiene que seleccionar un proyecto');
+            $this->redirect(array('/'));
+        }
+        $model->proyecto_id = $usuario->ultimo_proyecto_id;
         if (isset($_GET['Area']))
             $model->attributes = $_GET['Area'];
 

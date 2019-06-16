@@ -11,18 +11,34 @@ class PersonalController extends Controller
     /**
      * @return array action filters
      */
-    public function filters()
-    {
-        return array(
-            'accessControl', // perform access control for CRUD operations
-        );
-    }
+//    public function filters()
+//    {
+//        return array(
+//            'accessControl', // perform access control for CRUD operations
+//            array(
+//                'application.filters.ProyectoFilter + admin',
+//                'unit'=>'second',
+//            ),
+//        );
+//    }
 
     /**
      * Specifies the access control rules.
      * This method is used by the 'accessControl' filter.
      * @return array access control rules
      */
+
+    public function filters()
+    {
+        return array(
+            'postOnly + edit, create',
+            array(
+                'application.filters.PerformanceFilter - edit, create',
+                'unit'=>'second',
+            ),
+        );
+    }
+
     public function accessRules()
     {
         return array(
@@ -171,6 +187,12 @@ class PersonalController extends Controller
     {
         $model = new Personal('search');
         $model->unsetAttributes();  // clear any default values
+//        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+//        if(is_null($usuario->ultimo_proyecto_id)){
+//            Yii::app()->user->setNotification('error','Tiene que seleccionar un proyecto');
+//            $this->redirect(array('/'));
+//        }
+//        $model->proyecto_id = $usuario->ultimo_proyecto_id;
         if (isset($_GET['Personal']))
             $model->attributes = $_GET['Personal'];
 

@@ -23,6 +23,9 @@ class Area extends CustomCActiveRecord
 	/**
 	 * @return string the associated database table name
 	 */
+
+	public $proyecto_id;
+
 	public function tableName()
 	{
 		return 'area';
@@ -39,10 +42,10 @@ class Area extends CustomCActiveRecord
 			array('nombre, descripcion, organizacion_id', 'required'),
 			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>250),
 			array('descripcion', 'length', 'max'=>800),
-			array('creaTimeStamp, modTimeStamp', 'safe'),
+			array('proyecto_id,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id,organizacion_id, nombre, descripcion, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('proyecto_id,id,organizacion_id, nombre, descripcion, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -95,12 +98,11 @@ class Area extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-        if(!is_null($usuario->ultimo_proyecto_id)){
-            $criteria->join = " inner join area_proyecto ap on ap.area_id = t.id ";
-            $criteria->compare('ap.proyecto_id',$usuario->ultimo_proyecto_id);
-        }
-		$criteria->compare('t.id',$this->id);
+
+        $criteria->join = " inner join area_proyecto ap on ap.area_id = t.id ";
+        $criteria->compare('ap.proyecto_id',$this->proyecto_id);
+
+        $criteria->compare('t.id',$this->id);
 		$criteria->compare('t.nombre',$this->nombre,true);
 		$criteria->compare('t.descripcion',$this->descripcion,true);
 		$criteria->compare('t.creaUserStamp',$this->creaUserStamp,true);

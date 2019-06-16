@@ -25,6 +25,8 @@ class Personal extends CustomCActiveRecord
 	/**
 	 * @return string the associated database table name
 	 */
+	public $proyecto_id;
+
 	public function tableName()
 	{
 		return 'personal';
@@ -41,10 +43,10 @@ class Personal extends CustomCActiveRecord
 			array('apellido, nombre, dni, telefono, area_id, proceso_id', 'required'),
 			array('area_id,proceso_id', 'numerical', 'integerOnly'=>true),
 			array('apellido, nombre, dni, telefono, creaUserStamp, modUserStamp', 'length', 'max'=>50),
-			array('creaTimeStamp, modTimeStamp', 'safe'),
+			array('proyecto_id,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, apellido, proceso_id,nombre, dni, telefono, area_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('proyecto_id,id, apellido, proceso_id,nombre, dni, telefono, area_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -99,12 +101,12 @@ class Personal extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-        if(!is_null($usuario->ultimo_proyecto_id)){
-            $criteria->join = " inner join area a on a.id = t.area_id
-                                inner join area_proyecto ap on ap.area_id = a.id ";
-            $criteria->compare('ap.proyecto_id',$usuario->ultimo_proyecto_id);
-        }
+//        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+//        if(!is_null($usuario->ultimo_proyecto_id)){
+        $criteria->join = " inner join area a on a.id = t.area_id
+                            inner join area_proyecto ap on ap.area_id = a.id ";
+        $criteria->compare('ap.proyecto_id',$this->proyecto_id);
+//        }
 		$criteria->compare('id',$this->id);
 		$criteria->compare('apellido',$this->apellido,true);
 		$criteria->compare('nombre',$this->nombre,true);

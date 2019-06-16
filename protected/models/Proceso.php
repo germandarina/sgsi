@@ -24,6 +24,8 @@ class Proceso extends CustomCActiveRecord
 
 	public $area_id_2;
 	public $activo_id;
+	public $proyecto_id;
+
 	public function tableName()
 	{
 		return 'proceso';
@@ -41,10 +43,10 @@ class Proceso extends CustomCActiveRecord
 			array('area_id', 'numerical', 'integerOnly'=>true),
 			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>250),
 			array('descripcion', 'length', 'max'=>800),
-			array('activo_id,area_id_2,creaTimeStamp, modTimeStamp', 'safe'),
+			array('proyecto_id,activo_id,area_id_2,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('activo_id,area_id_2,id, nombre, descripcion, area_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('proyecto_id,activo_id,area_id_2,id, nombre, descripcion, area_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -94,12 +96,12 @@ class Proceso extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-        if(!is_null($usuario->ultimo_proyecto_id)){
+//        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+//        if(!is_null($usuario->ultimo_proyecto_id)){
             $criteria->join = " inner join area a on a.id = t.area_id
                                 inner join area_proyecto ap on ap.area_id = a.id ";
-            $criteria->compare('ap.proyecto_id',$usuario->ultimo_proyecto_id);
-        }
+            $criteria->compare('ap.proyecto_id',$this->proyecto_id);
+//        }
 		$criteria->compare('id',$this->id);
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('descripcion',$this->descripcion,true);

@@ -34,9 +34,7 @@
 				),
 			)
 		); ?>	</div>
-	<?php
-	    $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-		if(!is_null($usuario->ultimo_proyecto_id)){ ?>
+
 			<?php $this->widget('booster.widgets.TbExtendedGridView',array(
 				'id'=>'activo-grid',
 				'fixedHeader' => false,
@@ -93,8 +91,7 @@
 					),
 				),
 			));
-	} ?>
-
+	?>
 </div>
 
 <div class="modal fade" id="modalProcesos" tabindex="-1" role="dialog" aria-hidden="true">

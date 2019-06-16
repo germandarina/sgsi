@@ -100,14 +100,14 @@ class NivelDeRiesgos extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-        if(!is_null($usuario->ultimo_proyecto_id)){
-            $criteria->compare('proyecto_id',$usuario->ultimo_proyecto_id);
-        }
-        if($this->proyecto_id != NULL){
-            $criteria->compare('proyecto_id',$this->proyecto_id);
-        }
-		$criteria->compare('id',$this->id);
+//        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+//        if(!is_null($usuario->ultimo_proyecto_id)){
+//            $criteria->compare('proyecto_id',$usuario->ultimo_proyecto_id);
+//        }
+//        if($this->proyecto_id != NULL){
+//            $criteria->compare('proyecto_id',$this->proyecto_id);
+//        }
+		//$criteria->compare('id',$this->id);
 		$criteria->compare('valor_minimo',$this->valor_minimo);
 		$criteria->compare('valor_maximo',$this->valor_maximo);
 		$criteria->compare('concepto',$this->concepto);

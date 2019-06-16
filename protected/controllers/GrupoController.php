@@ -162,6 +162,12 @@ class GrupoController extends Controller
     {
         $model = new Grupo('search');
         $model->unsetAttributes();  // clear any default values
+        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        if(is_null($usuario->ultimo_proyecto_id)){
+            Yii::app()->user->setNotification('error','Tiene que seleccionar un proyecto');
+            $this->redirect(array('/'));
+        }
+        $model->proyecto_id = $usuario->ultimo_proyecto_id;
         if (isset($_GET['Grupo']))
             $model->attributes = $_GET['Grupo'];
 

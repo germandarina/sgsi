@@ -17,7 +17,8 @@
 					),
 				),
 			)
-		); ?>	</div>
+		); ?>
+    </div>
 
 	<?php $this->widget('booster.widgets.TbExtendedGridView',array(
 	'id'=>'control-grid',

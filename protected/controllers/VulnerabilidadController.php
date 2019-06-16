@@ -143,6 +143,7 @@ class VulnerabilidadController extends Controller
     {
         $model = new Vulnerabilidad('search');
         $model->unsetAttributes();  // clear any default values
+
         if (isset($_GET['Vulnerabilidad']))
             $model->attributes = $_GET['Vulnerabilidad'];
 

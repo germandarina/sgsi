@@ -119,7 +119,6 @@ class AnalisisController extends Controller
             }else{
                 Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
                 $this->redirect(array('create'));
-
             }
             if ($model->save()) {
                 Yii::app()->user->setNotification('success','Analisis actualizado con exito');
@@ -179,6 +178,12 @@ class AnalisisController extends Controller
     {
         $model = new Analisis('search');
         $model->unsetAttributes();  // clear any default values
+        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        if(is_null($usuario->ultimo_proyecto_id)){
+            Yii::app()->user->setNotification('error','Tiene que seleccionar un proyecto');
+            $this->redirect(array('/'));
+        }
+        $model->proyecto_id = $usuario->ultimo_proyecto_id;
         if (isset($_GET['Analisis']))
             $model->attributes = $_GET['Analisis'];
 
