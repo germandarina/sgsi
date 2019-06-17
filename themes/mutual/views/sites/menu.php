@@ -1,7 +1,7 @@
 <ul class="sidebar-menu">
-    <li class="header">MENU</li>
     <?php  $usuario = User::model()->findByPk(Yii::app()->user->model->id);
             if(!is_null($usuario->ultimo_proyecto_id)){ ?>
+                <li class="header">MENU</li>
                 <?php foreach ($items as $item) { ?>
                     <?php $url = !empty($item['url']) ? Yii::app()->createUrl($item['url']) : '';  ?>
                     <li class="<?php if(!empty($item['items'])) echo $item['class']; ?> ">

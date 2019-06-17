@@ -28,16 +28,16 @@ class PersonalController extends Controller
      * @return array access control rules
      */
 
-    public function filters()
-    {
-        return array(
-            'postOnly + edit, create',
-            array(
-                'application.filters.PerformanceFilter - edit, create',
-                'unit'=>'second',
-            ),
-        );
-    }
+//    public function filters()
+//    {
+//        return array(
+//            'postOnly + edit, create',
+//            array(
+//                'application.filters.PerformanceFilter - edit, create',
+//                'unit'=>'second',
+//            ),
+//        );
+//    }
 
     public function accessRules()
     {
