@@ -47,7 +47,7 @@
                 'context' => 'primary',
                 'content' => $this->renderPartial(
                     '_cabecera',
-                    array('analisis' => $analisis,'vulnerabilidad'=>$vulnerabilidad,'grupo'=>$grupo,'activo'=>$activo), TRUE)
+                    array('analisis' => $analisis,'vulnerabilidad'=>$vulnerabilidad,'grupo'=>$grupo,'activo'=>$activo,'amenaza'=>$amenaza), TRUE)
             )
         );
         ?>

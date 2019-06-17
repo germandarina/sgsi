@@ -451,6 +451,7 @@ class AnalisisController extends Controller
     public function actionVerValoracion($id,$analisis_id,$grupo_activo_id,$grupo_id,$activo_id){
         $vulnerabilidad = new Vulnerabilidad();
         $vulnerabilidad->amenaza_id =$id;
+        $amenaza = Amenaza::model()->findByPk($id);
         $analisis = Analisis::model()->findByPk($analisis_id);
         $grupo_activo = GrupoActivo::model()->findByPk($grupo_activo_id);
         $grupo = Grupo::model()->findByPk($grupo_id);
@@ -464,7 +465,7 @@ class AnalisisController extends Controller
 
         $this->render('verValoracion', array(
             'vulnerabilidad' => $vulnerabilidad,'analisis'=>$analisis,'grupo_activo'=>$grupo_activo,
-            'grupo'=>$grupo,'activo'=>$activo,'analisis_amenaza'=>$analisis_amenaza
+            'grupo'=>$grupo,'activo'=>$activo,'analisis_amenaza'=>$analisis_amenaza,'amenaza'=>$amenaza
         ));
     }
 

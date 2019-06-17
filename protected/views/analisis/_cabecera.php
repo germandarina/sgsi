@@ -10,9 +10,9 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td><?= $analisis->nombre?></td>
+				<td><?= $analisis->nombre ?></td>
 				<td><?= $activo->nombre ?></td>
-				<td><?= $vulnerabilidad->amenaza->nombre ?></td>
+				<td><?= $amenaza->nombre ?></td>
 				<td><?= !is_null($grupo) ? $grupo->nombre : "Sin Grupo Asignado" ?></td>
 			</tr>
 		</tbody>

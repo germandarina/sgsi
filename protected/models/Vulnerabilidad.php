@@ -44,10 +44,10 @@ class Vulnerabilidad extends CustomCActiveRecord
 			array('amenaza_id', 'numerical', 'integerOnly'=>true),
 			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>250),
 			array('descripcion', 'length', 'max'=>800),
-			array('tipo_activo_id,creaTimeStamp, modTimeStamp', 'safe'),
+			array('amenaza_id,tipo_activo_id,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('tipo_activo_id,id, nombre, descripcion, amenazas, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('amenaza_id,tipo_activo_id,id, nombre, descripcion, amenazas, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -108,6 +108,9 @@ class Vulnerabilidad extends CustomCActiveRecord
 		$criteria->compare('t.descripcion',$this->descripcion,true);
         if(!empty($this->amenazas)){
             $criteria->addCondition(" a.nombre like '%".$this->amenazas."%' ");
+        }
+        if(!empty($this->amenaza_id)){
+            $criteria->compare("a.id",$this->amenaza_id);
         }
         $criteria->group = "t.id";
 		//$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
@@ -179,4 +182,15 @@ class Vulnerabilidad extends CustomCActiveRecord
             return 0;
         }
     }
+
+//    public function getAmenazas(){
+//        $ame_vulne = AmenazaVulnerabilidad::model()->findAllByAttributes(['amenaza_id'=>$this->amenaza_id]);
+//        $stringAmenazas = "";
+//        if(!empty($ame_vulne)){
+//            foreach ($ame_vulne as $relacion){
+//                $stringAmenazas .= $relacion->amenaza->nombre.' , ';
+//            }
+//        }
+//        return trim($stringAmenazas, ' , ');
+//    }
 }

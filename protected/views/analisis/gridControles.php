@@ -49,7 +49,7 @@ $this->widget('booster.widgets.TbExtendedGridView', array(
         [
             'header' => 'Accion',
             'type' => 'raw',
-            'value' => '"<a onclick=\"valorarControl($data->id) \" title=\"Presione para Valorar\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-pencil\"></i></a>"',
+            'value' => '"<a style=\"cursor: pointer;\" onclick=\"valorarControl($data->id) \" title=\"Presione para Valorar\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-pencil\"></i></a>"',
             'htmlOptions'=>['style'=>'width:5%;'],
         ]
 	),
