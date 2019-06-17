@@ -64,10 +64,29 @@ class VulnerabilidadController extends Controller
         $model = new Vulnerabilidad;
 
         if (isset($_POST['Vulnerabilidad'])) {
-            $model->attributes = $_POST['Vulnerabilidad'];
-            if ($model->save()) {
+
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $model->attributes = $_POST['Vulnerabilidad'];
+                if (!$model->save()) {
+                    throw new Exception("Erro al guardar vulnerablidad");
+                }
+                if(isset($_POST['Vulnerabilidad']['array_amenazas']) && !empty($_POST['Vulnerabilidad']['array_amenazas'])){
+                    foreach ($_POST['Vulnerabilidad']['array_amenazas'] as $amenaza_id){
+                        $amenaza_vulne = new AmenazaVulnerabilidad();
+                        $amenaza_vulne->vulnerabilidad_id = $model->id;
+                        $amenaza_vulne->amenaza_id = $amenaza_id;
+                        if(!$amenaza_vulne->save()){
+                            throw new Exception("Error al crear relacion amenaza vulnerabilidad");
+                        }
+                    }
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success','Vulnerabilidad creada con exito');
                 $this->redirect(array('create'));
+            }catch (Exception $ex){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$ex->getMessage());
             }
         }
 
@@ -84,12 +103,43 @@ class VulnerabilidadController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->loadModel($id);
+        $amenaza_vulne = AmenazaVulnerabilidad::model()->findAllByAttributes(array('vulnerabilidad_id'=>$model->id));
+        foreach ($amenaza_vulne as $relacion){
+            $model->array_amenazas[] = $relacion->amenaza_id;
+        }
         if (isset($_POST['Vulnerabilidad'])) {
-            $model->attributes = $_POST['Vulnerabilidad'];
-            if ($model->save()){
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $model->attributes = $_POST['Vulnerabilidad'];
+                if (!$model->save()){
+                    throw new Exception("Error al guardar vulnerablidad");
+                }
+
+                foreach ($amenaza_vulne as $relacion){
+                    if(!$relacion->delete()){
+                        throw new Exception("Error al eliminar relacion vieja");
+                    }
+                }
+
+                if(isset($_POST['Vulnerabilidad']['array_amenazas']) && !empty($_POST['Vulnerabilidad']['array_amenazas'])){
+                    foreach ($_POST['Vulnerabilidad']['array_amenazas'] as $amenaza_id){
+                        $ame_vulne = new AmenazaVulnerabilidad();
+                        $ame_vulne->vulnerabilidad_id = $model->id;
+                        $ame_vulne->amenaza_id = $amenaza_id;
+                        if(!$ame_vulne->save()){
+                            throw new Exception("Error al crear relacion amenaza vulnerabilidad");
+                        }
+                    }
+                }
+
+                $transaction->commit();
                 Yii::app()->user->setNotification('success','Vulnerabilidad actualizada con exito');
                 $this->redirect(array('admin'));
+            }catch (Exception  $ex){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$ex->getMessage());
             }
+
         }
 
         $this->render('update', array(

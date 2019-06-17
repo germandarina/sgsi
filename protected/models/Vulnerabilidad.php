@@ -22,7 +22,8 @@ class Vulnerabilidad extends CustomCActiveRecord
     public $fecha_valor_vulnerabilidad;
     public $valor_vulnerabilidad;
 	public $tipo_activo_id;
-
+    public $amenazas;
+    public $array_amenazas = [];
     /**
 	 * @return string the associated database table name
 	 */
@@ -46,7 +47,7 @@ class Vulnerabilidad extends CustomCActiveRecord
 			array('tipo_activo_id,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('tipo_activo_id,id, nombre, descripcion, amenaza_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('tipo_activo_id,id, nombre, descripcion, amenazas, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -59,7 +60,7 @@ class Vulnerabilidad extends CustomCActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'controles' => array(self::HAS_MANY, 'Control', 'vulnerabilidad_id'),
-			'amenaza' => array(self::BELONGS_TO, 'Amenaza', 'amenaza_id'),
+			'amenaza_vulnerabilidad' => array(self::HAS_MANY, 'AmenazaVulnerabilidad', 'vulnerabilidad_id'),
 		);
 	}
 
@@ -72,7 +73,8 @@ class Vulnerabilidad extends CustomCActiveRecord
 			'id' => 'ID',
 			'nombre' => 'Nombre',
 			'descripcion' => 'Descripcion',
-			'amenaza_id' => 'Amenaza',
+			'amenazas' => 'Amenazas',
+            'array_amenazas' => 'Amenazas',
 			'creaUserStamp' => 'Crea User Stamp',
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
@@ -99,14 +101,15 @@ class Vulnerabilidad extends CustomCActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('nombre',$this->nombre,true);
-		$criteria->compare('descripcion',$this->descripcion,true);
-        if(!empty($this->amenaza_id)){
-            $criteria->together = true;
-            $criteria->with = ['amenaza'];
-            $criteria->addCondition("amenaza.nombre LIKE '%".$this->amenaza_id."%' ");
+		$criteria->select= " t.id, t.nombre, t.descripcion, t.creaUserStamp, group_concat(a.nombre) as amenazas ";
+		$criteria->join = " inner join amenaza_vulnerabilidad am on am.vulnerabilidad_id = t.id
+		                    inner join amenaza a on a.id = am.amenaza_id ";
+		$criteria->compare('t.nombre',$this->nombre,true);
+		$criteria->compare('t.descripcion',$this->descripcion,true);
+        if(!empty($this->amenazas)){
+            $criteria->addCondition(" a.nombre like '%".$this->amenazas."%' ");
         }
+        $criteria->group = "t.id";
 		//$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
 		//$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
 		//$criteria->compare('modUserStamp',$this->modUserStamp,true);

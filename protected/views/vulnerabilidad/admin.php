@@ -34,9 +34,9 @@
 		'nombre',
 		'descripcion',
 		array(
-			'name'=>'amenaza_id',
-			'header'=>'Amenaza',
-			'value'=>'$data->amenaza->nombre',
+			'name'=>'amenazas',
+			'header'=>'Amenazas',
+			'value'=>'$data->amenazas',
 		),
 		'creaUserStamp',
 		//'creaTimeStamp',

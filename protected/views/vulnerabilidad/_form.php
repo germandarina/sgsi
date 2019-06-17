@@ -1,8 +1,8 @@
 <script>
 
-    $(function () {
-       getAmenazas();
-    });
+    // $(function () {
+    //    getAmenazas();
+    // });
     function getAmenazas() {
         var tipo_activo_id = $("#Vulnerabilidad_tipo_activo_id").val();
         if(tipo_activo_id != "" && tipo_activo_id != 0  && tipo_activo_id != null && tipo_activo_id != undefined){
@@ -16,10 +16,10 @@
                     var amenazas = datos.amenazas;
 
                     if(amenazas.length >0){
-                        $("#Vulnerabilidad_amenaza_id").find('option').remove();
-                        $("#Vulnerabilidad_amenaza_id").select2('val', null);
+                        $("#Vulnerabilidad_array_amenazas").find('option').remove();
+                        $("#Vulnerabilidad_array_amenazas").select2('val', null);
                         $.each(amenazas, function (i, amenaza) {
-                            $("#Vulnerabilidad_amenaza_id").append('<option value="' + amenaza.id + '">' + amenaza.nombre + '</option>');
+                            $("#Vulnerabilidad_array_amenazas").append('<option value="' + amenaza.id + '">' + amenaza.nombre + '</option>');
                         });
                     }
                 }
@@ -65,7 +65,7 @@
         <div class="row">
             <div class="col-sm-6">
                 <?php echo $form->select2Group(
-                    $model, 'amenaza_id',
+                    $model, 'array_amenazas',
                     [
                         'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
                         'widgetOptions' => [
@@ -75,7 +75,7 @@
                                 'minimumResultsForSearch' => 10,
                                 'placeholder' => '--Seleccione--'
                             ],
-    //                        'htmlOptions' => ['onChange'=>'getProcesos()'],
+                            'htmlOptions' => ['multiple'=>'multiple'],
                         ],
                     ]
                 );
