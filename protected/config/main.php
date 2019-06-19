@@ -24,6 +24,7 @@ return array(
         'application.modules.*',
         'application.components.*',
         'application.extensions.*',
+        'application.filters.*',
         'application.modules.rbam.models.RBAMBaseModel',
     ),
 
