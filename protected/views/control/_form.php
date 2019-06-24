@@ -1,9 +1,18 @@
 <script>
     $(function () {
-        getAmenazas();
+        var id = "<?= $model->id ?>";
+        if(id != ""){
+            getAmenazas();
+        }
     });
     function getAmenazas() {
-        var tipo_activo_id = $("#Control_tipo_activo_id").val();
+        var tipo_activo_id;
+        if("<?= $model->tipo_activo_id ?>" != ""){
+            tipo_activo_id = "<?= $model->tipo_activo_id ?>";
+        }else{
+            tipo_activo_id = $("#Control_tipo_activo_id").val();
+        }
+
         if(tipo_activo_id != "" && tipo_activo_id != 0  && tipo_activo_id != null && tipo_activo_id != undefined){
             $.ajax({
                 type: 'POST',
@@ -20,15 +29,27 @@
                         $.each(amenazas, function (i, amenaza) {
                             $("#Control_amenaza_id").append('<option value="' + amenaza.id + '">' + amenaza.nombre + '</option>');
                         });
+                        setTimeout(function () {
+                            getVulnerabilidades();
+                        },200);
                     }
+
+
                 }
             });
         }
     }
     
     function getVulnerabilidades() {
-        var amenaza_id = $("#Control_amenaza_id").val();
+        var amenaza_id;
+        if("<?= $model->amenaza_id ?>" != ""){
+            amenaza_id = "<?= $model->amenaza_id ?>";
+            $("#Control_amenaza_id").select2('val', amenaza_id);
+        }else{
+            amenaza_id = $("#Control_amenaza_id").val();
+        }
         if(amenaza_id != "" && amenaza_id != 0  && amenaza_id != null && amenaza_id != undefined){
+           
             $.ajax({
                 type: 'POST',
                 url: "<?php echo CController::createUrl('control/getVulnerabilidades')?>",
@@ -44,6 +65,9 @@
                         $.each(vulnerabilidades, function (i, vulnerabilidad) {
                             $("#Control_vulnerabilidad_id").append('<option value="' + vulnerabilidad.id + '">' + vulnerabilidad.nombre + '</option>');
                         });
+                        if("<?= $model->vulnerabilidad_id ?>" != ""){
+                            $("#Control_vulnerabilidad_id").select2('val', <?= $model->vulnerabilidad_id ?>);
+                        }
                     }
                 }
             });
@@ -117,7 +141,7 @@
                     'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
                     'widgetOptions' => [
                         'asDropDownList' => true,
-                        'data' => CHtml::listData(Vulnerabilidad::model()->findAll(), 'id', 'nombre'),
+                        'data' => [],
                         'options' => [
                             'minimumResultsForSearch' => 10,
                             'placeholder' => '--Seleccione--'

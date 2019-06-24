@@ -9,6 +9,8 @@
  * @property string $descripcion
  * @property string $numeracion
  * @property integer $vulnerabilidad_id
+ * @property integer $tipo_activo_id
+ * @property integer $amenaza_id
  * @property string $creaUserStamp
  * @property string $creaTimeStamp
  * @property string $modUserStamp
@@ -28,9 +30,6 @@ class Control extends CustomCActiveRecord
     public $grupo_activo_id;
     public $analisis_amenaza_id;
 
-    public $tipo_activo_id;
-    public $amenaza_id;
-
 	public function tableName()
 	{
 		return 'control';
@@ -44,7 +43,7 @@ class Control extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nombre, descripcion, numeracion, vulnerabilidad_id', 'required'),
+			array('nombre, descripcion, numeracion, amenaza_id, tipo_activo_id,vulnerabilidad_id', 'required'),
 			array('vulnerabilidad_id', 'numerical', 'integerOnly'=>true),
 			array('nombre, numeracion, creaUserStamp, modUserStamp', 'length', 'max'=>250),
 			array('descripcion', 'length', 'max'=>800),
@@ -64,6 +63,8 @@ class Control extends CustomCActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'vulnerabilidad' => array(self::BELONGS_TO, 'Vulnerabilidad', 'vulnerabilidad_id'),
+            'tipoActivo' => array(self::BELONGS_TO, 'TipoActivo', 'tipo_activo_id'),
+            'amenaza' => array(self::BELONGS_TO, 'Amenaza', 'amenaza_id'),
 		);
 	}
 
@@ -109,11 +110,26 @@ class Control extends CustomCActiveRecord
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('descripcion',$this->descripcion,true);
 		$criteria->compare('numeracion',$this->numeracion,true);
-		$criteria->compare('vulnerabilidad_id',$this->vulnerabilidad_id);
-		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
-		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
-		$criteria->compare('modUserStamp',$this->modUserStamp,true);
-		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
+        $criteria->together = true;
+        $with = [];
+		if(!empty($this->vulnerabilidad_id)){
+            $with[]= 'vulnerabilidad';
+            $criteria->compare('vulnerabilidad.nombre',$this->vulnerabilidad_id,true);
+        }
+
+        if(!empty($this->amenaza_id)){
+            $with[]= 'amenaza';
+            $criteria->compare('amenaza.nombre',$this->amenaza_id,true);
+        }
+        if(!empty($this->tipo_activo_id)){
+            $with[]= 'tipoActivo';
+            $criteria->compare('tipoActivo.nombre',$this->tipo_activo_id,true);
+        }
+        $criteria->with = $with;
+//		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
+//		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
+//		$criteria->compare('modUserStamp',$this->modUserStamp,true);
+//		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

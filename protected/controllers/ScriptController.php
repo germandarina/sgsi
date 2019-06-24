@@ -174,4 +174,30 @@ class ScriptController extends Controller
             echo $ex->getMessage();
         }
     }
+
+    public function actionActualizarControles(){
+        try{
+            $transaction = Yii::app()->db->beginTransaction();
+            $controles = Control::model()->findAll();
+            if(!empty($controles)){
+                foreach ($controles as $control){
+                   $amenazas_vulne = AmenazaVulnerabilidad::model()->findAllByAttributes(['vulnerabilidad_id'=>$control->vulnerabilidad_id]);
+                   if(!empty($amenazas_vulne)){
+                        foreach ($amenazas_vulne as $relacional){
+                            $control->amenaza_id = $relacional->amenaza_id;
+                            $control->tipo_activo_id = $relacional->amenaza->tipo_activo_id;
+                            if(!$control->save()){
+                                throw new Exception("Error al actualizar control");
+                            }
+                        }
+                   }
+                }
+            }
+            $transaction->commit();
+            echo "controles actualizada con exito";
+        }catch (Exception $ex){
+            $transaction->rollback();
+            echo $ex->getMessage();
+        }
+    }
 }

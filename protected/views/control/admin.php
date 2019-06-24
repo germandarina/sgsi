@@ -35,13 +35,23 @@
 		'numeracion',
 		'nombre',
 		'descripcion',
+        array(
+            'name'=>'tipo_activo_id',
+            'header'=>'Tipo Activo',
+            'value'=>'$data->tipoActivo->nombre',
+        ),
+        array(
+            'name'=>'amenaza_id',
+            'header'=>'Amenaza',
+            'value'=>'$data->amenaza->nombre',
+        ),
 		array(
 			'name'=>'vulnerabilidad_id',
 			'header'=>'Vulnerabilidad',
 			'value'=>'$data->vulnerabilidad->nombre',
 		),
-		'creaUserStamp',
-		'creaTimeStamp',
+//		'creaUserStamp',
+//		'creaTimeStamp',
 	array(
 	'class'=>'booster.widgets.TbButtonColumn',
 		'template'=>'{update}{delete}',
