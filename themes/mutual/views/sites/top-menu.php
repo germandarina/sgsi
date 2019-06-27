@@ -1,70 +1,70 @@
+<style type="text/css" media="screen">
+    .dropdown-menu > li > a {
+        background-color: #1e282c !important;
+        font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .control-sidebar-heading {
+        font-weight: bold;
+    }
+</style>
+<script>
+    function asignarProyecto(event) {
+        event.preventDefault();
+        var proyecto_id = $("#eventos").val();
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo CController::createUrl('proyecto/asignarProyecto')?>",
+            data: {
+                'proyecto_id': proyecto_id
+            },
+            dataType: 'Text',
+            success: function (data) {
+                var datos = jQuery.parseJSON(data);
+                if(datos.error == 0){
+                    Lobibox.notify('success',{msg: datos.msj});
+                    setTimeout(function () {
+                        window.location.replace(datos.url);
+                    },300);
+                }else{
+                    Lobibox.notify('error',{msg: datos.msj});
+                }
+            }
+        });
+    }
+</script>
+
 <ul class="nav navbar-nav">
     <!-- Messages: style can be found in dropdown.less-->
-    <?php if(Yii::app()->user->model->isAuditor() || Yii::app()->user->model->isAdmin()){
-            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-            $proyecto = Proyecto::model()->findByPk($usuario->ultimo_proyecto_id); ?>
-            <li class="dropdown messages-menu" style="float: left;">
-                <?php if(!is_null($proyecto)) {?>
-                    <h5 style="color: white; margin-right: 10%;">Proyecto actual: <?= $proyecto->nombre; ?></h5>
-                <?php } ?>
+    <?php if (Yii::app()->user->model->isAuditor() || Yii::app()->user->model->isAdmin()) {
+        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        $proyecto = Proyecto::model()->findByPk($usuario->ultimo_proyecto_id); ?>
+        <?php if (!is_null($proyecto)) { ?>
+            <li class="dropdown header">
+                <a href="<?= $this->createUrl('/proyecto/panel', array('id' => $proyecto->id)) ?>"
+                   style="font-family: fontAwesome; font-size: 12px; background-color: #367fa9;" class="dropdown-toggle btn">
+                    <b>Panel Gral: <?= ucwords(strtolower($proyecto->nombre)) ?></b>
+                </a>
             </li>
-    <?php }?>
-    <!-- Notifications: style can be found in dropdown.less -->
-    <li class="dropdown notifications-menu" style="display:none;">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-bell-o"></i>
-            <span class="label label-warning">10</span>
-        </a>
-        <ul class="dropdown-menu">
-            <li class="header">You have 10 notifications</li>
-            <li>
-                <!-- inner menu: contains the actual data -->
-                <ul class="menu">
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="footer"><a href="#">View all</a></li>
-        </ul>
-    </li>
-    <!-- Tasks: style can be found in dropdown.less -->
-    <li class="dropdown tasks-menu" style="display:none;">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-flag-o"></i>
-            <span class="label label-danger">9</span>
-        </a>
-        <ul class="dropdown-menu">
-            <li class="header">You have 9 tasks</li>
-            <li>
-                <!-- inner menu: contains the actual data -->
-                <ul class="menu">
-                    <li><!-- Task item -->
-                        <a href="#">
-                            <h3>
-                                Design some buttons
-                                <small class="pull-right">20%</small>
-                            </h3>
-                            <div class="progress xs">
-                                <div class="progress-bar progress-bar-aqua" style="width: 20%"
-                                     role="progressbar" aria-valuenow="20" aria-valuemin="0"
-                                     aria-valuemax="100">
-                                    <span class="sr-only">20% Complete</span>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <!-- end task item -->
-                </ul>
-            </li>
-            <li class="footer">
-                <a href="#">View all tasks</a>
-            </li>
-        </ul>
-    </li>
-    <!-- User Account: style can be found in dropdown.less -->
+        <?php } ?>
+        <li>
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <select name="eventos" id="eventos" onchange="asignarProyecto(event)">
+                        <option disabled selected value> -- Seleccione --</option>
+                        <?php
+                         $proyectos =  Yii::app()->user->model->isAdmin() ? Proyecto::model()->findAll() : Proyecto::model()->findAllByAttributes(['usuario_id'=>$usuario->ultimo_proyecto_id]);
+                        foreach ($proyectos as $pro) { ?>
+                            <option value="<?= $pro->id ?>" <?= $pro->id == $proyecto->id ? 'selected="selected"' : '' ?>><?= $pro->nombre ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </form>
+        </li>
+
+    <?php } ?>
+
+    <!-- original -->
     <li class="dropdown user user-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <img src="<?= $themeUrl ?>/img/avatar5.png" class="user-image" alt="User Image"/>
@@ -85,13 +85,14 @@
                        class="btn btn-default btn-flat">Cambiar Password</a>
                 </div>
                 <div class="pull-right">
-                    <a href="<?= Yii::app()->createUrl('site/logout') ?>" class="btn btn-default btn-flat">Cerrar Sesion</a>
+                    <a href="<?= Yii::app()->createUrl('site/logout') ?>" class="btn btn-default btn-flat">Cerrar
+                        Sesion</a>
                 </div>
             </li>
         </ul>
     </li>
     <!-- Control Sidebar Toggle Button -->
-    <li>
-        <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-    </li>
+<!--    <li>-->
+<!--        <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>-->
+<!--    </li>-->
 </ul>

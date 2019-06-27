@@ -44,7 +44,7 @@ class Menu extends CustomCActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('padreId, label, sucursalId, visible, orden', 'required'),
+            array('label, sucursalId, visible, orden', 'required'),
             array('padreId, sucursalId, visible, orden', 'numerical', 'integerOnly' => true),
             array('label, titulo, url, icono, creaUserStamp, modUserStamp', 'length', 'max' => 50),
             array('creaTimeStamp, modTimeStamp', 'safe'),

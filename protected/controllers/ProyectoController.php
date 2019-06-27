@@ -31,7 +31,7 @@ class ProyectoController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','asignarProyecto', 'delete'),
+                'actions' => array('create', 'update', 'admin','asignarProyecto', 'delete','panel'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -265,9 +265,15 @@ class ProyectoController extends Controller
                 echo CJSON::encode($datos);
                 die();
             }
-            $datos =['error'=>0,'msj'=>'proyecto asignado con exito.'];
+            $url = Yii::app()->createUrl("/proyecto/panel", array("id" => $usuario->ultimo_proyecto_id));
+            $datos =['error'=>0,'msj'=>'Proyecto asignado correctamente.','url'=>$url];
             echo CJSON::encode($datos);
             die();
         }
+    }
+
+    public function actionPanel($id){
+        $model = $this->loadModel($id);
+        $this->render('panel', array('model' => $model,));
     }
 }

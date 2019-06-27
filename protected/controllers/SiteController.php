@@ -128,7 +128,11 @@ class SiteController extends Controller
 
                 if ($model->validate() && $model->login()) {
                     Yii::app()->user->setNotification('success', 'Bienvenido ' . Yii::app()->user->model->username . '!');
-                    $this->redirect(Yii::app()->user->returnUrl);
+                    $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+                    if(is_null($usuario->ultimo_proyecto_id)){
+                        return $this->redirect(Yii::app()->user->returnUrl);
+                    }
+                    return $this->redirect(array('/proyecto/panel','id'=>$usuario->ultimo_proyecto_id));
                 }
             }
             // display the login form
