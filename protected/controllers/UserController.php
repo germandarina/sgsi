@@ -31,7 +31,7 @@ class UserController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'cambiarPassword', 'cambiarSucursal'),
+                'actions' => array('create', 'update', 'admin', 'cambiarPassword','cambiarSucursal','delete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -157,10 +157,22 @@ class UserController extends Controller
     public function actionDelete($id)
     {
         if (Yii::app()->request->isPostRequest) {
-// we only allow deletion via POST request
-            $this->loadModel($id)->delete();
+            try{
+                $proyecto = Proyecto::model()->findByAttributes(['usuario_id'=>$id]);
+                if(!is_null($proyecto)){
+                    throw new Exception("Error. Este usuario esta asociado a un proyecto");
+                }
 
-// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+                $this->loadModel($id)->delete();
+                $datos = ['error'=>0,'msj'=>"Usuario eliminado correctamente"];
+                echo CJSON::encode($datos);
+            }catch (Exception $exception){
+                $msj = $exception->getMessage();
+                $datos = ['error'=>1,'msj'=>$msj];
+                echo CJSON::encode($datos);
+                die();
+            }
+
             if (!isset($_GET['ajax']))
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
         } else

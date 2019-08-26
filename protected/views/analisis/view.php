@@ -1,31 +1,41 @@
 <?php
-$this->breadcrumbs=array(
-	'Analisises'=>array('index'),
-	$model->id,
-);
-
-$this->menu=array(
-array('label'=>'List Analisis','url'=>array('index')),
-array('label'=>'Create Analisis','url'=>array('create')),
-array('label'=>'Update Analisis','url'=>array('update','id'=>$model->id)),
-array('label'=>'Delete Analisis','url'=>'#','linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-array('label'=>'Manage Analisis','url'=>array('admin')),
+$this->widget(
+    'booster.widgets.TbBreadcrumbs',
+    array(
+        'links' => array('Analisis' => array('admin'), 'Ver Datos'),
+    )
 );
 ?>
-
-<h1>View Analisis #<?php echo $model->id; ?></h1>
-
-<?php $this->widget('booster.widgets.TbDetailView',array(
-'data'=>$model,
-'attributes'=>array(
-		'id',
-		'nombre',
-		'descripcion',
-		'fecha',
-		'personal_id',
-		'creaUserStamp',
-		'creaTimeStamp',
-		'modUserStamp',
-		'modTimeStamp',
-),
-)); ?>
+<div class="box">
+    <div class="box-header with-border">
+        <h4>Datos del Analisis: <?php echo $model->nombre; ?></h4>
+    </div>
+    <div class="box-body">
+        <div class="col-md-12">
+            <br>
+            <?php $this->widget(
+                'booster.widgets.TbTabs',
+                array(
+                    'type' => 'tabs', // 'tabs' or 'pills'
+                    'htmlOptions' => ['class' => 'nav-tabs-custom'],
+                    'tabs' => array(
+                        array('label' => 'Asociaciones',
+                            'content' => $this->renderPartial('asociaciones', array('model'=>$model,'grupo_activo'=>$grupo_activo), true),
+                            'active' => true,
+                        ),
+                        array('label' => 'Dependencias',
+                            'content' => $this->renderPartial('dependencias', array('model'=>$model,'dependencia'=>$dependencia,'dependenciasPadres'=>$dependenciasPadres), true),
+                        ),
+                        array('label' => 'Valoración de Amenazas, Vulnerabilidades y Controles',
+                            'content' => $this->renderPartial('valoraciones', array('model'=>$model,'amenaza'=>$amenaza,'grupo_activo'=>$grupo_activo), true),
+                        ),
+                        array('label' => 'Gestion de Riesgos',
+                            'content' => $this->renderPartial('gestionDeRiesgos', array('model'=>$model,'amenaza'=>$amenaza,'grupo_activo'=>$grupo_activo,'actuacion'=>new ActuacionRiesgo()), true),
+                        ),
+                    ),
+                )
+            );
+            ?>
+        </div>
+    </div>
+</div>

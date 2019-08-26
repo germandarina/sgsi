@@ -53,8 +53,23 @@ class AnalisisController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->loadModel($id);
+        $grupo_activo = new GrupoActivo();
+        $grupo_activo->analisis_id = $model->id;
+        $dependencia = new Dependencia();
+        $dependencia->analisis_id = $model->id;
+        $dependenciasPadres = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>NULL,'analisis_id'=>$model->id));
+        $amenaza = new Amenaza();
+        $amenaza->analisis_id = $model->id;
+        if(isset($_GET['Amenaza'])){
+            $amenaza->nombre = $_GET['Amenaza']['nombre'];
+            $amenaza->grupo_nombre = $_GET['Amenaza']['grupo_nombre'];
+            $amenaza->tipo_activo_id = $_GET['Amenaza']['tipo_activo_id'];
+            $amenaza->activo_nombre = $_GET['Amenaza']['activo_nombre'];
+        }
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $model,'grupo_activo'=>$grupo_activo,'dependencia'=>$dependencia,'dependenciasPadres'=>$dependenciasPadres,
+            'amenaza'=>$amenaza
         ));
     }
 
@@ -96,20 +111,7 @@ class AnalisisController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->loadModel($id);
-        $grupo_activo = new GrupoActivo();
-        $grupo_activo->analisis_id = $model->id;
-        $dependencia = new Dependencia();
-        $dependencia->analisis_id = $model->id;
-        $dependenciasPadres = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>NULL,'analisis_id'=>$model->id));
         $model->fecha = Utilities::ViewDateFormat($model->fecha);
-        $amenaza = new Amenaza();
-        $amenaza->analisis_id = $model->id;
-        if(isset($_GET['Amenaza'])){
-            $amenaza->nombre = $_GET['Amenaza']['nombre'];
-            $amenaza->grupo_nombre = $_GET['Amenaza']['grupo_nombre'];
-            $amenaza->tipo_activo_id = $_GET['Amenaza']['tipo_activo_id'];
-            $amenaza->activo_nombre = $_GET['Amenaza']['activo_nombre'];
-        }
         if (isset($_POST['Analisis'])) {
             $model->attributes = $_POST['Analisis'];
             $model->fecha = Utilities::MysqlDateFormat($model->fecha);
@@ -127,8 +129,7 @@ class AnalisisController extends Controller
         }
 
         $this->render('update', array(
-            'model' => $model,'grupo_activo'=>$grupo_activo,'dependencia'=>$dependencia,'dependenciasPadres'=>$dependenciasPadres,
-            'amenaza'=>$amenaza
+            'model' => $model,
         ));
     }
 

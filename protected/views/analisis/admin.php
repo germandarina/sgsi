@@ -49,15 +49,13 @@
                     'header'=>'Personal',
                     'value'=>'$data->getPersonal()',
                 ),
-                'creaUserStamp',
-                'creaTimeStamp',
                 array(
                     'class'=>'booster.widgets.TbButtonColumn',
-                    'template'=>'{update}{delete}',
+                    'template'=>'{update} {view} {delete}',
                     'afterDelete' => 'function(link,success,data) { if (success && data) Lobibox.notify(\'info\', {msg: data }); }'
                 ),
                 array('class' => 'booster.widgets.TbButtonColumn',
-                    'template' => '{crear}',
+                    'template' => '{crear}  {ver}',
                     'buttons' => array(
                         'crear' => array(
                             'header'=>'Crear',
@@ -66,11 +64,6 @@
                             'url' => 'Yii::app()->createUrl("/plan/create", array("analisis_id"=>$data->id))',
                             'icon' => 'fa fa-plus-square',
                         ),
-                    ),
-                    ),
-                array('class' => 'booster.widgets.TbButtonColumn',
-                    'template' => '{ver}',
-                    'buttons' => array(
                         'ver' => array(
                             'label' => 'Ver/Actualizar Planes de Tratamiento',
                             'url' => 'Yii::app()->createUrl("/plan/verPlanes", array("analisis_id"=>$data->id))',
@@ -79,6 +72,12 @@
                         ),
                     ),
                     ),
+//                array('class' => 'booster.widgets.TbButtonColumn',
+//                    'template' => '{ver}',
+//                    'buttons' => array(
+//
+//                    ),
+//                    ),
             ),
         ));
 	 ?>

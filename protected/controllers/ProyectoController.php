@@ -223,6 +223,13 @@ class ProyectoController extends Controller
     {
         $model = new Proyecto('search');
         $model->unsetAttributes();  // clear any default values
+        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        if(!is_null($usuario->ultimo_proyecto_id)){
+            $model->id = $usuario->ultimo_proyecto_id;
+        }else{
+            Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
+            $this->redirect(array('/'));
+        }
         if (isset($_GET['Proyecto']))
             $model->attributes = $_GET['Proyecto'];
 
@@ -239,8 +246,17 @@ class ProyectoController extends Controller
     public function loadModel($id)
     {
         $model = Proyecto::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+
+        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        if(!is_null($usuario)){
+            if($model->id != $usuario->ultimo_proyecto_id){
+                Yii::app()->user->setNotification('error','Acceso denegado');
+                $this->redirect(array('admin'));
+            }
+        }
         return $model;
     }
 

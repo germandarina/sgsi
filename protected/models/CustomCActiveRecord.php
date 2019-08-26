@@ -28,18 +28,23 @@ abstract class CustomCActiveRecord Extends CActiveRecord
     {
         if (!(Yii::app() instanceof CConsoleApplication)) {
             $alias = $this->getTableAlias(false, false);
-            if ($this->hasAttribute("sucursalId")) {
-                return array(
-                    'condition' => $alias . ".sucursalId=:sucursalId",
-                    'params' => array(
-                        ':sucursalId' => Yii::app()->user->model->sucursalId,
-                    ),
-                );
+            if ($this->hasAttribute("proyecto_id")) {
+                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+                if(!is_null($usuario)) {
+                    return array(
+                        'condition' => $alias . ".proyecto_id=:proyecto_id",
+                        'params' => array(
+                            ':proyecto_id' => $usuario->ultimo_proyecto_id,
+                        ),
+                    );
+                }else{
+                    return [];
+                }
             } else {
-                return array();
+                return [];
             }
         } else {
-            return array();
+            return [];
         }
     }
 

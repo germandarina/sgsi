@@ -108,16 +108,23 @@ class TipoActivoController extends Controller
     {
         if (Yii::app()->request->isPostRequest) {
             try{
-                $grupo_activo = Amenaza::model()->findByAttributes(['tipo_activo_id'=>$id]);
-                if(!is_null($grupo_activo)){
-                    throw new Exception("Error. Este Tipo de Activo ya posee las asociaciones realizadas");
+                $amenaza = Amenaza::model()->findByAttributes(['tipo_activo_id'=>$id]);
+                if(!is_null($amenaza)){
+                    throw new Exception("Error. Este item esta asociado a una amenaza");
                 }
+
+                $activo = Activo::model()->findByAttributes(['tipo_activo_id'=>$id]);
+                if(!is_null($activo)){
+                    throw new Exception("Error. Este item esta asociado a un activo");
+                }
+
                 $this->loadModel($id)->delete();
-                $data = "Se elimino correctamente el tipo de activo";
-                echo CJSON::encode($data);
+                $datos = ['error'=>0,'msj'=>"Tipo de activo eliminado correctamente"];
+                echo CJSON::encode($datos);
             }catch (Exception $exception){
-                $data = $exception->getMessage();
-                echo CJSON::encode($data);
+                $msj = $exception->getMessage();
+                $datos = ['error'=>1,'msj'=>$msj];
+                echo CJSON::encode($datos);
                 die();
             }
             if (!isset($_GET['ajax'])) {
