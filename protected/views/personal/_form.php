@@ -70,7 +70,7 @@
                     'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
                     'widgetOptions' => [
                         'asDropDownList' => true,
-                        'data' => CHtml::listData(Proceso::model()->findAll(), 'id', 'nombre'),
+                        'data' => [],
                         'options' => [
                             'minimumResultsForSearch' => 10,
                             'placeholder' => '--Seleccione--'

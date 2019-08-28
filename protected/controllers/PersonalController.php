@@ -187,8 +187,8 @@ class PersonalController extends Controller
     {
         $model = new Personal('search');
         $model->unsetAttributes();  // clear any default values
-        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-        if(is_null($usuario->ultimo_proyecto_id)){
+        $usuario = User::model()->getUsuarioLogueado();
+        if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
             Yii::app()->user->setNotification('error','Tiene que seleccionar un proyecto');
             $this->redirect(array('/'));
         }
@@ -212,12 +212,23 @@ class PersonalController extends Controller
         if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
         }
-        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        $usuario = User::model()->getUsuarioLogueado();
         if(!is_null($usuario)){
-            if($model->id != $usuario->ultimo_proyecto_id){
+            $area = $model->area;
+            $areas_proyectos = AreaProyecto::model()->findAllByAttributes(['proyecto_id'=>$usuario->ultimo_proyecto_id]);
+            $bandera = false;
+            foreach ($areas_proyectos as $ap){
+                if($ap->area_id == $area->id){
+                    $bandera = true;
+                    break;
+                }
+            }
+            if(!$bandera){
                 Yii::app()->user->setNotification('error','Acceso denegado');
                 $this->redirect(array('admin'));
             }
+        }else{
+            $this->redirect(array('admin'));
         }
         return $model;
     }

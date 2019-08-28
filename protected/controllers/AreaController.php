@@ -186,8 +186,26 @@ class AreaController extends Controller
     public function loadModel($id)
     {
         $model = Area::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        $areas_por_proyecto =  Area::model()->getAreasDisponibles();
+        if(!empty($areas_por_proyecto)){
+            $bandera = false;
+            foreach ($areas_por_proyecto as $area){
+                if($area->id == $id){
+                    $bandera = true;
+                    break;
+                }
+            }
+            if(!$bandera){
+                Yii::app()->user->setNotification('error','Acceso denegado');
+                $this->redirect(array('admin'));
+            }
+        }else{
+            Yii::app()->user->setNotification('error','Acceso denegado');
+            $this->redirect(array('admin'));
+        }
         return $model;
     }
 

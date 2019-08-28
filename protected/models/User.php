@@ -20,7 +20,7 @@
  * @property integer $ultimo_proyecto_id
  * @property integer $ultimoLoginSucursalId
  * The followings are the available model relations:
- * @property AclSucursal $sucursal
+ * @property Sucursal $sucursal
  */
 class User extends CActiveRecord
 {
@@ -148,12 +148,6 @@ class User extends CActiveRecord
         $criteria->compare('creaTimeStamp', $this->creaTimeStamp, true);
         $criteria->compare('estado', $this->estado);
 
-//        $criteria->compare('modUserStamp', $this->modUserStamp, true);
-//        $criteria->compare('modTimeStamp', $this->modTimeStamp, true);
-//        $criteria->compare('horaDesde', $this->horaDesde, true);
-//        $criteria->compare('horaHasta', $this->horaHasta, true);
-//        $criteria->compare('diaDesde', $this->diaDesde, true);
-//        $criteria->compare('diaHasta', $this->diaHasta, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -350,5 +344,13 @@ class User extends CActiveRecord
           $command = Yii::app()->db->createCommand($query);
           $usuarios = $command->queryAll($query);
           return $usuarios;
+    }
+
+    public static function getUsuarioLogueado(){
+        if(Yii::app()->user){
+            $usuario = self::model()->findByPk(Yii::app()->user->model->id);
+            return $usuario;
+        }
+        return null;
     }
 }

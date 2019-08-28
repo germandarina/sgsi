@@ -29,7 +29,7 @@ abstract class CustomCActiveRecord Extends CActiveRecord
         if (!(Yii::app() instanceof CConsoleApplication)) {
             $alias = $this->getTableAlias(false, false);
             if ($this->hasAttribute("proyecto_id")) {
-                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+                $usuario = User::model()->getUsuarioLogueado();
                 if(!is_null($usuario)) {
                     return array(
                         'condition' => $alias . ".proyecto_id=:proyecto_id",

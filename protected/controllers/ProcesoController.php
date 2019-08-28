@@ -203,8 +203,29 @@ class ProcesoController extends Controller
     public function loadModel($id)
     {
         $model = Proceso::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        $usuario = User::model()->getUsuarioLogueado();
+        if($usuario){
+            $area = $model->area;
+            $areas_proyectos = AreaProyecto::model()->findAllByAttributes(['proyecto_id'=>$usuario->ultimo_proyecto_id]);
+            $bandera = false;
+            foreach ($areas_proyectos as $ap){
+                if($ap->area_id == $area->id){
+                    $bandera = true;
+                    break;
+                }
+            }
+            if(!$bandera){
+                Yii::app()->user->setNotification('error','Acceso denegado');
+                $this->redirect(array('admin'));
+            }
+        }else{
+            $this->redirect(array('admin'));
+        }
+
+
         return $model;
     }
 

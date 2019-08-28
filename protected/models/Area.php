@@ -131,11 +131,9 @@ class Area extends CustomCActiveRecord
 	}
 
 	public function getAreasDisponibles(){
-        if(Yii::app()->user->model->isAdmin()){
-            return $this->findAll();
-        }else{
+        $arrayAreas = [];
+        if(Yii::app()->user){
             $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-            $arrayAreas = [];
             if(!is_null($usuario->ultimo_proyecto_id)){
                 $area_proyecto = AreaProyecto::model()->findAllByAttributes(['proyecto_id'=>$usuario->ultimo_proyecto_id]);
                 if(!empty($area_proyecto)){
@@ -144,7 +142,7 @@ class Area extends CustomCActiveRecord
                     }
                 }
             }
-            return $arrayAreas;
         }
+        return $arrayAreas;
     }
 }

@@ -101,12 +101,10 @@ class Personal extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-//        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-//        if(!is_null($usuario->ultimo_proyecto_id)){
+
         $criteria->join = " inner join area a on a.id = t.area_id
                             inner join area_proyecto ap on ap.area_id = a.id ";
         $criteria->compare('ap.proyecto_id',$this->proyecto_id);
-//        }
 		$criteria->compare('id',$this->id);
 		$criteria->compare('apellido',$this->apellido,true);
 		$criteria->compare('nombre',$this->nombre,true);
