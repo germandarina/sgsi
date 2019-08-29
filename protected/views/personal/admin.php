@@ -21,7 +21,7 @@
 	</div>
 
 	<?php
-		if(Yii::app()->user->model->isAdmin() || Yii::app()->user->model->isGerencial() ) {
+		if(Yii::app()->user->model->isAdmin() || Yii::app()->user->model->isGerencial() || Yii::app()->user->model->isAuditor()) {
 			$this->widget('booster.widgets.TbExtendedGridView',array(
 				'id'=>'personal-grid',
 				'fixedHeader' => false,

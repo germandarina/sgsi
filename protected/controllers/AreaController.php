@@ -164,9 +164,9 @@ class AreaController extends Controller
     {
         $model = new Area('search');
         $model->unsetAttributes();  // clear any default values
-        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        $usuario = User::model()->getUsuarioLogueado();
         if(is_null($usuario->ultimo_proyecto_id)){
-            Yii::app()->user->setNotification('error','Tiene que seleccionar un proyecto');
+            Yii::app()->user->setNotification('error','Seleccione un proyecto');
             $this->redirect(array('/'));
         }
         $model->proyecto_id = $usuario->ultimo_proyecto_id;

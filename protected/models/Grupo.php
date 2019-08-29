@@ -97,22 +97,12 @@ class Grupo extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-//        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-//        if(!is_null($usuario->ultimo_proyecto_id)){
-//            $criteria->compare('proyecto_id',$usuario->ultimo_proyecto_id);
-//        }
-//        if($this->proyecto_id != NULL){
-//            $criteria->compare('proyecto_id',$this->proyecto_id);
-//        }
 		$criteria->compare('id',$this->id);
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('criterio',$this->criterio,true);
 		$criteria->compare('tipo_activo_id',$this->tipo_activo_id);
 		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
 		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
-//		$criteria->compare('modUserStamp',$this->modUserStamp,true);
-//		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
-
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

@@ -161,9 +161,9 @@ class NivelDeRiesgosController extends Controller
     {
         $model = new NivelDeRiesgos('search');
         $model->unsetAttributes();  // clear any default values
-        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        $usuario = User::model()->getUsuarioLogueado();
         if(is_null($usuario->ultimo_proyecto_id)){
-            Yii::app()->user->setNotification('error','Tiene que seleccionar un proyecto');
+            Yii::app()->user->setNotification('error','Seleccione un proyecto');
             $this->redirect(array('/'));
         }
         $model->proyecto_id = $usuario->ultimo_proyecto_id;
@@ -183,8 +183,18 @@ class NivelDeRiesgosController extends Controller
     public function loadModel($id)
     {
         $model = NivelDeRiesgos::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        $usuario = User::model()->getUsuarioLogueado();
+        if(!is_null($usuario)){
+            if($model->proyecto_id != $usuario->ultimo_proyecto_id){
+                Yii::app()->user->setNotification('error','Acceso denegado');
+                $this->redirect(array('admin'));
+            }
+        }else{
+            $this->redirect(array('admin'));
+        }
         return $model;
     }
 

@@ -96,15 +96,12 @@ class GrupoController extends Controller
         $activo->grupo_id = $model->id;
         if (isset($_POST['Grupo'])) {
             $model->attributes = $_POST['Grupo'];
-
             $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-            if(!is_null($usuario->ultimo_proyecto_id)){
-                $model->proyecto_id = $usuario->ultimo_proyecto_id;
-            }else{
+            if(is_null($usuario->ultimo_proyecto_id)){
                 Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
                 $this->redirect(array('create'));
-
             }
+            $model->proyecto_id = $usuario->ultimo_proyecto_id;
             if ($model->save()){
                 Yii::app()->user->setNotification('success','Grupo creado con exito');
                 $this->redirect(array('admin'));
@@ -162,9 +159,9 @@ class GrupoController extends Controller
     {
         $model = new Grupo('search');
         $model->unsetAttributes();  // clear any default values
-        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        $usuario = User::model()->getUsuarioLogueado();
         if(is_null($usuario->ultimo_proyecto_id)){
-            Yii::app()->user->setNotification('error','Tiene que seleccionar un proyecto');
+            Yii::app()->user->setNotification('error','Seleccione un proyecto');
             $this->redirect(array('/'));
         }
         $model->proyecto_id = $usuario->ultimo_proyecto_id;
@@ -184,8 +181,18 @@ class GrupoController extends Controller
     public function loadModel($id)
     {
         $model = Grupo::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        $usuario = User::model()->getUsuarioLogueado();
+        if(!is_null($usuario)){
+            if($model->proyecto_id != $usuario->ultimo_proyecto_id){
+                Yii::app()->user->setNotification('error','Acceso denegado');
+                $this->redirect(array('admin'));
+            }
+        }else{
+            $this->redirect(array('admin'));
+        }
         return $model;
     }
 

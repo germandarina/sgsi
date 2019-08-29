@@ -65,28 +65,27 @@ class ProcesoController extends Controller
 
         if (isset($_POST['Proceso'])) {
             $model->attributes = $_POST['Proceso'];
-            if(Yii::app()->user->model->isAuditor()){
-                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-                if(!is_null($usuario->ultimo_proyecto_id)) {
-                    $area_proyecto = AreaProyecto::model()->findByAttributes(['area_id'=>$model->area_id,'proyecto_id'=>$usuario->ultimo_proyecto_id]);
-                    if(is_null($area_proyecto)){
-                        Yii::app()->user->setNotification('error','El area seleccionada no corresponde al proyecto en el que se encuentra trabajando');
-                        $this->redirect(array('create'));
-                    }
-                    if ($model->save()) {
-                        Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
-                        $this->redirect(array('create'));
-                    }
-                }else{
-                    Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
-                    $this->redirect(array('create'));
-                }
-            }else{
-                if ($model->save()) {
-                    Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
-                    $this->redirect(array('create'));
-                }
+//            if(Yii::app()->user->model->isAuditor()){
+            $usuario = User::model()->getUsuarioLogueado();
+            if(is_null($usuario->ultimo_proyecto_id)) {
+                Yii::app()->user->setNotification('error','Seleccione un proyecto para empezar a trabajar');
+                $this->redirect(array('create'));
             }
+            $area_proyecto = AreaProyecto::model()->findByAttributes(['area_id'=>$model->area_id,'proyecto_id'=>$usuario->ultimo_proyecto_id]);
+            if(is_null($area_proyecto)){
+                Yii::app()->user->setNotification('error','El area seleccionada no corresponde al proyecto en el que se encuentra trabajando');
+                $this->redirect(array('create'));
+            }
+            if ($model->save()) {
+                Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
+                $this->redirect(array('create'));
+            }
+//            }else{
+//                if ($model->save()) {
+//                    Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
+//                    $this->redirect(array('create'));
+//                }
+//            }
         }
 
         $this->render('create', array(
@@ -106,28 +105,27 @@ class ProcesoController extends Controller
         $activo->area_id = $model->area_id;
         if (isset($_POST['Proceso'])) {
             $model->attributes = $_POST['Proceso'];
-            if(Yii::app()->user->model->isAuditor()){
-                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-                if(!is_null($usuario->ultimo_proyecto_id)) {
-                    $area_proyecto = AreaProyecto::model()->findByAttributes(['area_id'=>$model->area_id,'proyecto_id'=>$usuario->ultimo_proyecto_id]);
-                    if(is_null($area_proyecto)){
-                        Yii::app()->user->setNotification('error','El area seleccionada no corresponde al proyecto en el que se encuentra trabajando');
-                        $this->redirect(array('update','id'=>$model->id));
-                    }
-                    if ($model->save()) {
-                        Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
-                        $this->redirect(array('admin'));
-                    }
-                }else{
-                    Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
-                    $this->redirect(array('update','id'=>$model->id));
-                }
-            }else{
-                if ($model->save()) {
-                    Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
-                    $this->redirect(array('update','id'=>$model->id));
-                }
+//            if(Yii::app()->user->model->isAuditor()){
+            $usuario = User::model()->getUsuarioLogueado();
+            if(is_null($usuario->ultimo_proyecto_id)) {
+                Yii::app()->user->setNotification('error','Seleccione un proyecto para empezar a trabajar');
+                $this->redirect(array('update','id'=>$model->id));
             }
+            $area_proyecto = AreaProyecto::model()->findByAttributes(['area_id'=>$model->area_id,'proyecto_id'=>$usuario->ultimo_proyecto_id]);
+            if(is_null($area_proyecto)){
+                Yii::app()->user->setNotification('error','El area seleccionada no corresponde al proyecto en el que se encuentra trabajando');
+                $this->redirect(array('update','id'=>$model->id));
+            }
+            if ($model->save()) {
+                Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
+                $this->redirect(array('admin'));
+            }
+//            }else{
+//                if ($model->save()) {
+//                    Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
+//                    $this->redirect(array('update','id'=>$model->id));
+//                }
+//            }
         }
 
         $this->render('update', array(
@@ -181,9 +179,9 @@ class ProcesoController extends Controller
     {
         $model = new Proceso('search');
         $model->unsetAttributes();  // clear any default values
-        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        $usuario = User::model()->getUsuarioLogueado();
         if(is_null($usuario->ultimo_proyecto_id)){
-            Yii::app()->user->setNotification('error','Tiene que seleccionar un proyecto');
+            Yii::app()->user->setNotification('error','Seleccione un proyecto');
             $this->redirect(array('/'));
         }
         $model->proyecto_id = $usuario->ultimo_proyecto_id;
