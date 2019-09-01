@@ -64,28 +64,27 @@ class ProcesoController extends Controller
         $model = new Proceso;
 
         if (isset($_POST['Proceso'])) {
-            $model->attributes = $_POST['Proceso'];
-//            if(Yii::app()->user->model->isAuditor()){
-            $usuario = User::model()->getUsuarioLogueado();
-            if(is_null($usuario->ultimo_proyecto_id)) {
-                Yii::app()->user->setNotification('error','Seleccione un proyecto para empezar a trabajar');
-                $this->redirect(array('create'));
-            }
-            $area_proyecto = AreaProyecto::model()->findByAttributes(['area_id'=>$model->area_id,'proyecto_id'=>$usuario->ultimo_proyecto_id]);
-            if(is_null($area_proyecto)){
-                Yii::app()->user->setNotification('error','El area seleccionada no corresponde al proyecto en el que se encuentra trabajando');
-                $this->redirect(array('create'));
-            }
-            if ($model->save()) {
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $usuario = User::model()->getUsuarioLogueado();
+                if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)) {
+                    throw new Exception('Seleccione un proyecto para empezar a trabajar');
+                }
+                $model->attributes = $_POST['Proceso'];
+                $area_proyecto = AreaProyecto::model()->findByAttributes(['area_id'=>$model->area_id,'proyecto_id'=>$usuario->ultimo_proyecto_id]);
+                if(is_null($area_proyecto)){
+                    throw new Exception('El area seleccionada no corresponde al proyecto en el que se encuentra trabajando');
+                }
+                if (!$model->save()) {
+                    throw new Exception("Error guardar proceso");
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
                 $this->redirect(array('create'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
-//            }else{
-//                if ($model->save()) {
-//                    Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
-//                    $this->redirect(array('create'));
-//                }
-//            }
         }
 
         $this->render('create', array(
@@ -104,28 +103,27 @@ class ProcesoController extends Controller
         $activo = new Activo();
         $activo->area_id = $model->area_id;
         if (isset($_POST['Proceso'])) {
-            $model->attributes = $_POST['Proceso'];
-//            if(Yii::app()->user->model->isAuditor()){
-            $usuario = User::model()->getUsuarioLogueado();
-            if(is_null($usuario->ultimo_proyecto_id)) {
-                Yii::app()->user->setNotification('error','Seleccione un proyecto para empezar a trabajar');
-                $this->redirect(array('update','id'=>$model->id));
-            }
-            $area_proyecto = AreaProyecto::model()->findByAttributes(['area_id'=>$model->area_id,'proyecto_id'=>$usuario->ultimo_proyecto_id]);
-            if(is_null($area_proyecto)){
-                Yii::app()->user->setNotification('error','El area seleccionada no corresponde al proyecto en el que se encuentra trabajando');
-                $this->redirect(array('update','id'=>$model->id));
-            }
-            if ($model->save()) {
-                Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $usuario = User::model()->getUsuarioLogueado();
+                if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)) {
+                    throw new Exception('Seleccione un proyecto para empezar a trabajar');
+                }
+                $model->attributes = $_POST['Proceso'];
+                $area_proyecto = AreaProyecto::model()->findByAttributes(['area_id'=>$model->area_id,'proyecto_id'=>$usuario->ultimo_proyecto_id]);
+                if(is_null($area_proyecto)){
+                    throw new Exception('El area seleccionada no corresponde al proyecto en el que se encuentra trabajando');
+                }
+                if (!$model->save()) {
+                    throw new Exception("Error guardar proceso");
+                }
+                $transaction->commit();
+                Yii::app()->user->setNotification('success', 'El proceso fue actualizado con exito');
                 $this->redirect(array('admin'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
-//            }else{
-//                if ($model->save()) {
-//                    Yii::app()->user->setNotification('success', 'El proceso fue creado con exito');
-//                    $this->redirect(array('update','id'=>$model->id));
-//                }
-//            }
         }
 
         $this->render('update', array(
@@ -142,9 +140,9 @@ class ProcesoController extends Controller
     {
         if (Yii::app()->request->isPostRequest) {
             try{
-                $grupo_activo = Personal::model()->findByAttributes(['proceso_id'=>$id]);
-                if(!is_null($grupo_activo)){
-                    throw new Exception("Error. Este proceso ya posee las asociaciones realizadas");
+                $personal = Personal::model()->findByAttributes(['proceso_id'=>$id]);
+                if(!is_null($personal)){
+                    throw new Exception("Error. Este proceso esta asociado a un personal");
                 }
                 $this->loadModel($id)->delete();
                 $data = "Se elimino correctamente el proceso";
@@ -180,7 +178,7 @@ class ProcesoController extends Controller
         $model = new Proceso('search');
         $model->unsetAttributes();  // clear any default values
         $usuario = User::model()->getUsuarioLogueado();
-        if(is_null($usuario->ultimo_proyecto_id)){
+        if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
             Yii::app()->user->setNotification('error','Seleccione un proyecto');
             $this->redirect(array('/'));
         }

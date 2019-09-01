@@ -63,11 +63,21 @@ class OrganizacionController extends Controller
     {
         $model = new Organizacion;
         if (isset($_POST['Organizacion'])) {
-            $model->attributes = $_POST['Organizacion'];
-            if ($model->save()) {
+
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $model->attributes = $_POST['Organizacion'];
+                if (!$model->save()) {
+                    throw new Exception("Error al guardar organizacion");
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success','Organizacion creada con exito');
                 $this->redirect(array('admin'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
+
         }
 
         $this->render('create', array(
@@ -85,10 +95,18 @@ class OrganizacionController extends Controller
         $model = $this->loadModel($id);
 
         if (isset($_POST['Organizacion'])) {
-            $model->attributes = $_POST['Organizacion'];
-            if ($model->save()) {
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $model->attributes = $_POST['Organizacion'];
+                if (!$model->save()) {
+                    throw new Exception("Error al guardar organizacion");
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success','Organizacion actualizada con exito');
                 $this->redirect(array('admin'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
         }
 

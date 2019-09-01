@@ -64,10 +64,18 @@ class TipoActivoController extends Controller
         $model = new TipoActivo;
 
         if (isset($_POST['TipoActivo'])) {
-            $model->attributes = $_POST['TipoActivo'];
-            if ($model->save()) {
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $model->attributes = $_POST['TipoActivo'];
+                if (!$model->save()) {
+                    throw new Exception("Error al crear tipo de activo");
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success','Tipo de Activo creado con exito');
                 $this->redirect(array('create'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
         }
 
@@ -89,9 +97,19 @@ class TipoActivoController extends Controller
 // $this->performAjaxValidation($model);
 
         if (isset($_POST['TipoActivo'])) {
-            $model->attributes = $_POST['TipoActivo'];
-            if ($model->save())
-                $this->redirect(array('admin'));
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $model->attributes = $_POST['TipoActivo'];
+                if (!$model->save()) {
+                    throw new Exception("Error al actualizar tipo de activo");
+                }
+                $transaction->commit();
+                Yii::app()->user->setNotification('success','Tipo de Activo actualizado con exito');
+                $this->redirect(array('create'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
+            }
         }
 
         $this->render('update', array(
@@ -116,6 +134,16 @@ class TipoActivoController extends Controller
                 $activo = Activo::model()->findByAttributes(['tipo_activo_id'=>$id]);
                 if(!is_null($activo)){
                     throw new Exception("Error. Este item esta asociado a un activo");
+                }
+
+                $control = Control::model()->findByAttributes(['tipo_activo_id'=>$id]);
+                if(!is_null($control)){
+                    throw new Exception("Error. Este item esta asociado a un control");
+                }
+
+                $grupo = Grupo::model()->findByAttributes(['tipo_activo_id'=>$id]);
+                if(!is_null($grupo)){
+                    throw new Exception("Error. Este item esta asociado a un grupo");
                 }
 
                 $this->loadModel($id)->delete();

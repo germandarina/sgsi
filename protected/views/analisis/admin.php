@@ -66,18 +66,12 @@
                         ),
                         'ver' => array(
                             'label' => 'Ver/Actualizar Planes de Tratamiento',
-                            'url' => 'Yii::app()->createUrl("/plan/verPlanes", array("analisis_id"=>$data->id))',
+                            'url' => 'Yii::app()->createUrl("/plan/verPlanes", array("id"=>$data->id))',
                             'visible' => '$data->tienePlanDeTratamiento()', //  SI NO TIENE PLAN NO MOSTRAR EL ICONO;
                             'icon' => 'fa fa-eye',
                         ),
                     ),
                     ),
-//                array('class' => 'booster.widgets.TbButtonColumn',
-//                    'template' => '{ver}',
-//                    'buttons' => array(
-//
-//                    ),
-//                    ),
             ),
         ));
 	 ?>

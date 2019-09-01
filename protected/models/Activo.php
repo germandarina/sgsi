@@ -237,4 +237,17 @@ class Activo extends CustomCActiveRecord
         }
         return $array_procesos;
     }
+
+    public function getPadresMultiples($activo_padre_id,$analisis_id){
+        $queryPadres = "select a.*, d.id as getActivosPorTipo from 
+                             dependencia d 
+                             inner join activo a on d.activo_padre_id = a.id
+                             where d.activo_id =".$activo_padre_id." 
+                             and d.analisis_id =".$analisis_id."
+                             group by d.numero
+                             ";
+        $command = Yii::app()->db->createCommand($queryPadres);
+        $padres = $command->queryAll($queryPadres);
+        return $padres;
+    }
 }

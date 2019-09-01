@@ -117,4 +117,18 @@ class Plan extends CustomCActiveRecord
 	{
 		return parent::model($className);
 	}
+	public function getActivosAfectados($plan_detalle_id){
+        $query = "select al.nombre as nombre_analisis, a.nombre as nombre_activo, ta.nombre as nombre_tipo_activo
+                            from plan_detalle pl
+                            inner join plan p on p.id =pl.plan_id
+                            inner join analisis al on al.id = p.analisis_id
+                            inner join analisis_control ac on ac.id = pl.analisis_control_id
+                            inner join grupo_activo ga on ga.id = ac.grupo_activo_id
+                            inner join activo a on a.id = ga.activo_id
+                            inner join tipo_activo ta on ta.id = a.tipo_activo_id
+                            where pl.id = ".$plan_detalle_id."  ";
+        $command = Yii::app()->db->createCommand($query);
+        $resultados = $command->queryAll($query);
+        return $resultados;
+    }
 }

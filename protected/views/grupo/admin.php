@@ -53,7 +53,7 @@
                     'header'=>'Nombre',
                     'type'=>'raw',
                     'value'=>function($data){
-                        return "<a style='cursor: pointer' onclick='mostrarActivos(event,".$data->id.")'>".$data->nombre."</a>";
+                        return "<a title='Ver Activos' style='cursor: pointer' onclick='mostrarActivos(event,".$data->id.")'>".$data->nombre."</a>";
                     }
                 ],
                 'criterio',

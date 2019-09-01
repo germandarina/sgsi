@@ -82,16 +82,15 @@ class AnalisisController extends Controller
         $model = new Analisis;
 
         if (isset($_POST['Analisis'])) {
+            $usuario = User::model()->getUsuarioLogueado();
+            if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
+                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
+                $this->redirect(array('admin'));
+            }
+            $model->proyecto_id = $usuario->ultimo_proyecto_id;
             $model->attributes = $_POST['Analisis'];
             $model->fecha = Utilities::MysqlDateFormat($model->fecha);
-            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-            if(!is_null($usuario->ultimo_proyecto_id)){
-                $model->proyecto_id = $usuario->ultimo_proyecto_id;
-            }else{
-                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
-                $this->redirect(array('create'));
 
-            }
             if ($model->save()) {
                 Yii::app()->user->setNotification('success','Analisis creado con exito');
                 $this->redirect(array('update','id'=>$model->id));
@@ -113,15 +112,14 @@ class AnalisisController extends Controller
         $model = $this->loadModel($id);
         $model->fecha = Utilities::ViewDateFormat($model->fecha);
         if (isset($_POST['Analisis'])) {
+            $usuario = User::model()->getUsuarioLogueado();
+            if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
+                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
+                $this->redirect(array('admin'));
+            }
+            $model->proyecto_id = $usuario->ultimo_proyecto_id;
             $model->attributes = $_POST['Analisis'];
             $model->fecha = Utilities::MysqlDateFormat($model->fecha);
-            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-            if(!is_null($usuario->ultimo_proyecto_id)){
-                $model->proyecto_id = $usuario->ultimo_proyecto_id;
-            }else{
-                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
-                $this->redirect(array('create'));
-            }
             if ($model->save()) {
                 Yii::app()->user->setNotification('success','Analisis actualizado con exito');
                 $this->redirect(array('admin'));
@@ -144,8 +142,39 @@ class AnalisisController extends Controller
             try{
                 $grupo_activo = GrupoActivo::model()->findByAttributes(['analisis_id'=>$id]);
                 if(!is_null($grupo_activo)){
-                    throw new Exception("Error. Este analisis ya posee las asociaciones realizadas");
+                    throw new Exception("Error. Este analisis esta asociado a un grupo");
                 }
+
+                $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(['analisis_id'=>$id]);
+                if(!is_null($analisis_amenaza)){
+                    throw new Exception("Error. Este analisis esta asociado a una amenaza");
+                }
+
+                $analisis_control = AnalisisControl::model()->findByAttributes(['analisis_id'=>$id]);
+                if(!is_null($analisis_control)){
+                    throw new Exception("Error. Este analisis esta asociado a un control");
+                }
+
+                $analisis_riesgo = AnalisisRiesgo::model()->findByAttributes(['analisis_id'=>$id]);
+                if(!is_null($analisis_riesgo)){
+                    throw new Exception("Error. Este analisis esta asociado a un riesgo");
+                }
+
+                $analisis_vulnerabilidad = AnalisisVulnerabilidad::model()->findByAttributes(['analisis_id'=>$id]);
+                if(!is_null($analisis_vulnerabilidad)){
+                    throw new Exception("Error. Este analisis esta asociado a un riesgo");
+                }
+
+                $dependecia = Dependencia::model()->findByAttributes(['analisis_id'=>$id]);
+                if(!is_null($dependecia)){
+                    throw new Exception("Error. Este analisis esta asociado a una dependencia");
+                }
+
+                $plan = Plan::model()->findByAttributes(['analisis_id'=>$id]);
+                if(!is_null($plan)){
+                    throw new Exception("Error. Este analisis esta asociado a un plan");
+                }
+
                 $this->loadModel($id)->delete();
                 $data = "Se elimino correctamente el analisis";
                 echo CJSON::encode($data);
@@ -180,7 +209,7 @@ class AnalisisController extends Controller
         $model = new Analisis('search');
         $model->unsetAttributes();  // clear any default values
         $usuario = User::model()->getUsuarioLogueado();
-        if(is_null($usuario->ultimo_proyecto_id)){
+        if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
             Yii::app()->user->setNotification('error','Seleccione un proyecto');
             $this->redirect(array('/'));
         }

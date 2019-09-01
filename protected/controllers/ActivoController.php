@@ -66,12 +66,12 @@ class ActivoController extends Controller
         if (isset($_POST['Activo'])) {
             try{
                 $transaction = Yii::app()->db->beginTransaction();
-                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-                if(!is_null($usuario->ultimo_proyecto_id)){
-                   $model->proyecto_id = $usuario->ultimo_proyecto_id;
-                }else{
+                $usuario = User::model()->getUsuarioLogueado();
+                if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
                     throw new Exception("Debe seleccionar un proyecto para empezar a trabajar");
+
                 }
+                $model->proyecto_id = $usuario->ultimo_proyecto_id;
                 $model->attributes = $_POST['Activo'];
                 if (!$model->save()) {
                     throw new Exception("Error al crear activo");
@@ -119,13 +119,12 @@ class ActivoController extends Controller
             try{
                 $transaction = Yii::app()->db->beginTransaction();
 
-                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-                if(!is_null($usuario->ultimo_proyecto_id)){
-                    $model->proyecto_id = $usuario->ultimo_proyecto_id;
-                }else{
+                $usuario = User::model()->getUsuarioLogueado();
+                if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
                     throw new Exception("Debe seleccionar un proyecto para empezar a trabajar");
-                }
 
+                }
+                $model->proyecto_id = $usuario->ultimo_proyecto_id;
                 $model->attributes = $_POST['Activo'];
                 if (!$model->save()) {
                     throw new Exception("Error al actualizar activo");
@@ -174,6 +173,10 @@ class ActivoController extends Controller
                 if(!is_null($grupo_activo)){
                     throw new Exception("Error. Este activo ya posee las asociaciones realizadas");
                 }
+                $activo_area = ActivoArea::model()->findByAttributes(['activo_id'=>$id]);
+                if(!is_null($activo_area)){
+                    throw new Exception("Error. Este activo ya posee las asociaciones realizadas");
+                }
                 $this->loadModel($id)->delete();
                 $data = "Se elimino correctamente el activo";
                 echo CJSON::encode($data);
@@ -208,7 +211,7 @@ class ActivoController extends Controller
         $model = new Activo('search');
         $model->unsetAttributes();
         $usuario = User::model()->getUsuarioLogueado();
-        if(is_null($usuario->ultimo_proyecto_id)){
+        if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
             Yii::app()->user->setNotification('error','Seleccione un proyecto');
             $this->redirect(array('/'));
         }
@@ -229,8 +232,18 @@ class ActivoController extends Controller
     public function loadModel($id)
     {
         $model = Activo::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        $usuario = User::model()->getUsuarioLogueado();
+        if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
+            Yii::app()->user->setNotification('error','Seleccione un proyecto');
+            $this->redirect(array('/'));
+        }
+        if($model->proyecto_id != $usuario->ultimo_proyecto_id){
+            Yii::app()->user->setNotification('error','Accesoo denegado');
+            $this->redirect(array('admin'));
+        }
         return $model;
     }
 
@@ -275,15 +288,9 @@ class ActivoController extends Controller
     }
     public function actionGetPadresMultiples(){
         if(isset($_POST['activo_padre_id'])){
-            $queryPadres = "select a.*, d.id as getActivosPorTipo from 
-                             dependencia d 
-                             inner join activo a on d.activo_padre_id = a.id
-                             where d.activo_id =".$_POST['activo_padre_id']." 
-                             and d.analisis_id =".$_POST['analisis_id']."
-                             group by d.numero
-                             ";
-            $command = Yii::app()->db->createCommand($queryPadres);
-            $padres = $command->queryAll($queryPadres);
+            $activo_padre_id  = $_POST['activo_padre_id'];
+            $analisis_id = $_POST['analisis_id'];
+            $padres = Activo::model()->getPadresMultiples($activo_padre_id,$analisis_id);
             $datos = ['cantidad'=>count($padres),'padres'=>$padres];
             echo CJSON::encode($datos);
             die();

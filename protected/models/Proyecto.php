@@ -34,7 +34,7 @@ class Proyecto extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nombre, descripcion,areas ,fecha', 'required'),
+			array('nombre, descripcion,fecha', 'required'),
 			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>250),
 			array('descripcion', 'length', 'max'=>800),
 			array('usuario_id,creaTimeStamp, modTimeStamp', 'safe'),

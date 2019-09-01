@@ -65,18 +65,24 @@ class NivelDeRiesgosController extends Controller
 
 
         if (isset($_POST['NivelDeRiesgos'])) {
-            $model->attributes = $_POST['NivelDeRiesgos'];
-            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-            if(!is_null($usuario->ultimo_proyecto_id)){
-                $model->proyecto_id = $usuario->ultimo_proyecto_id;
-            }else{
-                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
-                $this->redirect(array('create'));
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
 
-            }
-            if ($model->save()) {
+                $usuario = User::model()->getUsuarioLogueado();
+                if(is_null($usuario) && is_null($usuario->ultimo_proyecto_id)){
+                    throw new Exception('Debe seleccionar un proyecto para empezar a trabajar');
+                }
+                $model->proyecto_id = $usuario->ultimo_proyecto_id;
+                $model->attributes = $_POST['NivelDeRiesgos'];
+                if(!$model->save()){
+                    throw new Exception('Error al guardar nivel de riesgo');
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success','Nivel de riesgo creado con exito');
                 $this->redirect(array('create'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
         }
 
@@ -95,18 +101,24 @@ class NivelDeRiesgosController extends Controller
         $model = $this->loadModel($id);
 
         if (isset($_POST['NivelDeRiesgos'])) {
-            $model->attributes = $_POST['NivelDeRiesgos'];
-            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-            if(!is_null($usuario->ultimo_proyecto_id)){
-                $model->proyecto_id = $usuario->ultimo_proyecto_id;
-            }else{
-                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
-                $this->redirect(array('create'));
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
 
-            }
-            if ($model->save()) {
+                $usuario = User::model()->getUsuarioLogueado();
+                if(is_null($usuario) && is_null($usuario->ultimo_proyecto_id)){
+                    throw new Exception('Debe seleccionar un proyecto para empezar a trabajar');
+                }
+                $model->proyecto_id = $usuario->ultimo_proyecto_id;
+                $model->attributes = $_POST['NivelDeRiesgos'];
+                if(!$model->save()){
+                    throw new Exception('Error al guardar nivel de riesgo');
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success','Nivel de riesgo actualizado con exito');
-                $this->redirect(array('update', 'id' => $model->id));
+                $this->redirect(array('admin'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
         }
 
@@ -124,8 +136,8 @@ class NivelDeRiesgosController extends Controller
     {
         if (Yii::app()->request->isPostRequest) {
             try{
-                $grupo_activo = AnalisisRiesgoDetalle::model()->findByAttributes(['nivel_riesgo_id'=>$id]);
-                if(!is_null($grupo_activo)){
+                $analisis_riesgo_detalle = AnalisisRiesgoDetalle::model()->findByAttributes(['nivel_riesgo_id'=>$id]);
+                if(!is_null($analisis_riesgo_detalle)){
                     throw new Exception("Error. Este Nivel de Riesgo esta relacionado a una gestion de riesgos.");
                 }
                 $this->loadModel($id)->delete();
@@ -162,7 +174,7 @@ class NivelDeRiesgosController extends Controller
         $model = new NivelDeRiesgos('search');
         $model->unsetAttributes();  // clear any default values
         $usuario = User::model()->getUsuarioLogueado();
-        if(is_null($usuario->ultimo_proyecto_id)){
+        if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
             Yii::app()->user->setNotification('error','Seleccione un proyecto');
             $this->redirect(array('/'));
         }

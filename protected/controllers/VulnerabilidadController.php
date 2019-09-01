@@ -158,8 +158,18 @@ class VulnerabilidadController extends Controller
             try{
                 $grupo_activo = Control::model()->findByAttributes(['vulnerabilidad_id'=>$id]);
                 if(!is_null($grupo_activo)){
-                    throw new Exception("Error. Esta Vulnerabilidad ya posee las asociaciones realizadas");
+                    throw new Exception("Error. Esta Vulnerabilidad esta asociada a un grupo");
                 }
+                $amenaza_vulne = AmenazaVulnerabilidad::model()->findByAttributes(['vulnerabilidad_id'=>$id]);
+                if(!is_null($amenaza_vulne)){
+                    throw new Exception("Error. Esta Vulnerabilidad esta asociada a una amenaza");
+                }
+
+                $analisis_vulne = AnalisisVulnerabilidad::model()->findByAttributes(['vulnerabilidad_id'=>$id]);
+                if(!is_null($analisis_vulne)){
+                    throw new Exception("Error. Esta Vulnerabilidad esta asociada a un analisis");
+                }
+
                 $this->loadModel($id)->delete();
                 $data = "Se elimino correctamente la vulnerabilidad";
                 echo CJSON::encode($data);

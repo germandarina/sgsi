@@ -11,33 +11,12 @@ class PersonalController extends Controller
     /**
      * @return array action filters
      */
-//    public function filters()
-//    {
-//        return array(
-//            'accessControl', // perform access control for CRUD operations
-//            array(
-//                'application.filters.ProyectoFilter + admin',
-//                'unit'=>'second',
-//            ),
-//        );
-//    }
-
-    /**
-     * Specifies the access control rules.
-     * This method is used by the 'accessControl' filter.
-     * @return array access control rules
-     */
-
-//    public function filters()
-//    {
-//        return array(
-//            'postOnly + edit, create',
-//            array(
-//                'application.filters.PerformanceFilter - edit, create',
-//                'unit'=>'second',
-//            ),
-//        );
-//    }
+    public function filters()
+    {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+        );
+    }
 
     public function accessRules()
     {
@@ -81,28 +60,27 @@ class PersonalController extends Controller
 
 
         if (isset($_POST['Personal'])) {
-            $model->attributes = $_POST['Personal'];
-            if(Yii::app()->user->model->isAuditor()){
-                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-                if(!is_null($usuario->ultimo_proyecto_id)) {
-                    $area_proyecto = AreaProyecto::model()->findByAttributes(['area_id'=>$model->area_id,'proyecto_id'=>$usuario->ultimo_proyecto_id]);
-                    if(is_null($area_proyecto)){
-                        Yii::app()->user->setNotification('error','El area seleccionada no corresponde al proyecto en el que se encuentra trabajando');
-                        $this->redirect(array('create'));
-                    }
-                    if ($model->save()) {
-                        Yii::app()->user->setNotification('success', 'El personal fue creado con exito');
-                        $this->redirect(array('admin'));
-                    }
-                }else{
-                    Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
-                    $this->redirect(array('create'));
+
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $usuario = User::model()->getUsuarioLogueado();
+                if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
+                    throw new Exception('Debe seleccionar un proyecto para empezar a trabajar');
                 }
-            }else{
-                if ($model->save()) {
-                    Yii::app()->user->setNotification('success', 'El personal fue creado con exito');
-                    $this->redirect(array('create'));
+                $model->attributes = $_POST['Personal'];
+                $area_proyecto = AreaProyecto::model()->findByAttributes(['area_id'=>$model->area_id,'proyecto_id'=>$usuario->ultimo_proyecto_id]);
+                if(is_null($area_proyecto)){
+                    throw new Exception("El area seleccionada no corresponde al proyecto en el que se encuentra trabajando");
                 }
+                if(!$model->save()) {
+                    throw new Exception("Error al crear personal");
+                }
+                $transaction->commit();
+                Yii::app()->user->setNotification('success', 'El personal fue creado con exito');
+                $this->redirect(array('admin'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
         }
 
@@ -124,10 +102,26 @@ class PersonalController extends Controller
 // $this->performAjaxValidation($model);
 
         if (isset($_POST['Personal'])) {
-            $model->attributes = $_POST['Personal'];
-            if ($model->save()) {
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $usuario = User::model()->getUsuarioLogueado();
+                if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
+                    throw new Exception('Debe seleccionar un proyecto para empezar a trabajar');
+                }
+                $model->attributes = $_POST['Personal'];
+                $area_proyecto = AreaProyecto::model()->findByAttributes(['area_id'=>$model->area_id,'proyecto_id'=>$usuario->ultimo_proyecto_id]);
+                if(is_null($area_proyecto)){
+                    throw new Exception("El area seleccionada no corresponde al proyecto en el que se encuentra trabajando");
+                }
+                if(!$model->save()) {
+                    throw new Exception("Error al crear personal");
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success', 'El personal fue actualizado con exito');
                 $this->redirect(array('admin'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
         }
 

@@ -63,12 +63,19 @@ class ControlController extends Controller
     public function actionCreate()
     {
         $model = new Control;
-
         if (isset($_POST['Control'])) {
-            $model->attributes = $_POST['Control'];
-            if ($model->save()) {
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $model->attributes = $_POST['Control'];
+                if (!$model->save()) {
+                    throw new Exception("Error al crear control");
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success','Control creado con exito');
                 $this->redirect(array('create'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
         }
 
@@ -85,18 +92,16 @@ class ControlController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->loadModel($id);
-        $controlValor = new ControlValor();
-        $controlValor->control_id = $model->id;
-
         if (isset($_POST['Control'])) {
             $model->attributes = $_POST['Control'];
             if ($model->save()) {
                 Yii::app()->user->setNotification('success','Control actualizado con exito');
-                $this->redirect(array('admin'));            }
+                $this->redirect(array('admin'));
+            }
         }
 
         $this->render('update', array(
-            'model' => $model,'controlValor'=>$controlValor
+            'model' => $model
         ));
     }
 
@@ -249,7 +254,13 @@ class ControlController extends Controller
 
     public function actionGetVulnerabilidades(){
         if(isset($_POST['amenaza_id'])){
-            $vulnerabilidades = Vulnerabilidad::model()->findAllByAttributes(['amenaza_id'=>$_POST['amenaza_id']]);
+            $amenaza_vulne = AmenazaVulnerabilidad::model()->findAllByAttributes(['amenaza_id'=>$_POST['amenaza_id']]);
+            $vulnerabilidades = [];
+            if(!empty($amenaza_vulne)){
+                foreach ($amenaza_vulne as $am){
+                    $vulnerabilidades[] = $am->vulnerabilidad;
+                }
+            }
             $datos = ['vulnerabilidades'=>$vulnerabilidades];
             echo CJSON::encode($datos);
             die();

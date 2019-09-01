@@ -113,9 +113,17 @@ class AmenazaController extends Controller
     {
         if (Yii::app()->request->isPostRequest) {
             try{
-                $grupo_activo = Vulnerabilidad::model()->findByAttributes(['amenaza_id'=>$id]);
-                if(!is_null($grupo_activo)){
-                    throw new Exception("Error. Esta amenaza ya posee las asociaciones realizadas");
+                $amenaza_vulne = AmenazaVulnerabilidad::model()->findByAttributes(['amenaza_id'=>$id]);
+                if(!is_null($amenaza_vulne)){
+                    throw new Exception("Error. Esta amenaza esta relacionada a una vulnerabilidades");
+                }
+                $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(['amenaza_id'=>$id]);
+                if(!is_null($analisis_amenaza)){
+                    throw new Exception("Error. Esta amenaza esta relacionada a un analisis");
+                }
+                $control = Control::model()->findByAttributes(['amenaza_id'=>$id]);
+                if(!is_null($control)){
+                    throw new Exception("Error. Esta amenaza esta relacionada a un control");
                 }
                 $this->loadModel($id)->delete();
                 $data = "Se elimino correctamente la amenaza";

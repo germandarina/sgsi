@@ -72,20 +72,23 @@ class ProyectoController extends Controller
                     throw new Exception("Debe seleccionar una fecha");
                 }
                 $model->fecha = Utilities::MysqlDateFormat($model->fecha);
-                if(!isset($_POST['Proyecto']['areas']) || empty($_POST['Proyecto']['areas'])){
-                    $model->addError('areas','Debe seleccionar al menos 1 area para crear el proyecto');
-                }
+//                if(!isset($_POST['Proyecto']['areas']) || empty($_POST['Proyecto']['areas'])){
+//                    $model->addError('areas','Debe seleccionar al menos 1 area para crear el proyecto');
+//                }
                 if (!$model->save()) {
                     throw new Exception("Error al crear proyecto");
                 }
-                foreach ($_POST['Proyecto']['areas'] as $areaId){
-                     $areaProyecto = new AreaProyecto();
-                     $areaProyecto->area_id = $areaId;
-                     $areaProyecto->proyecto_id = $model->id;
-                     if(!$areaProyecto->save()){
-                         throw new Exception("Error al crear relacion area proyecto");
-                     }
+                if(isset($_POST['Proyecto']['areas']) && !empty($_POST['Proyecto']['areas'])){
+                    foreach ($_POST['Proyecto']['areas'] as $areaId){
+                        $areaProyecto = new AreaProyecto();
+                        $areaProyecto->area_id = $areaId;
+                        $areaProyecto->proyecto_id = $model->id;
+                        if(!$areaProyecto->save()){
+                            throw new Exception("Error al crear relacion area proyecto");
+                        }
+                    }
                 }
+
                 $transaction->commit();
                 Yii::app()->user->setNotification('success','El proyecto fue creado con exito');
                 $this->redirect(array('admin'));
@@ -128,24 +131,28 @@ class ProyectoController extends Controller
                     throw new Exception("Debe seleccionar una fecha");
                 }
                 $model->fecha = Utilities::MysqlDateFormat($model->fecha);
-                if(!isset($_POST['Proyecto']['areas']) || empty($_POST['Proyecto']['areas'])){
-                    $model->addError('areas','Debe seleccionar al menos 1 area para crear el proyecto');
-                    throw new Exception('Debe seleccionar al menos 1 area para crear el proyecto');
-                }
+//                if(!isset($_POST['Proyecto']['areas']) || empty($_POST['Proyecto']['areas'])){
+//                    $model->addError('areas','Debe seleccionar al menos 1 area para crear el proyecto');
+//                    throw new Exception('Debe seleccionar al menos 1 area para crear el proyecto');
+//                }
                 if (!$model->save()){
                     throw new Exception("Error al actualizar proyecto");
                 }
-                foreach ($areasProyecto as $relacion){
-                    if(!$relacion->delete()){
-                        throw new Exception("Error al eliminar relacion area proyecto");
+                if(!empty($areasProyecto)){
+                    foreach ($areasProyecto as $relacion){
+                        if(!$relacion->delete()){
+                            throw new Exception("Error al eliminar relacion area proyecto");
+                        }
                     }
                 }
-                foreach ($_POST['Proyecto']['areas']as $areaId){
-                    $areaProyecto = new AreaProyecto();
-                    $areaProyecto->area_id = $areaId;
-                    $areaProyecto->proyecto_id = $model->id;
-                    if(!$areaProyecto->save()){
-                        throw new Exception("Error al crear relacion area proyecto");
+                if(isset($_POST['Proyecto']['areas']) && !empty($_POST['Proyecto']['areas'])){
+                    foreach ($_POST['Proyecto']['areas'] as $areaId){
+                        $areaProyecto = new AreaProyecto();
+                        $areaProyecto->area_id = $areaId;
+                        $areaProyecto->proyecto_id = $model->id;
+                        if(!$areaProyecto->save()){
+                            throw new Exception("Error al crear relacion area proyecto");
+                        }
                     }
                 }
                 $transaction->commit();
@@ -175,19 +182,28 @@ class ProyectoController extends Controller
     {
         if (Yii::app()->request->isPostRequest) {
             try{
-                $grupo_activo = Activo::model()->findByAttributes(['proyecto_id'=>$id]);
-                if(!is_null($grupo_activo)){
-                    throw new Exception("Error. Este proyecto ya posee las asociaciones realizadas");
+                $activo = Activo::model()->findByAttributes(['proyecto_id'=>$id]);
+                if(!is_null($activo)){
+                    throw new Exception("Error. Este proyecto esta relacionado con un activo");
                 }
 
-                $grupo_activo = Grupo::model()->findByAttributes(['proyecto_id'=>$id]);
-                if(!is_null($grupo_activo)){
-                    throw new Exception("Error. Este proyecto ya posee las asociaciones realizadas");
+                $grupo = Grupo::model()->findByAttributes(['proyecto_id'=>$id]);
+                if(!is_null($grupo)){
+                    throw new Exception("Error. Este proyecto esta relacionado con un grupo");
                 }
 
-                $grupo_activo = Analisis::model()->findByAttributes(['proyecto_id'=>$id]);
-                if(!is_null($grupo_activo)){
-                    throw new Exception("Error. Este proyecto ya posee las asociaciones realizadas");
+                $analisis = Analisis::model()->findByAttributes(['proyecto_id'=>$id]);
+                if(!is_null($analisis)){
+                    throw new Exception("Error. Este proyecto esta relacionado con un analisis");
+                }
+                $nivel_de_riesgos = NivelDeRiesgos::model()->findByAttributes(['proyecto_id'=>$id]);
+                if(!is_null($nivel_de_riesgos)){
+                    throw new Exception("Error. Este proyecto esta relacionado con un nivel de riesgo");
+                }
+
+                $area_proyecto = AreaProyecto::model()->findByAttributes(['proyecto_id'=>$id]);
+                if(!is_null($area_proyecto)){
+                    throw new Exception("Error. Este proyecto esta relacionado con un area");
                 }
 
                 $this->loadModel($id)->delete();
@@ -223,13 +239,12 @@ class ProyectoController extends Controller
     {
         $model = new Proyecto('search');
         $model->unsetAttributes();  // clear any default values
-        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-        if(!is_null($usuario->ultimo_proyecto_id)){
-            $model->id = $usuario->ultimo_proyecto_id;
-        }else{
+        $usuario = User::model()->getUsuarioLogueado();
+        if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
             Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
             $this->redirect(array('/'));
         }
+        $model->id = $usuario->ultimo_proyecto_id;
         if (isset($_GET['Proyecto']))
             $model->attributes = $_GET['Proyecto'];
 
@@ -254,10 +269,10 @@ class ProyectoController extends Controller
         if(!is_null($usuario)){
             if($model->id != $usuario->ultimo_proyecto_id){
                 Yii::app()->user->setNotification('error','Acceso denegado');
-                $this->redirect(array('admin'));
+                $this->redirect(array('/'));
             }
         }else{
-            $this->redirect(array('admin'));
+            $this->redirect(array('/'));
         }
 
         return $model;

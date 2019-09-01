@@ -63,28 +63,31 @@ class AreaController extends Controller
     {
         $model = new Area;
         if (isset($_POST['Area'])) {
-            $model->attributes = $_POST['Area'];
-            if(Yii::app()->user->model->isAuditor()){
-                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-                if(!is_null($usuario->ultimo_proyecto_id)) {
-                    if ($model->save()) {
-                        $area_proyecto = new AreaProyecto();
-                        $area_proyecto->area_id = $model->id;
-                        $area_proyecto->proyecto_id = $usuario->ultimo_proyecto_id;
-                        if($area_proyecto->save()){
-                            Yii::app()->user->setNotification('success', 'El area fue creada con exito');
-                            $this->redirect(array('create'));
-                        }
-                    }
-                }else{
-                    Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
-                    $this->redirect(array('create'));
+            try {
+                $transaction = Yii::app()->db->beginTransaction();
+                $usuario = User::model()->getUsuarioLogueado();
+                if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)) {
+                    throw new Exception("Debe seleccionar un proyecto para empezar a trabajar");
                 }
-            }else{
-                if ($model->save()) {
-                    Yii::app()->user->setNotification('success', 'El area fue creada con exito');
-                    $this->redirect(array('create'));
+
+                $model->attributes = $_POST['Area'];
+                if (!$model->save()) {
+                    throw new Exception("Error al guardar area");
                 }
+                $area_proyecto = new AreaProyecto();
+                $area_proyecto->area_id = $model->id;
+                $area_proyecto->proyecto_id = $usuario->ultimo_proyecto_id;
+                if(!$area_proyecto->save()){
+                    throw new Exception("Error al crear area_proyecto");
+                }
+
+                $transaction->commit();
+                Yii::app()->user->setNotification('success', 'El area fue creada con exito');
+                $this->redirect(array('create'));
+            }catch (Exception $exception) {
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error', $exception->getMessage());
+                $this->redirect(array('admin'));
             }
 
         }
@@ -126,12 +129,34 @@ class AreaController extends Controller
     public function actionDelete($id)
     {
         if (Yii::app()->request->isPostRequest) {
-        try{
-            $grupo_activo = Proceso::model()->findByAttributes(['area_id'=>$id]);
-            if(!is_null($grupo_activo)){
-                throw new Exception("Error. Esta area ya posee las asociaciones realizadas");
+        try {
+            $proceso = Proceso::model()->findByAttributes(['area_id' => $id]);
+            if (!is_null($proceso)) {
+                throw new Exception("Error. Esta area esta relacionada a un proceso");
             }
-            $this->loadModel($id)->delete();
+            $activo_area = ActivoArea::model()->findByAttributes(['area_id' => $id]);
+            if (!is_null($activo_area)) {
+                throw new Exception("Error. Esta area esta relacionada a un activo");
+            }
+
+            $personal = Personal::model()->findByAttributes(['area_id'=>$id]);
+            if(!is_null($personal)){
+                throw new Exception("Error. Esta area esta relacionada a un personal");
+            }
+
+            $usuario = User::model()->getUsuarioLogueado();
+            if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)) {
+                throw new Exception("Debe seleccionar un proyecto para empezar a trabajar");
+            }
+            $area_proyecto = AreaProyecto::model()->findAllByAttributes(['area_id'=>$id,'proyecto_id'=>$usuario->ultimo_proyecto_id]);
+            if(!empty($area_proyecto)){
+                foreach ($area_proyecto as $ap){
+                    if(!$ap->delete()){
+                        throw new Exception("Error al eliminar area_proyecto");
+                    }
+                }
+            }
+            // SOLO ELIMINAMOS LA RELACION ENTRE AREA Y PROYECTO. NO ELIMINAMOS EL AREA
             $data = "Se elimino correctamente el area";
             echo CJSON::encode($data);
         }catch (Exception $exception){
@@ -165,7 +190,7 @@ class AreaController extends Controller
         $model = new Area('search');
         $model->unsetAttributes();  // clear any default values
         $usuario = User::model()->getUsuarioLogueado();
-        if(is_null($usuario->ultimo_proyecto_id)){
+        if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
             Yii::app()->user->setNotification('error','Seleccione un proyecto');
             $this->redirect(array('/'));
         }
@@ -223,7 +248,7 @@ class AreaController extends Controller
     public function actionGetProcesos(){
         if(isset($_POST['area_id'])){
             $model = $this->loadModel($_POST['area_id']);
-            $procesos = $model->procesos; //Proceso::model()->findAllByAttributes(array('area_id'=>$_POST['area_id']));
+            $procesos = $model->procesos;
             if(!empty($procesos)){
                 $datos = ['procesos'=>$procesos];
             }else{

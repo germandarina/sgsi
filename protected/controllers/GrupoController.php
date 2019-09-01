@@ -64,18 +64,23 @@ class GrupoController extends Controller
         $model = new Grupo;
 
         if (isset($_POST['Grupo'])) {
-            $model->attributes = $_POST['Grupo'];
-            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-            if(!is_null($usuario->ultimo_proyecto_id)){
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+                if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
+                    throw new Exception('Debe seleccionar un proyecto para empezar a trabajar');
+                }
                 $model->proyecto_id = $usuario->ultimo_proyecto_id;
-            }else{
-                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
-                $this->redirect(array('create'));
-
-            }
-            if ($model->save()) {
+                $model->attributes = $_POST['Grupo'];
+                if(!$model->save()){
+                    throw new Exception("Error al guardar grupo");
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success','Grupo creado con exito');
                 $this->redirect(array('create'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
         }
 
@@ -95,17 +100,26 @@ class GrupoController extends Controller
         $activo = new Activo();
         $activo->grupo_id = $model->id;
         if (isset($_POST['Grupo'])) {
-            $model->attributes = $_POST['Grupo'];
-            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-            if(is_null($usuario->ultimo_proyecto_id)){
-                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
-                $this->redirect(array('create'));
-            }
-            $model->proyecto_id = $usuario->ultimo_proyecto_id;
-            if ($model->save()){
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+                if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
+                    throw new Exception('Debe seleccionar un proyecto para empezar a trabajar');
+                }
+                $model->attributes = $_POST['Grupo'];
+                $model->proyecto_id = $usuario->ultimo_proyecto_id;
+                if (!$model->save()){
+                    throw new Exception('Error al guardar grupo');
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success','Grupo creado con exito');
                 $this->redirect(array('admin'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
+
+
         }
 
         $this->render('update', array(
@@ -160,7 +174,7 @@ class GrupoController extends Controller
         $model = new Grupo('search');
         $model->unsetAttributes();  // clear any default values
         $usuario = User::model()->getUsuarioLogueado();
-        if(is_null($usuario->ultimo_proyecto_id)){
+        if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
             Yii::app()->user->setNotification('error','Seleccione un proyecto');
             $this->redirect(array('/'));
         }

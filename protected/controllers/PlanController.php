@@ -102,17 +102,33 @@ class PlanController extends Controller
         ));
     }
 
-    public function actionVerPlanes(){
-        if($_GET['analisis_id']){
-            $model = new Plan;
-            $model->analisis_id = $_GET['analisis_id'];
-            if (isset($_GET['Plan']))
-                $model->attributes = $_GET['Plan'];
-
-            $this->render('admin', array(
-                'model' => $model,
-            ));
+    public function actionVerPlanes($id){
+        $analisis = Analisis::model()->findByPk($id);
+        if(is_null($analisis)){
+            Yii::app()->user->setNotification('error','Acceso denegado');
+            $this->redirect(array('/analisis/admin'));
         }
+
+        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
+            Yii::app()->user->setNotification('error','Seleccione un proyecto');
+            $this->redirect(array('/analisis/admin'));
+        }
+
+        if($analisis->proyecto_id != $usuario->ultimo_proyecto_id){
+            Yii::app()->user->setNotification('error','Acceso denegado');
+            $this->redirect(array('/analisis/admin'));
+        }
+
+        $model = new Plan;
+        $model->analisis_id = $analisis->id;
+        if (isset($_GET['Plan']))
+            $model->attributes = $_GET['Plan'];
+
+        $this->render('admin', array(
+            'model' => $model,
+       ));
+
     }
 
 
@@ -202,8 +218,20 @@ class PlanController extends Controller
     public function loadModel($id)
     {
         $model = Plan::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        $analisis = $model->analisis;
+        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
+            Yii::app()->user->setNotification('error','Seleccione un proyecto');
+            $this->redirect(array('/analisis/admin'));
+        }
+
+        if($analisis->proyecto_id != $usuario->ultimo_proyecto_id){
+            Yii::app()->user->setNotification('error','Acceso denegado');
+            $this->redirect(array('/analisis/admin'));
+        }
         return $model;
     }
 
@@ -293,17 +321,8 @@ class PlanController extends Controller
 
     public function actionGetActivosAfectados(){
         if(isset($_POST['plan_detalle_id'])){
-            $query = "select al.nombre as nombre_analisis, a.nombre as nombre_activo, ta.nombre as nombre_tipo_activo
-                            from plan_detalle pl
-                            inner join plan p on p.id =pl.plan_id
-                            inner join analisis al on al.id = p.analisis_id
-                            inner join analisis_control ac on ac.id = pl.analisis_control_id
-                            inner join grupo_activo ga on ga.id = ac.grupo_activo_id
-                            inner join activo a on a.id = ga.activo_id
-                            inner join tipo_activo ta on ta.id = a.tipo_activo_id
-                            where pl.id = ".$_POST['plan_detalle_id']."  ";
-            $command = Yii::app()->db->createCommand($query);
-            $resultados = $command->queryAll($query);
+            $plan_detalle_id = $_POST['plan_detalle_id'];
+            $resultados = Plan::getActivosAfectados($plan_detalle_id);
             $html = $this->renderPartial('_activosAfectados',['resultados'=>$resultados],true);
             $datos = ['html'=>$html];
             echo CJSON::encode($datos);
