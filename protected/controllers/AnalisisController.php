@@ -82,18 +82,27 @@ class AnalisisController extends Controller
         $model = new Analisis;
 
         if (isset($_POST['Analisis'])) {
-            $usuario = User::model()->getUsuarioLogueado();
-            if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
-                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
-                $this->redirect(array('admin'));
-            }
-            $model->proyecto_id = $usuario->ultimo_proyecto_id;
-            $model->attributes = $_POST['Analisis'];
-            $model->fecha = Utilities::MysqlDateFormat($model->fecha);
 
-            if ($model->save()) {
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+
+                $usuario = User::model()->getUsuarioLogueado();
+                if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
+                    throw new Exception('Debe seleccionar un proyecto para empezar a trabajar');
+                }
+                $model->proyecto_id = $usuario->ultimo_proyecto_id;
+                $model->attributes = $_POST['Analisis'];
+                $model->fecha = Utilities::MysqlDateFormat($model->fecha);
+
+                if (!$model->save()) {
+                    throw new Exception("Error al crear analisis");
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success','Analisis creado con exito');
                 $this->redirect(array('update','id'=>$model->id));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
         }
 
@@ -112,17 +121,26 @@ class AnalisisController extends Controller
         $model = $this->loadModel($id);
         $model->fecha = Utilities::ViewDateFormat($model->fecha);
         if (isset($_POST['Analisis'])) {
-            $usuario = User::model()->getUsuarioLogueado();
-            if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
-                Yii::app()->user->setNotification('error','Debe seleccionar un proyecto para empezar a trabajar');
-                $this->redirect(array('admin'));
-            }
-            $model->proyecto_id = $usuario->ultimo_proyecto_id;
-            $model->attributes = $_POST['Analisis'];
-            $model->fecha = Utilities::MysqlDateFormat($model->fecha);
-            if ($model->save()) {
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+
+                $usuario = User::model()->getUsuarioLogueado();
+                if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
+                    throw new Exception('Debe seleccionar un proyecto para empezar a trabajar');
+                }
+                $model->proyecto_id = $usuario->ultimo_proyecto_id;
+                $model->attributes = $_POST['Analisis'];
+                $model->fecha = Utilities::MysqlDateFormat($model->fecha);
+
+                if (!$model->save()) {
+                    throw new Exception("Error al actualizar analisis");
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success','Analisis actualizado con exito');
-                $this->redirect(array('admin'));
+                $this->redirect(array('update','id'=>$model->id));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
         }
 
@@ -237,10 +255,10 @@ class AnalisisController extends Controller
         if(!is_null($usuario)){
            if($model->proyecto_id != $usuario->ultimo_proyecto_id){
                Yii::app()->user->setNotification('error','Acceso denegado');
-               $this->redirect(array('admin'));
+               $this->redirect(array('/'));
            }
         }else{
-            $this->redirect(array('admin'));
+            $this->redirect(array('/'));
         }
 
         return $model;
@@ -262,7 +280,7 @@ class AnalisisController extends Controller
         if(isset($_POST['analisis_id'])){
             try{
                 $transaction = Yii::app()->db->beginTransaction();
-                $analisis = Analisis::model()->findByPk($_POST['analisis_id']);
+                $analisis = $this->loadModel($_POST['analisis_id']);
                 $nuevogrupo = false;
                 if(!empty($_POST['grupo_id'])){
                     $grupo_id = $_POST['grupo_id'];
@@ -414,20 +432,13 @@ class AnalisisController extends Controller
                             $id_dependencias = implode(',',$arrayDependenciasHijas);
                             $id_dependencias .= ', '.$dependenciaPadre->id;
                             $id_dependencias = trim($id_dependencias,',');
-                            $queryOtrasDependencias = "select * from dependencia
-                                                        where id not in (".$id_dependencias.")
-                                                        and activo_id <>".$gah->activo_id."
-                                                        and analisis_id = ".$_POST['analisis_id']."
-                                                        ";
-                            $command = Yii::app()->db->createCommand($queryOtrasDependencias);
-                            $otrasDependencias = $command->queryAll($queryOtrasDependencias);
-
+                            $otrasDependencias = Analisis::model()->getOtrasDependencias($_POST['analisis_id'],$id_dependencias,$gah->activo_id);
                             if(!empty($otrasDependencias)){
                                  $valores = "";
                                  $arrayMayoresValores = [];
                                  foreach ($otrasDependencias as $dep){
                                      $valoresPadres = GrupoActivo::getValoresPadres($_POST['analisis_id'],$dep['activo_padre_id'],$valores);
-                                     $grupo_aux =GrupoActivo::model()->findByAttributes(['activo_id'=>$dep['activo_id'],'analisis_id'=>$_POST['analisis_id']]);
+                                     $grupo_aux = GrupoActivo::model()->findByAttributes(['activo_id'=>$dep['activo_id'],'analisis_id'=>$_POST['analisis_id']]);
                                      if($valoresPadres == "Es Padre"){
                                          $arrayMayoresValores[] = $grupo_aux->valor;
                                      }else{
@@ -484,7 +495,7 @@ class AnalisisController extends Controller
         $vulnerabilidad = new Vulnerabilidad();
         $vulnerabilidad->amenaza_id =$id;
         $amenaza = Amenaza::model()->findByPk($id);
-        $analisis = Analisis::model()->findByPk($analisis_id);
+        $analisis = $this->loadModel($analisis_id);
         $grupo_activo = GrupoActivo::model()->findByPk($grupo_activo_id);
         $grupo = Grupo::model()->findByPk($grupo_id);
         $activo = Activo::model()->findByPk($activo_id);
@@ -524,7 +535,7 @@ class AnalisisController extends Controller
             try{
                 $transaction= Yii::app()->db->beginTransaction();
                 $control = Control::model()->findByPk($_POST['control_id']);
-                $analisis = Analisis::model()->findByPk($_POST['analisis_id']);
+                $analisis = $this->loadModel($_POST['analisis_id']);
 
                 $analisis_control = AnalisisControl::model()->findByAttributes(['analisis_id'=>$analisis->id,'control_id'=>$control->id,
                                                                                 'grupo_activo_id'=>$_POST['grupo_activo_id'],
@@ -744,7 +755,7 @@ class AnalisisController extends Controller
     public function actionGuardarValorAmenaza(){
         if(isset($_POST['amenaza_id'])){
             try{
-                $analisis = Analisis::model()->findByPk($_POST['analisis_id']);
+                $analisis = $this->loadModel($_POST['analisis_id']);
                 $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(['analisis_id'=>$analisis->id,
                                                                                 'amenaza_id'=>$_POST['amenaza_id'],
                                                                                 'grupo_activo_id'=>$_POST['grupo_activo_id'],
@@ -807,8 +818,8 @@ class AnalisisController extends Controller
         if(isset($_POST['analisis_id'])){
             try{
                 $transaction = Yii::app()->db->beginTransaction();
+                $analisis =  $this->loadModel($_POST['analisis_id']);
                 $analisis_riesgo = AnalisisRiesgo::model()->findByAttributes(array('analisis_id'=>$_POST['analisis_id']));
-                $analisis = Analisis::model()->findByPk($_POST['analisis_id']);
                 if(is_null($analisis_riesgo)) {
                     $analisis_riesgo = new AnalisisRiesgo();
                     $analisis_riesgo->riesgo_aceptable = "";

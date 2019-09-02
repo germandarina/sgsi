@@ -171,12 +171,23 @@ class ActivoController extends Controller
             try{
                 $grupo_activo = GrupoActivo::model()->findByAttributes(['activo_id'=>$id]);
                 if(!is_null($grupo_activo)){
-                    throw new Exception("Error. Este activo ya posee las asociaciones realizadas");
+                    throw new Exception("Error. Este activo esta relacionado con un grupo");
                 }
                 $activo_area = ActivoArea::model()->findByAttributes(['activo_id'=>$id]);
                 if(!is_null($activo_area)){
-                    throw new Exception("Error. Este activo ya posee las asociaciones realizadas");
+                    throw new Exception("Error. Este activo esta relacionado con un area");
                 }
+
+                $dependencia = Dependencia::model()->findByAttributes(['activo_id'=>$id]);
+                if(!is_null($dependencia)){
+                    throw new Exception("Error. Este activo esta relacionado con una dependencia");
+                }
+
+                $analisis_amenaza = AnalisisAmenaza::model()->findByAttributes(['activo_id'=>$id]);
+                if(!is_null($analisis_amenaza)){
+                    throw new Exception("Error. Este activo esta relacionado con una analisis");
+                }
+
                 $this->loadModel($id)->delete();
                 $data = "Se elimino correctamente el activo";
                 echo CJSON::encode($data);
@@ -242,7 +253,7 @@ class ActivoController extends Controller
         }
         if($model->proyecto_id != $usuario->ultimo_proyecto_id){
             Yii::app()->user->setNotification('error','Accesoo denegado');
-            $this->redirect(array('admin'));
+            $this->redirect(array('/'));
         }
         return $model;
     }

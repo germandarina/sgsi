@@ -109,9 +109,23 @@ class AreaController extends Controller
         $proceso->area_id_2 = $model->id;
 
         if (isset($_POST['Area'])) {
-            $model->attributes = $_POST['Area'];
-            if ($model->save()) {
+            try {
+                $transaction = Yii::app()->db->beginTransaction();
+                $usuario = User::model()->getUsuarioLogueado();
+                if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)) {
+                    throw new Exception("Debe seleccionar un proyecto para empezar a trabajar");
+                }
+
+                $model->attributes = $_POST['Area'];
+                if (!$model->save()) {
+                    throw new Exception("Error al actualizar area");
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success', 'El area fue actualizada con exito');
+                $this->redirect(array('create'));
+            }catch (Exception $exception) {
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error', $exception->getMessage());
                 $this->redirect(array('admin'));
             }
         }
@@ -225,11 +239,11 @@ class AreaController extends Controller
             }
             if(!$bandera){
                 Yii::app()->user->setNotification('error','Acceso denegado');
-                $this->redirect(array('admin'));
+                $this->redirect(array('/'));
             }
         }else{
             Yii::app()->user->setNotification('error','Acceso denegado');
-            $this->redirect(array('admin'));
+            $this->redirect(array('/'));
         }
         return $model;
     }

@@ -67,10 +67,18 @@ class AmenazaController extends Controller
 // $this->performAjaxValidation($model);
 
         if (isset($_POST['Amenaza'])) {
-            $model->attributes = $_POST['Amenaza'];
-            if ($model->save()) {
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $model->attributes = $_POST['Amenaza'];
+                if (!$model->save()) {
+                    throw new Exception("Error al crear amenaza");
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success','Amenaza creada con exito');
                 $this->redirect(array('create'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
         }
 
@@ -92,10 +100,18 @@ class AmenazaController extends Controller
 // $this->performAjaxValidation($model);
 
         if (isset($_POST['Amenaza'])) {
-            $model->attributes = $_POST['Amenaza'];
-            if ($model->save()) {
-                Yii::app()->user->setNotification('success','Amenaza creada con exito');
-                $this->redirect(array('admin'));
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $model->attributes = $_POST['Amenaza'];
+                if (!$model->save()) {
+                    throw new Exception("Error al actualizar amenaza");
+                }
+                $transaction->commit();
+                Yii::app()->user->setNotification('success','Amenaza actualizada con exito');
+                $this->redirect(array('create'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
         }
 

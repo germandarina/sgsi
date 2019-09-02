@@ -106,18 +106,18 @@ class PlanController extends Controller
         $analisis = Analisis::model()->findByPk($id);
         if(is_null($analisis)){
             Yii::app()->user->setNotification('error','Acceso denegado');
-            $this->redirect(array('/analisis/admin'));
+            $this->redirect(array('/'));
         }
 
         $usuario = User::model()->findByPk(Yii::app()->user->model->id);
         if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
             Yii::app()->user->setNotification('error','Seleccione un proyecto');
-            $this->redirect(array('/analisis/admin'));
+            $this->redirect(array('/'));
         }
 
         if($analisis->proyecto_id != $usuario->ultimo_proyecto_id){
             Yii::app()->user->setNotification('error','Acceso denegado');
-            $this->redirect(array('/analisis/admin'));
+            $this->redirect(array('/'));
         }
 
         $model = new Plan;
@@ -225,12 +225,12 @@ class PlanController extends Controller
         $usuario = User::model()->findByPk(Yii::app()->user->model->id);
         if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
             Yii::app()->user->setNotification('error','Seleccione un proyecto');
-            $this->redirect(array('/analisis/admin'));
+            $this->redirect(array('/'));
         }
 
         if($analisis->proyecto_id != $usuario->ultimo_proyecto_id){
             Yii::app()->user->setNotification('error','Acceso denegado');
-            $this->redirect(array('/analisis/admin'));
+            $this->redirect(array('/'));
         }
         return $model;
     }
@@ -305,7 +305,7 @@ class PlanController extends Controller
                             echo CJSON::encode($datos);
                             die();
                         }catch (Exception $exception){
-                            $transaction->rollBack();
+                            $transaction->rollback();
                             $datos =['error'=>1,'msj'=>$exception->getMessage()];
                             echo CJSON::encode($datos);
                             die();

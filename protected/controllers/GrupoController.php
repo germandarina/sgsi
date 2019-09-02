@@ -202,10 +202,10 @@ class GrupoController extends Controller
         if(!is_null($usuario)){
             if($model->proyecto_id != $usuario->ultimo_proyecto_id){
                 Yii::app()->user->setNotification('error','Acceso denegado');
-                $this->redirect(array('admin'));
+                $this->redirect(array('/'));
             }
         }else{
-            $this->redirect(array('admin'));
+            $this->redirect(array('/'));
         }
         return $model;
     }

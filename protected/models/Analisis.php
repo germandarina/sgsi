@@ -336,4 +336,14 @@ class Analisis extends CustomCActiveRecord
         }
 
     }
+    public function getOtrasDependencias($analisis_id,$id_dependencias,$activo_id){
+        $queryOtrasDependencias = "select * from dependencia
+                                                        where id not in (".$id_dependencias.")
+                                                        and activo_id <>".$activo_id."
+                                                        and analisis_id = ".$analisis_id."
+                                                        ";
+        $command = Yii::app()->db->createCommand($queryOtrasDependencias);
+        $otrasDependencias = $command->queryAll($queryOtrasDependencias);
+        return $otrasDependencias;
+    }
 }

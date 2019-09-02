@@ -219,10 +219,10 @@ class PersonalController extends Controller
             }
             if(!$bandera){
                 Yii::app()->user->setNotification('error','Acceso denegado');
-                $this->redirect(array('admin'));
+                $this->redirect(array('/'));
             }
         }else{
-            $this->redirect(array('admin'));
+            $this->redirect(array('/'));
         }
         return $model;
     }

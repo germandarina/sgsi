@@ -292,7 +292,12 @@ class ProyectoController extends Controller
 
     public function actionAsignarProyecto(){
         if(isset($_POST['proyecto_id'])){
-            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+            $usuario = User::model()->getUsuarioLogueado();
+            if(is_null($usuario)){
+                $datos =['error'=>1,'msj'=>'error al asignar proyecto.'];
+                echo CJSON::encode($datos);
+                die();
+            }
             $usuario->ultimo_proyecto_id = $_POST['proyecto_id'];
             if(!$usuario->save()){
                 $datos =['error'=>1,'msj'=>'error al asignar proyecto.'];

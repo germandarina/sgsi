@@ -93,10 +93,18 @@ class ControlController extends Controller
     {
         $model = $this->loadModel($id);
         if (isset($_POST['Control'])) {
-            $model->attributes = $_POST['Control'];
-            if ($model->save()) {
+            try{
+                $transaction = Yii::app()->db->beginTransaction();
+                $model->attributes = $_POST['Control'];
+                if (!$model->save()) {
+                    throw new Exception("Error al actualizar control");
+                }
+                $transaction->commit();
                 Yii::app()->user->setNotification('success','Control actualizado con exito');
-                $this->redirect(array('admin'));
+                $this->redirect(array('create'));
+            }catch (Exception $exception){
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
         }
 
