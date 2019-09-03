@@ -146,10 +146,12 @@ class ProcesoController extends Controller
                 }
                 $this->loadModel($id)->delete();
                 $data = "Se elimino correctamente el proceso";
-                echo CJSON::encode($data);
+                $datos = ['error'=>0,'msj'=>$data];
+                echo CJSON::encode($datos);
             }catch (Exception $exception){
-                $data = $exception->getMessage();
-                echo CJSON::encode($data);
+                $msj = $exception->getMessage();
+                $datos = ['error'=>1,'msj'=>$msj];
+                echo CJSON::encode($datos);
                 die();
             }
             if (!isset($_GET['ajax'])) {

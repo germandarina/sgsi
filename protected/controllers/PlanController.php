@@ -174,10 +174,17 @@ class PlanController extends Controller
     public function actionDelete($id)
     {
         if (Yii::app()->request->isPostRequest) {
-// we only allow deletion via POST request
-            $this->loadModel($id)->delete();
-
-// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+            try{
+                $this->loadModel($id)->delete();
+                $data = "Se elimino correctamente el plan";
+                $datos = ['error'=>0,'msj'=>$data];
+                echo CJSON::encode($datos);
+            }catch (Exception $exception){
+                $msj = $exception->getMessage();
+                $datos = ['error'=>1,'msj'=>$msj];
+                echo CJSON::encode($datos);
+                die();
+            }
             if (!isset($_GET['ajax']))
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
         } else

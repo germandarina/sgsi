@@ -72,7 +72,18 @@
                 array(
                     'class'=>'booster.widgets.TbButtonColumn',
                     'template'=>'{update}{delete}',
-                    'afterDelete' => 'function(link,success,data) { if (success && data) Lobibox.notify(\'info\', {msg: data }); }'
+                    'afterDelete' => 'function(link,success,data){ 
+                                  var datos = jQuery.parseJSON(data);
+                                  if(success){
+                                        if(datos.error == 0){
+                                            Lobibox.notify(\'success\', {msg: datos.msj }); 
+                                        }else{
+                                         Lobibox.notify(\'error\', {msg: datos.msj }); 
+                                        }
+                                  }else{
+                                    Lobibox.notify(\'error\', {msg: datos.msj }); 
+                                  }
+                              }'
                 ),
             ),
         ));
