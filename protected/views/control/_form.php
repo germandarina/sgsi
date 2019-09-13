@@ -29,9 +29,14 @@
                         $.each(amenazas, function (i, amenaza) {
                             $("#Control_amenaza_id").append('<option value="' + amenaza.id + '">' + amenaza.nombre + '</option>');
                         });
-                        setTimeout(function () {
-                            getVulnerabilidades();
-                        },200);
+                        $("#Control_vulnerabilidad_id").find('option').remove();
+                        $("#Control_vulnerabilidad_id").select2('val', null);
+                        var id = "<?= $model->id ?>";
+                        if(id != "") {
+                            setTimeout(function () {
+                                getVulnerabilidades();
+                            }, 200);
+                        }
                     }
 
 
