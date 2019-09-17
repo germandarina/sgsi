@@ -16,24 +16,17 @@
 </script>
 
 <div class="box">
-	<div class="box-header">
-		<h3 class="box-title">Gestion de Areas</h3>
-		<?php $this->widget(
-			'booster.widgets.TbButtonGroup',
-			array(
-				'size' => 'medium',
-				'context' => 'primary',
-				'buttons' => array(
-					array(
-						'label' => 'Acciones',
-						'items' => array(
-							array('label' => 'Crear', 'url' => Yii::app()->createUrl('Area/create')),
-						)
-					),
-				),
-			)
-		); ?>
-	</div>
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            Areas
+        </h3>
+        <div class="box-tools">
+            <div class="btn-group pull-right">
+                <a href="<?= $this->createUrl('create') ?>" class="btn btn-sm btn-success"><i
+                            class="fa fa-plus-circle"></i> Crear</a>
+            </div>
+        </div>
+    </div>
 
 	<?php
        if(Yii::app()->user->model->isAdmin() || Yii::app()->user->model->isGerencial() || Yii::app()->user->model->isAuditor()) {

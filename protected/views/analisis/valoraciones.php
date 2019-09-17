@@ -45,13 +45,19 @@
 </script>
 
 <?php
+
+$dataProvider = $amenaza->searchValoraciones();
+if (isset(Yii::app()->session["paginado"])) {
+    $dataProvider->pagination->currentPage = Yii::app()->session["paginado"];
+}
+
 $this->widget('booster.widgets.TbExtendedGridView',array(
     'id'=>'valoraciones-grid',
     'fixedHeader' => false,
     'headerOffset' => 10,
     // 40px is the height of the main navigation at bootstrap
     'type' => 'striped hover condensed',
-    'dataProvider' => $amenaza->searchValoraciones(),
+    'dataProvider' => $dataProvider,
     'responsiveTable' => true,
     'template' => "{items}\n{pager}",
     'selectableRows' => 1,

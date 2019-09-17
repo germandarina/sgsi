@@ -47,7 +47,7 @@
                 'context' => 'primary',
                 'content' => $this->renderPartial(
                     '_cabecera',
-                    array('analisis' => $analisis,'vulnerabilidad'=>$vulnerabilidad,'grupo'=>$grupo,'activo'=>$activo,'amenaza'=>$amenaza), TRUE)
+                    array('analisis' => $analisis,'grupo'=>$grupo,'activo'=>$activo,'amenaza'=>$amenaza), TRUE)
             )
         );
         ?>
@@ -57,7 +57,7 @@
             'size' => 'medium',
             'buttonType' => 'link',
             'context'=>'success',
-            'url' => $this->createUrl("analisis/update",array('id'=>$analisis->id)),
+            'url' => $this->createUrl("analisis/".$analisis->id),
         )); ?>
 	</div>
 
@@ -69,7 +69,7 @@
 	'headerOffset' => 10,
 	// 40px is the height of the main navigation at bootstrap
 	//'type' => 'striped condensed',
-	'dataProvider' => $vulnerabilidad->search(),
+	'dataProvider' => $vulnerabilidad->search($amenaza->id),
 	'responsiveTable' => true,
 	'htmlOptions'=>array('class'=>'table-responsive'),
 	'template' => "{items}\n{pager}",

@@ -56,10 +56,11 @@ class Amenaza extends CustomCActiveRecord
 			array('tipo_activo_id,nombre, descripcion, confidencialidad, integridad, disponibilidad, trazabilidad', 'required'),
 			array('confidencialidad, integridad, disponibilidad, trazabilidad', 'numerical', 'integerOnly'=>true),
 			array('nombre, descripcion, creaUserStamp, modUserStamp', 'length', 'max'=>800),
-			array('creaTimeStamp, modTimeStamp', 'safe'),
+			array('activo_nombre,grupo_nombre,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, tipo_activo_id,nombre, descripcion, confidencialidad, integridad, disponibilidad, trazabilidad, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('activo_nombre,grupo_nombre,id, tipo_activo_id,nombre, descripcion, confidencialidad, integridad, disponibilidad, trazabilidad, 
+			       creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 

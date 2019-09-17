@@ -95,7 +95,7 @@ class Vulnerabilidad extends CustomCActiveRecord
 	 * @return CActiveDataProvider the data provider that can return the models
 	 * based on the search/filter conditions.
 	 */
-	public function search()
+	public function search($amenaza_id = null)
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -109,8 +109,8 @@ class Vulnerabilidad extends CustomCActiveRecord
         if(!empty($this->amenazas)){
             $criteria->addCondition(" a.nombre like '%".$this->amenazas."%' ");
         }
-        if(!empty($this->amenaza_id)){
-            $criteria->compare("a.id",$this->amenaza_id);
+        if(!is_null($amenaza_id)){
+            $criteria->compare("a.id",$amenaza_id);
         }
         $criteria->group = "t.id";
 		//$criteria->compare('creaUserStamp',$this->creaUserStamp,true);

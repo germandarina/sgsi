@@ -60,13 +60,29 @@ class AnalisisController extends Controller
         $dependencia->analisis_id = $model->id;
         $dependenciasPadres = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>NULL,'analisis_id'=>$model->id));
         $amenaza = new Amenaza();
+        if (isset(Yii::app()->session['filtro'])) {
+            $amenaza->attributes = Yii::app()->session['filtro'];
+        }
         $amenaza->analisis_id = $model->id;
         if(isset($_GET['Amenaza'])){
             $amenaza->nombre = $_GET['Amenaza']['nombre'];
             $amenaza->grupo_nombre = $_GET['Amenaza']['grupo_nombre'];
             $amenaza->tipo_activo_id = $_GET['Amenaza']['tipo_activo_id'];
             $amenaza->activo_nombre = $_GET['Amenaza']['activo_nombre'];
+            Yii::app()->session['filtro'] = $_GET['Amenaza'];
         }
+
+
+        if (isset($_GET['ajax'])) {
+            if (isset($_GET['Amenaza_page'])) {
+                Yii::app()->session['paginado'] = ($_GET['Amenaza_page'] - 1);
+            } else {
+                Yii::app()->session['paginado'] = 0;
+            }
+
+        }
+
+
         $this->render('view', array(
             'model' => $model,'grupo_activo'=>$grupo_activo,'dependencia'=>$dependencia,'dependenciasPadres'=>$dependenciasPadres,
             'amenaza'=>$amenaza
@@ -495,7 +511,6 @@ class AnalisisController extends Controller
 
     public function actionVerValoracion($id,$analisis_id,$grupo_activo_id,$grupo_id,$activo_id){
         $vulnerabilidad = new Vulnerabilidad();
-        $vulnerabilidad->amenaza_id =$id;
         $amenaza = Amenaza::model()->findByPk($id);
         $analisis = $this->loadModel($analisis_id);
         $grupo_activo = GrupoActivo::model()->findByPk($grupo_activo_id);
