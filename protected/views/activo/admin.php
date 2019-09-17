@@ -17,23 +17,17 @@
 
 
 <div class="box">
-	<div class="box-header">
-		<h3 class="box-title">Admin Activos</h3>
-		<?php $this->widget(
-			'booster.widgets.TbButtonGroup',
-			array(
-				'size' => 'medium',
-				'context' => 'primary',
-				'buttons' => array(
-					array(
-						'label' => 'Acciones',
-						'items' => array(
-							array('label' => 'Crear', 'url' => Yii::app()->createUrl('Activo/create')),
-						)
-					),
-				),
-			)
-		); ?>	</div>
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            Activos
+        </h3>
+        <div class="box-tools">
+            <div class="btn-group pull-right">
+                <a href="<?= $this->createUrl('create') ?>" class="btn btn-sm btn-success"><i
+                            class="fa fa-plus-circle"></i> Crear</a>
+            </div>
+        </div>
+    </div>
 
 			<?php $this->widget('booster.widgets.TbExtendedGridView',array(
 				'id'=>'activo-grid',
