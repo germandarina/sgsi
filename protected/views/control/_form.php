@@ -6,12 +6,12 @@
         }
     });
     function getAmenazas() {
-        var tipo_activo_id;
-        if("<?= $model->tipo_activo_id ?>" != ""){
-            tipo_activo_id = "<?= $model->tipo_activo_id ?>";
-        }else{
+        //var tipo_activo_id;
+        //if("<?//= $model->tipo_activo_id ?>//" != ""){
+        //    tipo_activo_id = "<?//= $model->tipo_activo_id ?>//";
+        //}else{
             tipo_activo_id = $("#Control_tipo_activo_id").val();
-        }
+        // }
 
         if(tipo_activo_id != "" && tipo_activo_id != 0  && tipo_activo_id != null && tipo_activo_id != undefined){
             $.ajax({
@@ -29,6 +29,9 @@
                         $.each(amenazas, function (i, amenaza) {
                             $("#Control_amenaza_id").append('<option value="' + amenaza.id + '">' + amenaza.nombre + '</option>');
                         });
+
+                        $("#Control_amenaza_id").select2('val', "<?= $model->amenaza_id ?>");
+
                         $("#Control_vulnerabilidad_id").find('option').remove();
                         $("#Control_vulnerabilidad_id").select2('val', null);
                         var id = "<?= $model->id ?>";
@@ -46,13 +49,13 @@
     }
     
     function getVulnerabilidades() {
-        var amenaza_id;
-        if("<?= $model->amenaza_id ?>" != ""){
-            amenaza_id = "<?= $model->amenaza_id ?>";
-            $("#Control_amenaza_id").select2('val', amenaza_id);
-        }else{
+        //var amenaza_id;
+        //if("<?//= $model->amenaza_id ?>//" != ""){
+        //    amenaza_id = "<?//= $model->amenaza_id ?>//";
+        //    $("#Control_amenaza_id").select2('val', amenaza_id);
+        //}else{
             amenaza_id = $("#Control_amenaza_id").val();
-        }
+        // }
         if(amenaza_id != "" && amenaza_id != 0  && amenaza_id != null && amenaza_id != undefined){
            
             $.ajax({
