@@ -21,8 +21,8 @@
     <link href="<?= Yii::app()->request->baseUrl ?>/css/site.css" rel="stylesheet" type="text/css"/>
     <link href="<?= Yii::app()->request->baseUrl ?>/js/lobibox/css/lobibox.css" rel="stylesheet" type="text/css"/>
 
-    <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl ?>/protected/vendor/clevertech/yii-booster/src/assets/select2/select2.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl ?>/protected/vendor/clevertech/yii-booster/src/assets/select2/select2-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl ?>/js/clevertech/yii-booster/src/assets/select2/select2.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl ?>/js/clevertech/yii-booster/src/assets/select2/select2-bootstrap.css">
 
     <!-- jQuery 2.1.4 -->
     <script src="<?= $themeUrl ?>/plugins/jQuery/jQuery-2.1.4.min.js"></script>
@@ -146,7 +146,7 @@
 <script src="<?= Yii::app()->request->baseUrl?>/js/js-kartik/plugins/canvas-to-blob.min.js" type="text/javascript"></script>
 <script src="<?= Yii::app()->request->baseUrl?>/js/js-kartik/fileinput.min.js" type="text/javascript"></script>
 <script src="<?= Yii::app()->request->baseUrl?>/js/js-kartik/fileinput_locale_es.js" type="text/javascript"></script>
-<script src="<?php echo Yii::app()->request->baseUrl ?>/protected/vendor/clevertech/yii-booster/src/assets/select2/select2.js" type="text/javascript"></script>
+<script src="<?php echo Yii::app()->request->baseUrl ?>/js/clevertech/yii-booster/src/assets/select2/select2.js" type="text/javascript"></script>
 
 <script src="<?= Yii::app()->request->baseUrl?>/js/lobibox/js/lobibox.js" type="text/javascript"></script>
 <script>

@@ -9,7 +9,7 @@
 Yii::setPathOfAlias('adminlte', 'protected/vendor/almasaeed2010/adminlte');
 Yii::setPathOfAlias('vendor', 'protected/vendor');
 YII::setPathOfAlias('components.gii.bootstrap.BootstrapCode', 'protected/components/gii/bootstrap/BootstrapCode');
-Yii::setPathOfAlias('chartjs', dirname(__FILE__).'/../extensions/yii-chartjs');
+Yii::setPathOfAlias('chartjs', dirname(__FILE__).'/../extensions/yii-chartJs');
 
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
@@ -17,7 +17,7 @@ return array(
 
     // preloading 'log' component
     //'preload' => array('log', 'booster'),
-    'preload' => strpos($_SERVER['REQUEST_URI'], 'rbam') ? array('log') : array('log', 'booster','chartjs'),
+    'preload' => strpos($_SERVER['REQUEST_URI'], 'rbam') ? array('log') : array('log', 'booster','chartJs'),
     // autoloading model and component classes
     'import' => array(
         'application.models.*',
@@ -34,7 +34,7 @@ return array(
             'class' => 'system.gii.GiiModule',
             'password' => 'pascal098deal',
             // If removed, Gii defaults to localhost only. Edit carefully to taste.
-            'ipFilters' => array('127.0.0.1', '::1'),
+            'ipFilters' => array('*'),//array('127.0.0.1', '::1'),
             'generatorPaths' => array(
                 'application.components.gii',
             ),
