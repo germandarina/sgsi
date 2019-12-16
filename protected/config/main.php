@@ -13,7 +13,7 @@ Yii::setPathOfAlias('chartjs', dirname(__FILE__).'/../extensions/yii-chartJs');
 
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
-    'name' => 'DIME-SGSI',
+    'name' => 'SGSI',
 
     // preloading 'log' component
     //'preload' => array('log', 'booster'),
