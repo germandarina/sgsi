@@ -3,9 +3,9 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title><?php echo ucwords(strtolower(CHtml::encode($this->pageTitle))); ?></title>
+    <title><?php echo ucwords(strtoupper(CHtml::encode($this->pageTitle))); ?></title>
     <link href="<?= $themeUrl ?>/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="shortcut icon" href="<?php echo Yii::app()->request->baseUrl; ?>/images/logo-chico.png" type="image/x-icon" />
+<!--    <link rel="shortcut icon" href="--><?php //echo Yii::app()->request->baseUrl; ?><!--/images/logo-chico.png" type="image/x-icon" />-->
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Font Awesome Icons -->
     <link href="<?= $themeUrl ?>/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"
@@ -67,9 +67,9 @@
         <!-- Logo -->
         <a href="<?= Yii::app()->getBaseUrl()?>" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b><?php echo ucwords(strtolower(CHtml::encode(Yii::app()->name))); ?></b></span>
+            <span class="logo-mini"><b><?php echo ucwords(strtoupper(CHtml::encode(Yii::app()->name))); ?></b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b><?php echo ucwords(strtolower(CHtml::encode(Yii::app()->name))); ?></b></span>
+            <span class="logo-lg"><b><?php echo ucwords(strtoupper(CHtml::encode(Yii::app()->name))); ?></b></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">

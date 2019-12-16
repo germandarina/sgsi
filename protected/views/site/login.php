@@ -1,6 +1,6 @@
 <style>
 	.login-page, .register-page {
-		background-image: url(<?= Yii::app()->baseUrl.'/images/fondo2.jpg' ?>) !important;
+		background-image: url(<?= Yii::app()->baseUrl.'/images/fondo.jpg' ?>) !important;
 		background-repeat: round;
 	}
 </style>
@@ -11,7 +11,7 @@
 	</div><!-- /.login-logo -->
 	<div class="login-box-body">
 		<p class="login-box-msg">
-			<img src="<?= Yii::app()->baseUrl.'/images/logo-dime.png' ?>"
+			<img src="<?= /*Yii::app()->baseUrl.'/images/logo-dime.png'*/ '' ?>"
 				 class="img-responsive" >
 <!--			--><?php //echo CHtml::image(Yii::app()->baseUrl.'/images/logo-dime.png', 'DIME-SGSI',array(
 //				'style' => 'width:200px;')); ?>
@@ -38,14 +38,14 @@
 				<span class="glyphicon glyphicon-lock form-control-feedback"></span>
 			</div>
 			<div class="row">
-				<div class="col-xs-8">
-					<div class="checkbox icheck">
-						<label>
-							<input type="checkbox"> Recordarme
-						</label>
-					</div>
-				</div><!-- /.col -->
-				<div class="col-xs-4">
+<!--				<div class="col-xs-8">-->
+<!--					<div class="checkbox icheck">-->
+<!--						<label>-->
+<!--							<input type="checkbox"> Recordarme-->
+<!--						</label>-->
+<!--					</div>-->
+<!--				</div>-->
+				<div class="col-xs-12">
 					<button type="submit" class="btn btn-primary btn-block btn-flat">Login</button>
 				</div><!-- /.col -->
 			</div>
@@ -54,7 +54,7 @@
 		unset($form);
 		?>
 
-		<a href="#">Olvidé mi contraseña</a><br>
+<!--		<a href="#">Olvidé mi contraseña</a><br>-->
 
 	</div><!-- /.login-box-body -->
 </div><!-- /.login-box -->
