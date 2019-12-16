@@ -88,9 +88,9 @@ class AuthItemsController extends RbamController {
 				),
 				'roles'=>array($module->rbacManagerRole),
 			),
-			//array('deny',  // deny all users
-			//	'users'=>array('*'),
-			//),
+//			array('deny',  // deny all users
+//				'users'=>array('*'),
+//			),
 		);
 	}
 	

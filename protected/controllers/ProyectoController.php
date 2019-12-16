@@ -131,10 +131,6 @@ class ProyectoController extends Controller
                     throw new Exception("Debe seleccionar una fecha");
                 }
                 $model->fecha = Utilities::MysqlDateFormat($model->fecha);
-//                if(!isset($_POST['Proyecto']['areas']) || empty($_POST['Proyecto']['areas'])){
-//                    $model->addError('areas','Debe seleccionar al menos 1 area para crear el proyecto');
-//                    throw new Exception('Debe seleccionar al menos 1 area para crear el proyecto');
-//                }
                 if (!$model->save()){
                     throw new Exception("Error al actualizar proyecto");
                 }
@@ -153,6 +149,13 @@ class ProyectoController extends Controller
                         if(!$areaProyecto->save()){
                             throw new Exception("Error al crear relacion area proyecto");
                         }
+                    }
+                }
+                if(!is_null($model->usuario_id)){
+                    $usuario = User::model()->findByPk($model->usuario_id);
+                    $usuario->ultimo_proyecto_id = $model->id;
+                    if(!$usuario->save()) {
+                        throw new Exception("Error al actualizar usuario, asignacion de proyecto");
                     }
                 }
                 $transaction->commit();

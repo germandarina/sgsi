@@ -40,9 +40,9 @@ class AuthAssignmentsController extends RbamController {
 				),
 				'roles'=>array($this->getModule()->authAssignmentsManagerRole),
 			),
-			//array('deny',  // deny all users
-			//	'users'=>array('*'),
-			//),
+//			array('deny',  // deny all users
+//				'users'=>array('*'),
+//			),
 		);
 	}
 
