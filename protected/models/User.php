@@ -317,7 +317,7 @@ class User extends CActiveRecord
             $this->perfil = $perfil . ',';
         }
         if(!empty($this->perfil)) {
-            $this->perfil = substr($this->perfil, 0, strlen($this->perfil) - 2);
+            $this->perfil = trim($this->perfil,',');
         }
     }
 

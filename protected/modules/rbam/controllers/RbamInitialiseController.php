@@ -56,9 +56,9 @@ class RbamInitialiseController extends RbamController {
 		);
 		return array(
 			$allow,
-			//array('deny',  // deny all users
-			//	'users'=>array('*'),
-			//),
+//			array('deny',  // deny all users
+//				'users'=>array('*'),
+//			),
 		);
 	}
 	

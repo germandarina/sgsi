@@ -68,9 +68,9 @@ class RbamController extends CController {
 			);
 		return array(
 			$allow,
-			//array('deny',  // deny all users
-			//	'users'=>array('*'),
-			//),
+//			array('deny',  // deny all users
+//				'users'=>array('*'),
+//			),
 		);
 	}
 
