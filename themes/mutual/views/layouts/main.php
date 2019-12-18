@@ -164,6 +164,26 @@
             }
         });
     }
+    function toPanel(event) {
+        event.preventDefault();
+        var proyecto_id = $("#eventos").val();
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo CController::createUrl('proyecto/asignarProyecto')?>",
+            data: {
+                'proyecto_id': proyecto_id
+            },
+            dataType: 'Text',
+            success: function (data) {
+                var datos = jQuery.parseJSON(data);
+                if(datos.error == 0){
+                    window.location.replace(datos.url);
+                }else{
+                    Lobibox.notify('error',{msg: datos.msj});
+                }
+            }
+        });
+    }
     var currencyOptions = {
         'alias': 'numeric',
         'groupSeparator': '.',
