@@ -130,7 +130,7 @@ class TipoActivoController extends Controller
                 if(!is_null($amenaza)){
                     throw new Exception("Error. Este item esta asociado a una amenaza");
                 }
-
+                Activo::model()->setScenario('scripts');
                 $activo = Activo::model()->findByAttributes(['tipo_activo_id'=>$id]);
                 if(!is_null($activo)){
                     throw new Exception("Error. Este item esta asociado a un activo");
@@ -140,7 +140,7 @@ class TipoActivoController extends Controller
                 if(!is_null($control)){
                     throw new Exception("Error. Este item esta asociado a un control");
                 }
-
+                Grupo::model()->setScenario('scripts');
                 $grupo = Grupo::model()->findByAttributes(['tipo_activo_id'=>$id]);
                 if(!is_null($grupo)){
                     throw new Exception("Error. Este item esta asociado a un grupo");

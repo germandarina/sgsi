@@ -10,7 +10,6 @@ Yii::setPathOfAlias('adminlte', 'protected/vendor/almasaeed2010/adminlte');
 Yii::setPathOfAlias('vendor', 'protected/vendor');
 YII::setPathOfAlias('components.gii.bootstrap.BootstrapCode', 'protected/components/gii/bootstrap/BootstrapCode');
 Yii::setPathOfAlias('chartjs', dirname(__FILE__).'/../extensions/yii-chartJs');
-
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
     'name' => 'SGSI',

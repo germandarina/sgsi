@@ -26,7 +26,7 @@ abstract class CustomCActiveRecord Extends CActiveRecord
 
     public function defaultScope()
     {
-        if (!(Yii::app() instanceof CConsoleApplication)) {
+        if (!(Yii::app() instanceof CConsoleApplication) && $this->getScenario() != 'scripts') {
             $alias = $this->getTableAlias(false, false);
             if ($this->hasAttribute("proyecto_id")) {
                 $usuario = User::model()->getUsuarioLogueado();
