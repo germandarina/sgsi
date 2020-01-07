@@ -66,10 +66,9 @@
                 success: function (data) {
                     var datos = jQuery.parseJSON(data);
                     var vulnerabilidades = datos.vulnerabilidades;
-
+                    $("#Control_vulnerabilidad_id").find('option').remove();
+                    $("#Control_vulnerabilidad_id").select2('val', null);
                     if(vulnerabilidades.length >0){
-                        $("#Control_vulnerabilidad_id").find('option').remove();
-                        $("#Control_vulnerabilidad_id").select2('val', null);
                         $.each(vulnerabilidades, function (i, vulnerabilidad) {
                             $("#Control_vulnerabilidad_id").append('<option value="' + vulnerabilidad.id + '">' + vulnerabilidad.nombre + '</option>');
                         });

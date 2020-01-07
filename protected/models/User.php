@@ -336,11 +336,11 @@ class User extends CActiveRecord
         return $seconds;
     }
 
-    public static function getUsuariosAuditores(){
+    public static function getUsuariosAuditoresYGerencial(){
           $query = " select u.*
                         from usuario u
                         inner join AuthAssignment aa on aa.userid = u.id
-                        where aa.itemname = 'auditor'";
+                        where aa.itemname = 'auditor' or aa.itemname = 'gerencial' ";
           $command = Yii::app()->db->createCommand($query);
           $usuarios = $command->queryAll($query);
           return $usuarios;

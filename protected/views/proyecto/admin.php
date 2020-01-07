@@ -31,20 +31,27 @@
 			'value'=>'Utilities::ViewDateFormat($data->fecha)',
 			'filter'=>false,
 		),
+        array(
+            'name'=>'organizacion_id',
+            'header'=>'Organizacion',
+            'value'=>'$data->organizacion != null ? $data->organizacion->nombre : "" ',
+            'filter'=>false,
+        ),
 		array(
 			'name'=>'usuario_id',
 			'header'=>'Usuario',
 			'value'=>'$data->usuario != null ? $data->usuario->username : "" ',
 			'filter'=>false,
 		),
+
 		array(
 			'name'=>'id',
 			'header'=>'Areas',
 			'value'=>'$data->getAreas()',
 			'filter'=>false,
 		),
-		'creaUserStamp',
-		'creaTimeStamp',
+		//'creaUserStamp',
+	//	'creaTimeStamp',
 
 	array(
 	'class'=>'booster.widgets.TbButtonColumn',

@@ -31,7 +31,7 @@ class OrganizacionController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete'),
+                'actions' => array('create', 'update', 'admin', 'delete','getAreas'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -193,6 +193,25 @@ class OrganizacionController extends Controller
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'organizacion-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
+        }
+    }
+
+    public function actionGetAreas(){
+        if(isset($_POST['organizacion_id'])){
+            $areas = Area::model()->findAllByAttributes(['organizacion_id'=>$_POST['organizacion_id']]);
+            $areasIds = [];
+            if(isset($_POST['proyecto_id']) && !empty($_POST['proyecto_id'])){
+                $areasProyectos = AreaProyecto::model()->findAllByAttributes(['proyecto_id'=>$_POST['proyecto_id']]);
+                if(!empty($areasProyectos)){
+                    foreach ($areasProyectos as $relacional){
+                        $areasIds [] = $relacional->area_id;
+                    }
+                }
+            }
+
+            $datos = ['areas'=>$areas,'areasIds'=>$areasIds];
+            echo CJSON::encode($datos);
+            die();
         }
     }
 }

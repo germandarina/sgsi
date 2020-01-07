@@ -64,6 +64,7 @@
             </div>
         </div>
         <div class="row">
+            <br>
             <div class="col-sm-6">
                 <?php echo $form->select2Group(
                     $model, 'areas',

@@ -13,13 +13,15 @@
  * @property string $creaTimeStamp
  * @property string $modUserStamp
  * @property string $modTimeStamp
+ * @property integer $organizacion_id
  */
 class Proyecto extends CustomCActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
-	public $areas = array();
+	public $areas = [];
+	public $usuarios = [];
 
 	public function tableName()
 	{
@@ -34,13 +36,13 @@ class Proyecto extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nombre, descripcion,fecha', 'required'),
+			array('usuarios,areas,organizacion_id,nombre, descripcion,fecha', 'required'),
 			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>250),
 			array('descripcion', 'length', 'max'=>800),
-			array('usuario_id,creaTimeStamp, modTimeStamp', 'safe'),
+			array('usuarios,usuario_id,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('usuario_id,areas,id, nombre, descripcion, fecha, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('usuarios,organizacion_id,usuario_id,areas,id, nombre, descripcion, fecha, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -53,6 +55,7 @@ class Proyecto extends CustomCActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
             'usuario' => array(self::BELONGS_TO, 'User', 'usuario_id'),
+            'organizacion' => array(self::BELONGS_TO, 'Organizacion', 'organizacion_id'),
         );
 	}
 
@@ -71,6 +74,7 @@ class Proyecto extends CustomCActiveRecord
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
             'usuario_id'=>'Usuario',
+            'organizacion_id' =>'Organizacion',
 		);
 	}
 
@@ -91,15 +95,16 @@ class Proyecto extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-		$criteria->compare('id',$this->id);
+
+		//$criteria->compare('id',$this->id);
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('descripcion',$this->descripcion,true);
-		$criteria->compare('fecha',$this->fecha,true);
+		//$criteria->compare('fecha',$this->fecha,true);
 		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
 		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
-		$criteria->compare('modUserStamp',$this->modUserStamp,true);
-		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
-        $criteria->compare('usuario_id',$this->usuario_id,true);
+	//	$criteria->compare('modUserStamp',$this->modUserStamp,true);
+    //		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
+    //       $criteria->compare('usuario_id',$this->usuario_id,true);
 
         return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -129,5 +134,15 @@ class Proyecto extends CustomCActiveRecord
         }else{
             return "";
         }
+    }
+
+    public function getProyectosPorUsuario($usuario_id){
+	    $query = " select p.*
+	                 from proyecto p 
+	                 inner proyecto_usuario pu on pu.proyecto_id = p.id
+	                 where pu.usuario_id =".$usuario_id."
+	                 group by pu.proyecto_id ";
+	    $proyectos = Proyecto::model()->findBySql($query);
+	    return $proyectos;
     }
 }

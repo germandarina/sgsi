@@ -72,9 +72,12 @@ class ProyectoController extends Controller
                     throw new Exception("Debe seleccionar una fecha");
                 }
                 $model->fecha = Utilities::MysqlDateFormat($model->fecha);
-//                if(!isset($_POST['Proyecto']['areas']) || empty($_POST['Proyecto']['areas'])){
-//                    $model->addError('areas','Debe seleccionar al menos 1 area para crear el proyecto');
-//                }
+                if(!isset($_POST['Proyecto']['areas']) || empty($_POST['Proyecto']['areas'])){
+                    $model->addError('areas','Debe seleccionar al menos 1 area para crear el proyecto');
+                }
+                if(!isset($_POST['Proyecto']['usuarios']) || empty($_POST['Proyecto']['usuarios'])){
+                    $model->addError('usuarios','Debe seleccionar al menos 1 usuario para crear el proyecto');
+                }
                 if (!$model->save()) {
                     throw new Exception("Error al crear proyecto");
                 }
@@ -85,6 +88,24 @@ class ProyectoController extends Controller
                         $areaProyecto->proyecto_id = $model->id;
                         if(!$areaProyecto->save()){
                             throw new Exception("Error al crear relacion area proyecto");
+                        }
+                    }
+                }
+
+                if(isset($_POST['Proyecto']['usuarios']) && !empty($_POST['Proyecto']['usuarios'])){
+                    foreach ($_POST['Proyecto']['usuarios'] as $usuarioId){
+                        $proyectoUsuario = new ProyectoUsuario();
+                        $proyectoUsuario->usuario_id = $usuarioId;
+                        $proyectoUsuario->proyecto_id = $model->id;
+                        if(!$proyectoUsuario->save()){
+                            throw new Exception("Error al crear relacion proyecto usuario");
+                        }
+                        $usuario = User::model()->findByPk($usuarioId);
+                        if(is_null($usuario->ultimo_proyecto_id)){
+                            $usuario->ultimo_proyecto_id = $model->id;
+                            if(!$usuario->save()) {
+                                throw new Exception("Error al actualizar usuario, asignacion de proyecto");
+                            }
                         }
                     }
                 }
@@ -122,6 +143,13 @@ class ProyectoController extends Controller
             }
         }
 
+        $proyectoUsuario = ProyectoUsuario::model()->findAllByAttributes(array('proyecto_id'=>$model->id));
+        if(!empty($proyectoUsuario)){
+            foreach ($proyectoUsuario as $relacion){
+                $model->usuarios[] = $relacion->usuario_id;
+            }
+        }
+
         if (isset($_POST['Proyecto'])) {
             try{
                 $transaction = Yii::app()->db->beginTransaction();
@@ -130,6 +158,14 @@ class ProyectoController extends Controller
                     $model->addError('fecha','Debe seleccionar una fecha');
                     throw new Exception("Debe seleccionar una fecha");
                 }
+                if(!isset($_POST['Proyecto']['areas']) || empty($_POST['Proyecto']['areas'])){
+                    $model->addError('areas','Debe seleccionar al menos 1 area');
+                }
+
+                if(!isset($_POST['Proyecto']['usuarios']) || empty($_POST['Proyecto']['usuarios'])){
+                    $model->addError('usuarios','Debe seleccionar al menos 1 usuario');
+                }
+
                 $model->fecha = Utilities::MysqlDateFormat($model->fecha);
                 if (!$model->save()){
                     throw new Exception("Error al actualizar proyecto");
@@ -151,13 +187,33 @@ class ProyectoController extends Controller
                         }
                     }
                 }
-                if(!is_null($model->usuario_id)){
-                    $usuario = User::model()->findByPk($model->usuario_id);
-                    $usuario->ultimo_proyecto_id = $model->id;
-                    if(!$usuario->save()) {
-                        throw new Exception("Error al actualizar usuario, asignacion de proyecto");
+
+                if(!empty($proyectoUsuario)){
+                    foreach ($proyectoUsuario as $relacion){
+                        if(!$relacion->delete()){
+                            throw new Exception("Error al eliminar relacion proyecto usuario");
+                        }
                     }
                 }
+
+                if(isset($_POST['Proyecto']['usuarios']) && !empty($_POST['Proyecto']['usuarios'])){
+                    foreach ($_POST['Proyecto']['usuarios'] as $usuarioId){
+                        $proyectoUsuario = new ProyectoUsuario();
+                        $proyectoUsuario->usuario_id = $usuarioId;
+                        $proyectoUsuario->proyecto_id = $model->id;
+                        if(!$proyectoUsuario->save()){
+                            throw new Exception("Error al crear relacion proyecto usuario");
+                        }
+                        $usuario = User::model()->findByPk($usuarioId);
+                        if(is_null($usuario->ultimo_proyecto_id)){
+                            $usuario->ultimo_proyecto_id = $model->id;
+                            if(!$usuario->save()) {
+                                throw new Exception("Error al actualizar usuario, asignacion de proyecto");
+                            }
+                        }
+                    }
+                }
+
                 $transaction->commit();
                 Yii::app()->user->setNotification('success','Proyecto actualizado con exito');
                 $this->redirect(array('admin'));
@@ -207,6 +263,11 @@ class ProyectoController extends Controller
                 $area_proyecto = AreaProyecto::model()->findByAttributes(['proyecto_id'=>$id]);
                 if(!is_null($area_proyecto)){
                     throw new Exception("Error. Este proyecto esta relacionado con un area");
+                }
+
+                $proyecto_usuario = ProyectoUsuario::model()->findByAttributes(['proyecto_id'=>$id]);
+                if(!is_null($proyecto_usuario)){
+                    throw new Exception("Error. Este proyecto esta relacionado con un usuario");
                 }
 
                 $this->loadModel($id)->delete();
