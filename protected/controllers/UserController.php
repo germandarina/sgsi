@@ -91,7 +91,9 @@ class UserController extends Controller
         $perfiles = array();
         $perfilAuditor = "";
         foreach (Yii::app()->authManager->roles as $nombrePerfil => $perfil) {
-            $perfiles[$nombrePerfil] = $nombrePerfil;
+            if(!User::model()->esPerfilRbam(trim($nombrePerfil))){
+                $perfiles[$nombrePerfil] = $nombrePerfil;
+            }
             if($perfil->name == 'auditor'){
                 $perfilAuditor = $perfil->name;
             }
@@ -123,7 +125,10 @@ class UserController extends Controller
         $model = $this->loadModel($id);
         $perfiles = array();
         foreach (Yii::app()->authManager->roles as $nombrePerfil => $perfil) {
-            $perfiles[$nombrePerfil] = $nombrePerfil;
+            if(!User::model()->esPerfilRbam(trim($nombrePerfil))){
+                $perfiles[$nombrePerfil] = $nombrePerfil;
+            }
+
         }
        // $model->setScenario('jornadaLaboral');
 

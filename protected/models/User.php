@@ -353,4 +353,13 @@ class User extends CActiveRecord
         }
         return null;
     }
+
+    public function esPerfilRbam($nombrePerfil){
+        if($nombrePerfil == '6299b35b' || $nombrePerfil == 'Auth Assignments Manager'
+            || $nombrePerfil == 'Auth Items Manager' || $nombrePerfil == 'Authenticated'
+            || $nombrePerfil == 'Guest' || $nombrePerfil == 'RBAC Manager' ){
+            return true;
+        }
+        return false;
+    }
 }
