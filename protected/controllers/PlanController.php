@@ -226,7 +226,9 @@ class PlanController extends Controller
     {
         $model = Plan::model()->findByPk($id);
         if ($model === null) {
-            throw new CHttpException(404, 'The requested page does not exist.');
+            Yii::app()->user->setNotification('error','Acceso denegado');
+            $this->redirect(array('/'));
+            //throw new CHttpException(404, 'The requested page does not exist.');
         }
         $analisis = $model->analisis;
         $usuario = User::model()->findByPk(Yii::app()->user->model->id);

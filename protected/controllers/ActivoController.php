@@ -246,7 +246,9 @@ class ActivoController extends Controller
     {
         $model = Activo::model()->findByPk($id);
         if ($model === null) {
-            throw new CHttpException(404, 'The requested page does not exist.');
+            Yii::app()->user->setNotification('error','Acceso denegado');
+            $this->redirect(array('/'));
+            //throw new CHttpException(404, 'The requested page does not exist.');
         }
         $usuario = User::model()->getUsuarioLogueado();
         if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){

@@ -24,7 +24,6 @@ class Controller extends CController
     public function beforeAction($action)
     {
         if(!Yii::app()->request->isAjaxRequest && !Yii::app()->user->isGuest && Yii::app()->user->model) {
-            //echo var_dump($action->id,$this->getRoute()); die();
             if(!Yii::app()->user->model->isAdmin()){
                 $ruta = $this->getRoute();
                 $userId = Yii::app()->user->id;
@@ -36,7 +35,7 @@ class Controller extends CController
                 if($ruta!='site/index' && $ruta!='site/logout' && $ruta!='user/cambiarPassword' ) {
                     if (!$authManager->checkAccess($rutaRBAM, $userId)) {
                         Yii::app()->user->setNotification('error', 'Este usuario no tiene habilitada esta accion.');
-                        $this->redirect(array('/site/index'));
+                        $this->redirect(array('/site/index/'));
                     }
                 }
             }

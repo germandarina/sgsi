@@ -198,7 +198,9 @@ class NivelDeRiesgosController extends Controller
     {
         $model = NivelDeRiesgos::model()->findByPk($id);
         if ($model === null) {
-            throw new CHttpException(404, 'The requested page does not exist.');
+            Yii::app()->user->setNotification('error','Acceso denegado');
+            $this->redirect(array('/'));
+            //throw new CHttpException(404, 'The requested page does not exist.');
         }
         $usuario = User::model()->getUsuarioLogueado();
         if(!is_null($usuario)){

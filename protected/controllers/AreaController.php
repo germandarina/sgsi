@@ -228,7 +228,9 @@ class AreaController extends Controller
     {
         $model = Area::model()->findByPk($id);
         if ($model === null) {
-            throw new CHttpException(404, 'The requested page does not exist.');
+            Yii::app()->user->setNotification('error','Acceso denegado');
+            $this->redirect(array('/'));
+            //throw new CHttpException(404, 'The requested page does not exist.');
         }
         $areas_por_proyecto =  Area::model()->getAreasDisponibles();
         if(!empty($areas_por_proyecto)){

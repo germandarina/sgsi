@@ -46,7 +46,9 @@
                     <b>Panel Gral: <?= ucwords(strtolower($proyecto->nombre)) ?></b>
                 </a>
             </li>
-        <?php } ?>
+        <?php } else {
+            $proyecto = new Proyecto();
+        } ?>
         <li>
             <form class="navbar-form" role="search">
                 <div class="input-group">
