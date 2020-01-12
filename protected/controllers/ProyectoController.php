@@ -109,7 +109,11 @@ class ProyectoController extends Controller
                         }
                     }
                 }
-
+                $usuarioLogueado = Yii::app()->user->model;
+                $usuarioLogueado->ultimo_proyecto_id = $model->id;
+                if(!$usuarioLogueado->save()){
+                    throw new Exception("Error al actualizar usuario con proyecto creado");
+                }
                 $transaction->commit();
                 Yii::app()->user->setNotification('success','El proyecto fue creado con exito');
                 $this->redirect(array('admin'));

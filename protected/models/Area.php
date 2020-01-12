@@ -130,7 +130,7 @@ class Area extends CustomCActiveRecord
 		return parent::model($className);
 	}
 
-	public function getAreasDisponibles(){
+	public function getAreasDisponiblesPorProyecto(){
         $arrayAreas = [];
         if(Yii::app()->user){
             $usuario = User::model()->findByPk(Yii::app()->user->model->id);

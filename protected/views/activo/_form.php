@@ -72,7 +72,7 @@
                         'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
                         'widgetOptions' => [
                             'asDropDownList' => true,
-                            'data' => CHtml::listData(Area::model()->getAreasDisponibles(), 'id', 'nombre'),
+                            'data' => CHtml::listData(Area::model()->getAreasDisponiblesPorProyecto(), 'id', 'nombre'),
                             'options' => [
                                 'minimumResultsForSearch' => 10,
                                 'placeholder' => '--Seleccione--'
@@ -90,7 +90,7 @@
                         'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
                         'widgetOptions' => [
                             'asDropDownList' => true,
-                            'data' => CHtml::listData(Personal::model()->findAll(), 'id', 'nombre'),
+                            'data' => CHtml::listData(Personal::model()->getPersonalDisponiblePorProyecto(), 'id', 'nombre'),
                             'options' => [
                                 'minimumResultsForSearch' => 10,
                                 'placeholder' => '--Seleccione--'

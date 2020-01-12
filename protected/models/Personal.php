@@ -137,4 +137,21 @@ class Personal extends CustomCActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	public function getPersonalDisponiblePorProyecto(){
+        $arrayPersonal = [];
+        if(Yii::app()->user){
+            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+            if(!is_null($usuario->ultimo_proyecto_id)){
+                $query = " select t.id, concat(t.nombre,', ',t.apellido) as nombre
+                        from personal t 
+                        inner join area a on t.area_id = a.id
+                        inner join area_proyecto ap on a.id = ap.area_id 
+                        where ap.proyecto_id = ".$usuario->ultimo_proyecto_id."
+                        group by t.id; ";
+                $arrayPersonal = Personal::model()->findAllBySql($query);
+            }
+        }
+        return $arrayPersonal;
+    }
 }
