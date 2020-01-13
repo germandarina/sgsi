@@ -29,7 +29,10 @@ class Menu extends CustomCActiveRecord
     const TYPE_NOVISIBLE = 0;
     const TYPE_VISIBLE = 1;
 
-    public $perfiles = array();
+    public $perfiles = [];
+    public $controllers = [];
+    public $accionesControllers;
+
 
     public function tableName()
     {

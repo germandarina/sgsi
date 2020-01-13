@@ -139,10 +139,10 @@ class Proyecto extends CustomCActiveRecord
     public function getProyectosPorUsuario($usuario_id){
 	    $query = " select p.*
 	                 from proyecto p 
-	                 inner proyecto_usuario pu on pu.proyecto_id = p.id
-	                 where pu.usuario_id =".$usuario_id."
+	                 inner join proyecto_usuario pu on pu.proyecto_id = p.id
+	                 where pu.usuario_id = ".$usuario_id."
 	                 group by pu.proyecto_id ";
-	    $proyectos = Proyecto::model()->findBySql($query);
+	    $proyectos = Proyecto::model()->findAllBySql($query);
 	    return $proyectos;
     }
 }

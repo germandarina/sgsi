@@ -32,7 +32,8 @@ class MenuController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'getOrden', 'admin', 'delete','guardarMenuActivo'),
+                'actions' => array('create', 'update', 'getOrden', 'admin', 'delete','guardarMenuActivo',
+                                    'asignarPermisos','getAccionesPorController'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -109,7 +110,9 @@ class MenuController extends Controller
     {
         $perfiles = array();
         foreach (Yii::app()->authManager->roles as $nombrePerfil => $perfil) {
-            $perfiles[$nombrePerfil] = $nombrePerfil;
+            if(!User::model()->esPerfilRbam(trim($nombrePerfil))) {
+                $perfiles[$nombrePerfil] = $nombrePerfil;
+            }
         }
 
         return $perfiles;
@@ -309,5 +312,114 @@ class MenuController extends Controller
     public function actionGuardarMenuActivo(){
         Yii::app()->session["hijoId"] = $_POST['hijoId'];
         Yii::app()->session["padreId"] = $_POST['padreId'];
+    }
+
+    public function actionAsignarPermisos(){
+        /**
+         * @var $authManager CDbAuthManager;
+         */
+        $model = new Menu;
+        $perfiles = $this->getPerfiles();
+        $controllerlist = $this->getControllers();
+        if (isset($_POST['Menu'])) {
+            try {
+                $transaction = Yii::app()->db->beginTransaction();
+                if(isset($_POST['Menu']['perfiles']) && empty($_POST['Menu']['perfiles'])){
+                    throw new Exception("Debe seleccionar un perfil");
+                }
+                if(isset($_POST['Menu']['controllers']) && empty($_POST['Menu']['controllers'])){
+                    throw new Exception("Debe seleccionar un controller");
+                }
+                if(isset($_POST['Menu']['accionesControllers']) && empty($_POST['Menu']['accionesControllers'])){
+                    throw new Exception("Debe seleccionar una accion");
+                }
+
+
+                foreach ($_POST['Menu']['accionesControllers'] as $accion){
+                    $controller = $_POST['Menu']['controllers'];
+                    $permiso = $controller.':'.$accion;
+                    $descripcion = $accion;
+                    $sqlAuthItem = "INSERT INTO AuthItem(name,description,type,data) VALUES(:permiso,:descripcion,:type,:data);";
+                    $commandAuthItem = Yii::app()->db->createCommand($sqlAuthItem);
+                    $commandAuthItem->bindValue(":permiso", $permiso);
+                    $commandAuthItem->bindValue(":descripcion", $descripcion);
+                    $commandAuthItem->bindValue(":type", 0);
+                    $commandAuthItem->bindValue(":data", 'N;');
+                    $commandAuthItem->execute();
+
+                    foreach ($_POST['Menu']['perfiles'] as $perfil){
+                        $sqlAuthItemChild = "INSERT INTO AuthItemChild(parent,child)  values(:parent,:child);";
+                        $commandAuthItemChild = Yii::app()->db->createCommand($sqlAuthItemChild);
+                        $commandAuthItemChild->bindValue(":parent", $perfil);
+                        $commandAuthItemChild->bindValue(":child", $permiso);
+                        $commandAuthItemChild->execute();
+
+                    }
+                }
+
+                $transaction->commit();
+                Yii::app()->user->setNotification('success', 'Permisos Asignados');
+                $this->redirect(array('asignarPermisos'));
+            } catch (Exception $e) {
+                $transaction->rollback();
+                Yii::app()->user->setNotification('error', $e->getMessage());
+            }
+
+        }
+
+        $this->render('asignarPermisos', array(
+            'model' => $model, 'perfiles' => $perfiles,'controllerList'=>$controllerlist)
+        );
+    }
+
+    private function getControllers(){
+        $controllerlist = [];
+        if ($handle = opendir(__DIR__)) {
+            while (false !== ($file = readdir($handle))) {
+                if ($file != "." && $file != ".." && substr($file, strrpos($file, '.') - 10) == 'Controller.php') {
+                    $controller =  str_replace('Controller.php','',$file);
+                    $controllerlist[$controller] = $controller; //str_replace('Controller.php','',$file);
+                }
+            }
+            closedir($handle);
+        }
+        asort($controllerlist);
+        return $controllerlist;
+        $fulllist = [];
+        foreach ($controllerlist as $controller):
+            $handle = fopen(__DIR__.'/'. $controller, "r");
+            if ($handle) {
+                while (($line = fgets($handle)) !== false) {
+                    if (preg_match('/public function action(.*?)\(/', $line, $display)):
+                        if (strlen($display[1]) > 2):
+                            $fulllist[str_replace('Controller.php','',$controller)][] = ($display[1]);
+                        endif;
+                    endif;
+                }
+            }
+            fclose($handle);
+        endforeach;
+        return die(var_dump($fulllist));
+    }
+
+    public function actionGetAccionesPorController(){
+        if(isset($_POST['controller'])){
+            $controller = $_POST['controller'];
+            $controller .= 'Controller.php';
+            $accionesList = [];
+            $handle = fopen(__DIR__.'/'. $controller, "r");
+            if ($handle) {
+                while (($line = fgets($handle)) !== false) {
+                    if (preg_match('/public function action(.*?)\(/', $line, $display)):
+                        if (strlen($display[1]) > 2):
+                            $accionesList[$display[1]] = $display[1];
+                        endif;
+                    endif;
+                }
+            }
+            fclose($handle);
+            echo CJSON::encode(['acciones'=>$accionesList]);
+            die();
+        }
     }
 }
