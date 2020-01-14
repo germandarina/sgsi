@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4906943cafda7113c90e1c7eab3450ba",
-    "content-hash": "564b59a026cfac6bb7e8e40a93da2fd7",
+    "hash": "b99963ef9cf12119e1aba0dfd0b88f43",
+    "content-hash": "ae46e2bb4a236521b90e03b3ea74ffd2",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
             "version": "2.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/almasaeed2010/AdminLTE.git",
+                "url": "https://github.com/ColorlibHQ/AdminLTE.git",
                 "reference": "e55c2b85aa037e9ecd4ef30f913104dde91a2826"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/almasaeed2010/AdminLTE/zipball/e55c2b85aa037e9ecd4ef30f913104dde91a2826",
+                "url": "https://api.github.com/repos/ColorlibHQ/AdminLTE/zipball/e55c2b85aa037e9ecd4ef30f913104dde91a2826",
                 "reference": "e55c2b85aa037e9ecd4ef30f913104dde91a2826",
                 "shasum": ""
             },
@@ -110,20 +110,28 @@
         },
         {
             "name": "yiisoft/yii",
-            "version": "1.1.16",
+            "version": "1.1.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii.git",
-                "reference": "bca0420b6799b0b2a7966aa90bcd15cb4aa73563"
+                "reference": "6ed38411e7568f7a13c4aab8bcd38bff2a6f2390"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii/zipball/bca0420b6799b0b2a7966aa90bcd15cb4aa73563",
-                "reference": "bca0420b6799b0b2a7966aa90bcd15cb4aa73563",
+                "url": "https://api.github.com/repos/yiisoft/yii/zipball/6ed38411e7568f7a13c4aab8bcd38bff2a6f2390",
+                "reference": "6ed38411e7568f7a13c4aab8bcd38bff2a6f2390",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.1.0"
+            },
+            "require-dev": {
+                "phing/phing": "2.*",
+                "phpunit/phpunit": "~4.8.34",
+                "phpunit/phpunit-selenium": "~1.4.0"
+            },
+            "suggest": {
+                "ext-mcrypt": "Required by encrypt and decrypt methods of CSecurityManager"
             },
             "bin": [
                 "framework/yiic"
@@ -196,7 +204,7 @@
                 "framework",
                 "yii"
             ],
-            "time": "2014-12-21 19:30:17"
+            "time": "2018-07-06 17:18:25"
         }
     ],
     "packages-dev": [],

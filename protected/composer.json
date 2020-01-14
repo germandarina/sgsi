@@ -1,8 +1,8 @@
 {
-  "name": "3bytes/mutual",
+  "name": "dime",
   "require": {
     "php": ">=5.4.1",
-    "yiisoft/yii": "1.1.16",
+    "yiisoft/yii": "1.1.20",
     "clevertech/yii-booster": "4.0.0.x-dev",
     "almasaeed2010/adminlte": "2.1.1"
   }
