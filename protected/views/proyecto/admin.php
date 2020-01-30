@@ -40,7 +40,7 @@
 		array(
 			'name'=>'usuario_id',
 			'header'=>'Usuario',
-			'value'=>'$data->usuario != null ? $data->usuario->username : "" ',
+			'value'=>'$data->getUsuarios()',
 			'filter'=>false,
 		),
 

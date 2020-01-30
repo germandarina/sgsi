@@ -43,7 +43,7 @@ class TipoActivo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nombre, descripcion, confidencialidad, integridad, disponibilidad, trazabilidad', 'required'),
+			array('nombre, descripcion', 'required'),
 			array('confidencialidad, integridad, disponibilidad, trazabilidad', 'numerical', 'integerOnly'=>true),
 			array('nombre, descripcion, creaUserStamp, modUserStamp', 'length', 'max'=>200),
 			array('creaTimeStamp, modTimeStamp', 'safe'),

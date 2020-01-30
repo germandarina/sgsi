@@ -127,10 +127,22 @@ class Proyecto extends CustomCActiveRecord
         if(!empty($areas_proyectos)){
             $stringAreas = "";
             foreach ($areas_proyectos as $ap){
-                $area = $ap->area;
-                $stringAreas .= $area->nombre.' / ';
+                $stringAreas .= $ap->area->nombre.' / ';
             }
             return trim($stringAreas, ' / ');
+        }else{
+            return "";
+        }
+    }
+
+    public function getUsuarios(){
+        $usuario_proyecto = ProyectoUsuario::model()->findAllByAttributes(['proyecto_id'=>$this->id]);
+        if(!empty($usuario_proyecto)){
+            $stringUsuario = "";
+            foreach ($usuario_proyecto as $up){
+                $stringUsuario .= $up->usuario->username.' / ';
+            }
+            return trim($stringUsuario, ' / ');
         }else{
             return "";
         }

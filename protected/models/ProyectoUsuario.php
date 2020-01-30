@@ -53,7 +53,7 @@ class ProyectoUsuario extends CustomCActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'proyecto' => array(self::BELONGS_TO, 'Proyecto', 'proyecto_id'),
-			'usuario' => array(self::BELONGS_TO, 'Usuario', 'usuario_id'),
+			'usuario' => array(self::BELONGS_TO, 'User', 'usuario_id'),
 		);
 	}
 

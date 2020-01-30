@@ -52,7 +52,7 @@
                     'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
                     'widgetOptions' => [
                         'asDropDownList' => true,
-                        'data' => CHtml::listData(Area::model()->getAreasDisponibles(), 'id', 'nombre'),
+                        'data' => CHtml::listData(Area::model()->getAreasDisponiblesPorProyecto(), 'id', 'nombre'),
                         'options' => [
                             'minimumResultsForSearch' => 10,
                             'placeholder' => '--Seleccione--'

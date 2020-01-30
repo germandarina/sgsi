@@ -232,7 +232,7 @@ class AreaController extends Controller
             $this->redirect(array('/'));
             //throw new CHttpException(404, 'The requested page does not exist.');
         }
-        $areas_por_proyecto =  Area::model()->getAreasDisponibles();
+        $areas_por_proyecto =  Area::model()->getAreasDisponiblesPorProyecto();
         if(!empty($areas_por_proyecto)){
             $bandera = false;
             foreach ($areas_por_proyecto as $area){

@@ -35,16 +35,16 @@ $this->widget(
 	<div class="box-body">
 			<?php foreach ($amenazas as $amenaza){?>
 				<ul>
-					<li data-visible="1" id="amenaza_<?= $amenaza->id?>"><span><h4><a href="#" onclick="ocultarMostrarHijos(event,'amenaza',<?= $amenaza->id?>)"><icon class="fa fa-cloud"></a>&nbsp;&nbsp;&nbsp;<?= $amenaza->nombre?></h4>
+					<li title="Amenaza" data-visible="1" id="amenaza_<?= $amenaza->id?>"><span><h4 title="Amenaza" ><a title="Amenaza" href="#" onclick="ocultarMostrarHijos(event,'amenaza',<?= $amenaza->id?>)"><icon class="fa fa-cloud"></a>&nbsp;&nbsp;&nbsp;<?= $amenaza->nombre?></h4>
 						<ul>
-							<?php $vulnerabilidades = $amenaza->vulnerabilidades;
+							<?php $vulnerabilidades = $amenaza->getVulnerabilidades();
 							foreach ($vulnerabilidades as $vulnerabilidad){ ?>
-								<li data-visible="1" id="vulnerabilidad_<?= $vulnerabilidad->id?>"><span><h4><a href="#" onclick="ocultarMostrarHijos(event,'vulnerabilidad',<?= $vulnerabilidad->id?>)" ><icon class="fa fa-bolt"></a>&nbsp;&nbsp;&nbsp;<?= $vulnerabilidad->nombre?></h4>
+								<li title="Vulnerabilidad" data-visible="1" id="vulnerabilidad_<?= $vulnerabilidad->id?>"><span><h4 title="Vulnerabilidad"><a title="Vulnerabilidad" href="#" onclick="ocultarMostrarHijos(event,'vulnerabilidad',<?= $vulnerabilidad->id?>)" ><icon class="fa fa-bolt"></a>&nbsp;&nbsp;&nbsp;<?= $vulnerabilidad->nombre?></h4>
 									<ul>
 										<?php $controles = $vulnerabilidad->controles;
 										foreach ($controles as $control){
 											?>
-											<li><h4><span><icon class="fa fa-cogs">&nbsp;&nbsp;&nbsp;<?= $control->numeracion?>&nbsp;-&nbsp;<?= $control->nombre?></h4></li>
+											<li title="Control"><h4 title="Control"><span><icon class="fa fa-cogs">&nbsp;&nbsp;&nbsp;<?= $control->numeracion?>&nbsp;-&nbsp;<?= $control->nombre?></h4></li>
 										<?php }?>
 									</ul>
 								</li>

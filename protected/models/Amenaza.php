@@ -215,4 +215,18 @@ class Amenaza extends CustomCActiveRecord
             return "";
         }
     }
+    public function getVulnerabilidades(){
+	    $amenazas_vulne = AmenazaVulnerabilidad::model()->findAllByAttributes(['amenaza_id'=>$this->id]);
+	    $arrayVulnerabilidades = [];
+	    $arrayControl = [];
+	    if(!empty($amenazas_vulne)){
+	        foreach ($amenazas_vulne as $relacional){
+	            if(!in_array($relacional->vulnerabilidad_id,$arrayControl)){
+	                $arrayControl[] = $relacional->vulnerabilidad_id;
+	                $arrayVulnerabilidades[] = $relacional->vulnerabilidad;
+                }
+            }
+        }
+	    return $arrayVulnerabilidades;
+    }
 }
