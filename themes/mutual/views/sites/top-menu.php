@@ -39,11 +39,12 @@
     <?php if (Yii::app()->user->model->isAuditor() || Yii::app()->user->model->isAdmin()) {
         $usuario = User::model()->findByPk(Yii::app()->user->model->id);
         $proyecto = Proyecto::model()->findByPk($usuario->ultimo_proyecto_id); ?>
-        <?php if (!is_null($proyecto)) { ?>
+        <?php if (!is_null($proyecto)) {
+            $organizacion = $proyecto->organizacion; ?>
             <li class="dropdown header">
-                <a href="<?= $this->createUrl('/proyecto/panel', array('id' => $proyecto->id)) ?>"
+                <a href="#"
                    style="font-family: fontAwesome; font-size: 12px; background-color: #367fa9;" class="dropdown-toggle btn">
-                    <b>Panel Gral: <?= ucwords(strtolower($proyecto->nombre)) ?></b>
+                    <b>Organizacion: <?= ucwords(strtolower($organizacion->nombre)) ?></b>
                 </a>
             </li>
         <?php } else {
