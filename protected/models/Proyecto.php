@@ -96,12 +96,12 @@ class Proyecto extends CustomCActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		//$criteria->compare('id',$this->id);
+		$criteria->compare('id',$this->id);
 		$criteria->compare('nombre',$this->nombre,true);
 		$criteria->compare('descripcion',$this->descripcion,true);
 		//$criteria->compare('fecha',$this->fecha,true);
-		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
-		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
+	//	$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
+	//	$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
 	//	$criteria->compare('modUserStamp',$this->modUserStamp,true);
     //		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
     //       $criteria->compare('usuario_id',$this->usuario_id,true);

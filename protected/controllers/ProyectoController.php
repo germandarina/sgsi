@@ -107,6 +107,16 @@ class ProyectoController extends Controller
                                 throw new Exception("Error al actualizar usuario, asignacion de proyecto");
                             }
                         }
+
+                        $proyectoUsuarioExiste = ProyectoUsuario::model()->findByAttributes(['proyecto_id'=>$model->id,'usuario_id'=>Yii::app()->user->model->id]);
+                        if(is_null($proyectoUsuarioExiste)){
+                            $proyectoUsuario = new ProyectoUsuario();
+                            $proyectoUsuario->usuario_id = Yii::app()->user->model->id;
+                            $proyectoUsuario->proyecto_id = $model->id;
+                            if(!$proyectoUsuario->save()){
+                                throw new Exception("Error al crear relacion proyecto usuario");
+                            }
+                        }
                     }
                 }
                 $usuarioLogueado = Yii::app()->user->model;
@@ -218,6 +228,16 @@ class ProyectoController extends Controller
                     }
                 }
 
+                $proyectoUsuarioExiste = ProyectoUsuario::model()->findByAttributes(['proyecto_id'=>$model->id,'usuario_id'=>Yii::app()->user->model->id]);
+                if(is_null($proyectoUsuarioExiste)){
+                    $proyectoUsuario = new ProyectoUsuario();
+                    $proyectoUsuario->usuario_id = Yii::app()->user->model->id;
+                    $proyectoUsuario->proyecto_id = $model->id;
+                    if(!$proyectoUsuario->save()){
+                        throw new Exception("Error al crear relacion proyecto usuario");
+                    }
+                }
+
                 $transaction->commit();
                 Yii::app()->user->setNotification('success','Proyecto actualizado con exito');
                 $this->redirect(array('admin'));
@@ -245,6 +265,7 @@ class ProyectoController extends Controller
     {
         if (Yii::app()->request->isPostRequest) {
             try{
+                $transaction = Yii::app()->db->beginTransaction();
                 $activo = Activo::model()->findByAttributes(['proyecto_id'=>$id]);
                 if(!is_null($activo)){
                     throw new Exception("Error. Este proyecto esta relacionado con un activo");
@@ -264,21 +285,39 @@ class ProyectoController extends Controller
                     throw new Exception("Error. Este proyecto esta relacionado con un nivel de riesgo");
                 }
 
-                $area_proyecto = AreaProyecto::model()->findByAttributes(['proyecto_id'=>$id]);
-                if(!is_null($area_proyecto)){
-                    throw new Exception("Error. Este proyecto esta relacionado con un area");
+                $area_proyecto = AreaProyecto::model()->findAllByAttributes(['proyecto_id'=>$id]);
+                if(!empty($area_proyecto)){
+                    foreach ($area_proyecto as $ap){
+                        if(!$ap->delete()){
+                            throw new Exception("Error al eliminar relacion area proyecto");
+                        }
+                    }
                 }
 
-                $proyecto_usuario = ProyectoUsuario::model()->findByAttributes(['proyecto_id'=>$id]);
-                if(!is_null($proyecto_usuario)){
-                    throw new Exception("Error. Este proyecto esta relacionado con un usuario");
+                $proyecto_usuario = ProyectoUsuario::model()->findAllByAttributes(['proyecto_id'=>$id]);
+                if(!empty($proyecto_usuario)){
+                    foreach ($proyecto_usuario as $pu){
+                        $usuario = User::model()->findByPk($pu->usuario_id);
+                        $usuario->ultimo_proyecto_id = NULL;
+                        if(!$usuario->save()){
+                            throw new Exception("Error al actualizar usuarios");
+                        }
+                    }
+
+                    foreach ($proyecto_usuario as $pu){
+                        if(!$pu->delete()){
+                            throw new Exception("Error al eliminar relacion usuario proyecto");
+                        }
+                    }
                 }
 
                 $this->loadModel($id)->delete();
+                $transaction->commit();
                 $data = "Se elimino correctamente el analisis";
                 $datos = ['error'=>0,'msj'=>$data];
                 echo CJSON::encode($datos);
             }catch (Exception $exception){
+                $transaction->rollback();
                 $msj = $exception->getMessage();
                 $datos = ['error'=>1,'msj'=>$msj];
                 echo CJSON::encode($datos);

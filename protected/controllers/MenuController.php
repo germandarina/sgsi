@@ -339,21 +339,25 @@ class MenuController extends Controller
                     $controller = $_POST['Menu']['controllers'];
                     $permiso = $controller.':'.$accion;
                     $descripcion = $accion;
-                    $sqlAuthItem = "INSERT INTO AuthItem(name,description,type,data) VALUES(:permiso,:descripcion,:type,:data);";
-                    $commandAuthItem = Yii::app()->db->createCommand($sqlAuthItem);
-                    $commandAuthItem->bindValue(":permiso", $permiso);
-                    $commandAuthItem->bindValue(":descripcion", $descripcion);
-                    $commandAuthItem->bindValue(":type", 0);
-                    $commandAuthItem->bindValue(":data", 'N;');
-                    $commandAuthItem->execute();
-
+                    $sqlExiste = " select * from AuthItem where name = :nombre;";
+                    $commandExiste = Yii::app()->db->createCommand($sqlExiste);
+                    $commandExiste->bindValue(":nombre", $permiso);
+                    $authItemExiste =  $commandExiste->queryRow($sqlExiste);
+                    if(!$authItemExiste){
+                        $sqlAuthItem = "INSERT INTO AuthItem(name,description,type,data) VALUES(:permiso,:descripcion,:type,:data);";
+                        $commandAuthItem = Yii::app()->db->createCommand($sqlAuthItem);
+                        $commandAuthItem->bindValue(":permiso", $permiso);
+                        $commandAuthItem->bindValue(":descripcion", $descripcion);
+                        $commandAuthItem->bindValue(":type", 0);
+                        $commandAuthItem->bindValue(":data", 'N;');
+                        $commandAuthItem->execute();
+                    }
                     foreach ($_POST['Menu']['perfiles'] as $perfil){
                         $sqlAuthItemChild = "INSERT INTO AuthItemChild(parent,child)  values(:parent,:child);";
                         $commandAuthItemChild = Yii::app()->db->createCommand($sqlAuthItemChild);
                         $commandAuthItemChild->bindValue(":parent", $perfil);
                         $commandAuthItemChild->bindValue(":child", $permiso);
                         $commandAuthItemChild->execute();
-
                     }
                 }
 

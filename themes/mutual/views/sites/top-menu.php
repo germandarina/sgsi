@@ -36,20 +36,18 @@
 
 <ul class="nav navbar-nav">
     <!-- Messages: style can be found in dropdown.less-->
-    <?php if (Yii::app()->user->model->isAuditor() || Yii::app()->user->model->isAdmin()) {
-        $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-        $proyecto = Proyecto::model()->findByPk($usuario->ultimo_proyecto_id); ?>
-        <?php if (!is_null($proyecto)) {
-            $organizacion = $proyecto->organizacion; ?>
+        <?php  $usuario = User::model()->findByPk(Yii::app()->user->model->id);
+        $proyecto = Proyecto::model()->findByPk($usuario->ultimo_proyecto_id);
+        $proyecto = is_null($proyecto) ? new Proyecto() : $proyecto;
+        $organizacion = $proyecto->organizacion;
+        $organizacion = is_null($organizacion) ? new Organizacion() : $organizacion;
+        ?>
             <li class="dropdown header">
                 <a href="#"
                    style="font-family: fontAwesome; font-size: 12px; background-color: #367fa9;" class="dropdown-toggle btn">
                     <b>Organizacion: <?= ucwords(strtolower($organizacion->nombre)) ?></b>
                 </a>
             </li>
-        <?php } else {
-            $proyecto = new Proyecto();
-        } ?>
         <li>
             <form class="navbar-form" role="search">
                 <div class="input-group">
@@ -64,9 +62,6 @@
                 </div>
             </form>
         </li>
-
-    <?php } ?>
-
     <!-- original -->
     <li class="dropdown user user-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
