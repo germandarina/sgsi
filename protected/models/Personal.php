@@ -15,10 +15,12 @@
  * @property string $creaTimeStamp
  * @property string $modUserStamp
  * @property string $modTimeStamp
+ * @property integer $puesto_trabajo_id
  *
  * The followings are the available model relations:
  * @property Area $area
  * @property Proceso $proceso
+ * @property PuestosDeTrabajo $puestoDeTrabajo
  */
 class Personal extends CustomCActiveRecord
 {
@@ -40,13 +42,13 @@ class Personal extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('apellido, nombre, dni, telefono, area_id, proceso_id', 'required'),
+			array('puesto_trabajo_id,apellido, nombre, dni, telefono, area_id, proceso_id', 'required'),
 			array('area_id,proceso_id', 'numerical', 'integerOnly'=>true),
 			array('apellido, nombre, dni, telefono, creaUserStamp, modUserStamp', 'length', 'max'=>50),
-			array('proyecto_id,creaTimeStamp, modTimeStamp', 'safe'),
+			array('puesto_trabajo_id,proyecto_id,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('proyecto_id,id, apellido, proceso_id,nombre, dni, telefono, area_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('puesto_trabajo_id,proyecto_id,id, apellido, proceso_id,nombre, dni, telefono, area_id, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -81,6 +83,7 @@ class Personal extends CustomCActiveRecord
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
+            'puesto_trabajo_id' =>'Puesto de Trabajo',
 		);
 	}
 

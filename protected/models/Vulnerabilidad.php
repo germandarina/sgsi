@@ -7,7 +7,6 @@
  * @property integer $id
  * @property string $nombre
  * @property string $descripcion
- * @property integer $amenaza_id
  * @property string $creaUserStamp
  * @property string $creaTimeStamp
  * @property string $modUserStamp
@@ -40,14 +39,16 @@ class Vulnerabilidad extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nombre, descripcion, amenaza_id', 'required'),
-			array('amenaza_id', 'numerical', 'integerOnly'=>true),
+			array('nombre, descripcion,array_amenazas', 'required'),
+
+            array('tipo_activo_id', 'required','on'=>'create'),
+			//array('amenaza_id', 'numerical', 'integerOnly'=>true),
 			array('nombre, creaUserStamp, modUserStamp', 'length', 'max'=>250),
 			array('descripcion', 'length', 'max'=>800),
-			array('amenaza_id,tipo_activo_id,creaTimeStamp, modTimeStamp', 'safe'),
+			array('tipo_activo_id,creaTimeStamp, modTimeStamp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('amenaza_id,tipo_activo_id,id, nombre, descripcion, amenazas, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
+			array('tipo_activo_id,id, nombre, descripcion, amenazas, creaUserStamp, creaTimeStamp, modUserStamp, modTimeStamp', 'safe', 'on'=>'search'),
 		);
 	}
 

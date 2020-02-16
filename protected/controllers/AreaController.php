@@ -31,7 +31,8 @@ class AreaController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','delete','getProcesos','getPersonal','getProcesosModal'),
+                'actions' => array('create', 'update', 'admin','delete','getProcesos','getPersonal','getProcesosModal',
+                    'getPuestos'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -299,6 +300,18 @@ class AreaController extends Controller
             $html = $this->renderPartial('_procesosPorArea', array('procesos'=>$procesos), true);
             echo CJSON::encode(['html'=>$html]);
             die();
+        }
+    }
+
+    public function actionGetPuestos(){
+        if(isset($_POST['area_id'])){
+            $puestosDeTrabajo = PuestosDeTrabajo::model()->findAllByAttributes(['area_id'=>$_POST['area_id']]);
+            if(!empty($puestosDeTrabajo)){
+                $datos = ['puestosDeTrabajo'=>$puestosDeTrabajo];
+            }else{
+                $datos = ['puestosDeTrabajo'=>''];
+            }
+            echo CJSON::encode($datos);
         }
     }
 }

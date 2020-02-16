@@ -31,7 +31,7 @@ class VulnerabilidadController extends Controller
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','delete','getAmenazas'),
+                'actions' => array('create', 'update', 'admin','delete','getAmenazas','getAmenazasPorVulnerabilidad'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -61,7 +61,7 @@ class VulnerabilidadController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Vulnerabilidad;
+        $model = new Vulnerabilidad('create');
 
         if (isset($_POST['Vulnerabilidad'])) {
 
@@ -104,8 +104,10 @@ class VulnerabilidadController extends Controller
     {
         $model = $this->loadModel($id);
         $amenaza_vulne = AmenazaVulnerabilidad::model()->findAllByAttributes(array('vulnerabilidad_id'=>$model->id));
+
         foreach ($amenaza_vulne as $relacion){
             $model->array_amenazas[] = $relacion->amenaza_id;
+            $model->tipo_activo_id = $relacion->amenaza->tipo_activo_id;
         }
         if (isset($_POST['Vulnerabilidad'])) {
             try{
@@ -246,6 +248,18 @@ class VulnerabilidadController extends Controller
             $datos = ['amenazas'=>$amenazas];
             echo CJSON::encode($datos);
             die();
+        }
+    }
+
+    public function actionGetAmenazasPorVulnerabilidad(){
+        if($_POST['id']){
+            $model = $this->loadModel($_POST['id']);
+            $amenaza_vulne = AmenazaVulnerabilidad::model()->findAllByAttributes(array('vulnerabilidad_id'=>$model->id));
+            $arrayIdsAmenazas = [];
+            foreach ($amenaza_vulne as $relacion){
+                $arrayIdsAmenazas[] = $relacion->amenaza_id;
+            }
+            echo CJSON::encode(['idsAmenazas'=>$arrayIdsAmenazas]);
         }
     }
 }

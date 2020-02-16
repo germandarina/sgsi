@@ -1,8 +1,11 @@
 <script>
 
-    // $(function () {
-    //    getAmenazas();
-    // });
+    $(function () {
+        if("<?= $model->id?>" != null){
+            getDatosVulnerabilidad();
+        }
+        getAmenazas();
+    });
     function getAmenazas() {
         var tipo_activo_id = $("#Vulnerabilidad_tipo_activo_id").val();
         if(tipo_activo_id != "" && tipo_activo_id != 0  && tipo_activo_id != null && tipo_activo_id != undefined){
@@ -25,6 +28,35 @@
                 }
             });
         }
+    }
+    function getDatosVulnerabilidad() {
+        getAmenazas();
+        setTimeout(function () {
+            getAmenazasPorVulnerabilidad();
+        },200);
+    }
+
+    function getAmenazasPorVulnerabilidad() {
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo CController::createUrl('vulnerabilidad/getAmenazasPorVulnerabilidad')?>",
+            data: {'id': "<?= $model->id ?>"},
+            dataType: 'Text',
+            success: function (data) {
+                var datos = jQuery.parseJSON(data);
+                var idsAmenazas = datos.idsAmenazas;
+                $("#Vulnerabilidad_array_amenazas").select2('val', idsAmenazas);
+                // if(amenazas.length >0){
+                //     $("#Vulnerabilidad_array_amenazas").find('option').remove();
+                //     $("#Vulnerabilidad_array_amenazas").select2('val', null);
+                //     $.each(amenazas, function (i, amenaza) {
+                //         $("#Vulnerabilidad_array_amenazas").append('<option value="' + amenaza.id + '">' + amenaza.nombre + '</option>');
+                //     });
+                // }
+            }
+        });
+
+
     }
 </script>
 
