@@ -311,7 +311,10 @@ class ProyectoController extends Controller
                     }
                 }
 
-                $this->loadModel($id)->delete();
+                $proyecto = Proyecto::model()->findByPk($id);
+                if(!$proyecto->delete()){
+                    throw new Exception("Error al eliminar proyecto");
+                }
                 $transaction->commit();
                 $data = "Se elimino correctamente el analisis";
                 $datos = ['error'=>0,'msj'=>$data];

@@ -60,7 +60,10 @@
                                   var datos = jQuery.parseJSON(data);
                                   if(success){
                                         if(datos.error == 0){
-                                            Lobibox.notify(\'success\', {msg: datos.msj }); 
+                                            Lobibox.notify(\'success\', {msg: datos.msj });
+                                            setTimeout(function(){
+                                            window.location.reload();
+                                        }, 500); 
                                         }else{
                                          Lobibox.notify(\'error\', {msg: datos.msj }); 
                                         }

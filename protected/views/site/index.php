@@ -1,8 +1,15 @@
 
 <div class="box">
-    <div class="box-header">
+   <div class="box-header">
         <h3 class="box-title"><?php echo $this->pageTitle=Yii::app()->name; ?> - Bienvenidos</h3>
    </div>
+<?php  $usuario = User::model()->getUsuarioLogueado();
+       $proyecto_usuario = ProyectoUsuario::model()->findByAttributes(['usuario_id'=>$usuario->id]);
+       if(is_null($proyecto_usuario)){ ?>
+            <div class="box-header">
+                <h3 class="box-title">Ud no tiene ningun proyecto asignado para comenzar a trabajar. Comuniquese con su supervisor.</h3>
+            </div>
+       <?php } ?>
 </div>
 
 <?php //if(!Yii::app()->user->model->isGerencial() && !Yii::app()->user->model->isDataEntry() ) {?>

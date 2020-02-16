@@ -1,7 +1,8 @@
 <ul class="sidebar-menu">
     <?php
-            $usuario = User::model()->findByPk(Yii::app()->user->model->id);
-            if(!is_null($usuario->ultimo_proyecto_id) || (Yii::app()->user->model->isGerencial() || Yii::app()->user->model->isDataEntry()) ){ ?>
+            $usuario = User::model()->getUsuarioLogueado();
+            $proyecto_usuario = ProyectoUsuario::model()->findByAttributes(['usuario_id'=>$usuario->id]);
+            if(!is_null($usuario->ultimo_proyecto_id) && !is_null($proyecto_usuario)){ ?>
                 <li ><a class="header" style="text-align: center; color: white;" href="#" onclick="toPanel(event)"><b>HOME</b></a></li>
                 <?php foreach ($items as $item) { ?>
                     <?php $url = !empty($item['url']) ? Yii::app()->createUrl($item['url']) : '';  ?>
