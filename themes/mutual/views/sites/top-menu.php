@@ -54,7 +54,7 @@
                     <select name="eventos" id="eventos" onchange="asignarProyecto(event)">
                         <option disabled selected value>-- Seleccione --</option>
                         <?php
-                        $proyectos =  Yii::app()->user->model->isAdmin() ? Proyecto::model()->findAll() : Proyecto::model()->getProyectosPorUsuario($usuario->id);
+                        $proyectos =  Proyecto::model()->getProyectosPorUsuario($usuario->id);
                         foreach ($proyectos as $pro) { ?>
                             <option value="<?= $pro->id ?>" <?= $pro->id == $proyecto->id ? 'selected="selected"' : '' ?>><?= $pro->nombre ?></option>
                         <?php } ?>
