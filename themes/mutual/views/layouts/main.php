@@ -232,6 +232,12 @@
         $('.treeview-menu > li.active').parents('.treeview').addClass('active');
 
         $('#eventos').select2();
+        $(".filter-container>select").css('height','30px');
+        $(".filter-container>input").css('height','30px');
+        setInterval(function () {
+            $(".filter-container>select").css('height','30px');
+            $(".filter-container>input").css('height','30px');
+        },100)
     });
 
 
