@@ -113,7 +113,7 @@ class TipoActivoController extends Controller
                 }
                 $transaction->commit();
                 Yii::app()->user->setNotification('success','Tipo de Activo actualizado con exito');
-                $this->redirect(array('create'));
+                $this->redirect(array('admin'));
             }catch (Exception $exception){
                 $transaction->rollback();
                 Yii::app()->user->setNotification('error',$exception->getMessage());
