@@ -362,4 +362,14 @@ class User extends CActiveRecord
         }
         return false;
     }
+
+    public function getUsuariosAdministradores(){
+        $query = " select u.*
+                        from usuario u
+                        inner join AuthAssignment aa on aa.userid = u.id
+                        where aa.itemname = 'Administrador' or aa.itemname = 'administrador' ";
+        $command = Yii::app()->db->createCommand($query);
+        $usuarios = $command->queryAll($query);
+        return $usuarios;
+    }
 }

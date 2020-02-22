@@ -31,8 +31,6 @@
 			'header'=>'Amenazas',
 			'value'=>'$data->amenazas',
 		),
-		'creaUserStamp',
-		//'creaTimeStamp',
 	array(
 	'class'=>'booster.widgets.TbButtonColumn',
 		'template'=>'{update}{delete}',

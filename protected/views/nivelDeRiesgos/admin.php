@@ -33,9 +33,6 @@
                     'value' => 'NivelDeRiesgos::$arrayConceptos[$data->concepto]',
                     'filter' => NivelDeRiesgos::$arrayConceptos,
                 ),
-
-                'creaUserStamp',
-                'creaTimeStamp',
                 array(
                     'class' => 'booster.widgets.TbButtonColumn',
                     'template' => '{update}{delete}',

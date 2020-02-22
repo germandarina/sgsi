@@ -56,8 +56,6 @@
                         'header'=>'Organizacion',
                         'value'=>'$data->organizacion->nombre',
                     ),
-                    'creaUserStamp',
-                    'creaTimeStamp',
                     array(
                         'class'=>'booster.widgets.TbButtonColumn',
                         'template'=>'{update}{delete}',

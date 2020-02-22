@@ -33,7 +33,7 @@
 			'type' => 'raw',
 			'value'=>function($data){
 				if($data->confidencialidad == TipoActivo::VALOR_SI){
-					return "<a onclick=\" \" title=\"Presione para ver\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-ok\"></i></a>";
+					return "<a onclick=\" \"  class=\"linkCredito\"><i class=\"glyphicon glyphicon-ok\"></i></a>";
 				}else{
 					return '';
 				}
@@ -46,7 +46,7 @@
 			'type' => 'raw',
 			'value'=>function($data){
 				if($data->integridad == TipoActivo::VALOR_SI){
-					return "<a onclick=\" \" title=\"Presione para ver\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-ok\"></i></a>";
+					return "<a onclick=\" \"  class=\"linkCredito\"><i class=\"glyphicon glyphicon-ok\"></i></a>";
 				}else{
 					return '';
 				}
@@ -58,7 +58,7 @@
 			'type' => 'raw',
 			'value'=>function($data){
 				if($data->disponibilidad == TipoActivo::VALOR_SI){
-					return "<a onclick=\" \" title=\"Presione para ver\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-ok\"></i></a>";
+					return "<a onclick=\" \"  class=\"linkCredito\"><i class=\"glyphicon glyphicon-ok\"></i></a>";
 				}else{
 					return '';
 				}
@@ -70,18 +70,16 @@
 			'type' => 'raw',
 			'value'=>function($data){
 				if($data->trazabilidad == TipoActivo::VALOR_SI){
-					return "<a onclick=\" \" title=\"Presione para ver\" class=\"linkCredito\"><i class=\"glyphicon glyphicon-ok\"></i></a>";
+					return "<a onclick=\" \"  class=\"linkCredito\"><i class=\"glyphicon glyphicon-ok\"></i></a>";
 				}else{
 					return '';
 				}
 			},
 			'filter'=>TipoActivo::$valores,
 		],
-		'creaUserStamp',
-		'creaTimeStamp',
 	array(
 	'class'=>'booster.widgets.TbButtonColumn',
-		'template'=>'{update}{delete}',
+		'template'=>'{update}   {delete}',
         'afterDelete' => 'function(link,success,data){ 
                                   var datos = jQuery.parseJSON(data);
                                   if(success){

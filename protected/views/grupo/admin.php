@@ -56,12 +56,6 @@
                     'value'=>'$data->tipoActivo->nombre',
                     'filter'=>CHtml::listData(TipoActivo::model()->findAll(),'id','nombre'),
                 ),
-                'creaUserStamp',
-                'creaTimeStamp',
-                /*
-                'modUserStamp',
-                'modTimeStamp',
-                */
                 array(
                     'class'=>'booster.widgets.TbButtonColumn',
                     'template'=>'{update}{delete}',
