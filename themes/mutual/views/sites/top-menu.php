@@ -42,11 +42,10 @@
         $organizacion = $proyecto->organizacion;
         $organizacion = is_null($organizacion) ? new Organizacion() : $organizacion;
         ?>
-            <li class="dropdown header">
-                <a href="#"
-                   style="font-family: fontAwesome; font-size: 12px; background-color: #367fa9;" class="dropdown-toggle btn">
-                    <b>Organizacion: <?= ucwords(strtolower($organizacion->nombre)) ?></b>
-                </a>
+            <li>
+             
+                <p class="organization_name"><?= ucwords(strtolower($organizacion->nombre)) ?></p> 
+             
             </li>
         <li>
             <form class="navbar-form" role="search">
@@ -65,7 +64,7 @@
     <!-- original -->
     <li class="dropdown user user-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <img src="<?= $themeUrl ?>/img/avatar5.png" class="user-image" alt="User Image"/>
+            <img src="<?= $themeUrl ?>/img/user1.jpg" class="user-image" alt="User Image"/>
             <span class="hidden-xs"><?= ucwords(strtolower(Yii::app()->user->model->username)) ?></span>
         </a>
         <ul class="dropdown-menu">

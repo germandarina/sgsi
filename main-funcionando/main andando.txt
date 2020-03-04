@@ -9,21 +9,21 @@
 Yii::setPathOfAlias('adminlte', 'protected/vendor/almasaeed2010/adminlte');
 Yii::setPathOfAlias('vendor', 'protected/vendor');
 YII::setPathOfAlias('components.gii.bootstrap.BootstrapCode', 'protected/components/gii/bootstrap/BootstrapCode');
-Yii::setPathOfAlias('chartjs', dirname(__FILE__).'/../extensions/yii-chartJs');
+Yii::setPathOfAlias('chartjs', dirname(__FILE__).'/../extensions/yii-chartjs');
+
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
-    'name' => 'SGSI',
+    'name' => 'DIME-SGSI',
 
     // preloading 'log' component
     //'preload' => array('log', 'booster'),
-    'preload' => strpos($_SERVER['REQUEST_URI'], 'rbam') ? array('log') : array('log', 'booster','chartJs'),
+    'preload' => strpos($_SERVER['REQUEST_URI'], 'rbam') ? array('log') : array('log', 'booster','chartjs'),
     // autoloading model and component classes
     'import' => array(
         'application.models.*',
         'application.modules.*',
         'application.components.*',
         'application.extensions.*',
-        'application.filters.*',
         'application.modules.rbam.models.RBAMBaseModel',
     ),
 
@@ -33,7 +33,7 @@ return array(
             'class' => 'system.gii.GiiModule',
             'password' => 'pascal098deal',
             // If removed, Gii defaults to localhost only. Edit carefully to taste.
-            'ipFilters' => array('*'),//array('127.0.0.1', '::1'),
+            'ipFilters' => array('127.0.0.1', '::1'),
             'generatorPaths' => array(
                 'application.components.gii',
             ),
@@ -47,7 +47,7 @@ return array(
     ),
     // application components
     'components' => array(
-        'chartjs' => array('class' => 'chartjs.components.ChartJs'),
+        'chartjs' => array('class' => 'chartjs.components.Chartjs'),
         'booster' => array(
             'class' => 'vendor.clevertech.yii-booster.src.components.Booster',
         ),

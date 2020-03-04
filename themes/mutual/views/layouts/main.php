@@ -67,9 +67,11 @@
         <!-- Logo -->
         <a href="<?= Yii::app()->getBaseUrl()?>" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b><?php echo ucwords(strtoupper(CHtml::encode(Yii::app()->name))); ?></b></span>
-            <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b><?php echo ucwords(strtoupper(CHtml::encode(Yii::app()->name))); ?></b></span>
+           <i class="fa fa-shield"></i>
+            <span>
+                Activa SGSI
+            </span>
+                <!-- logo for regular state and mobile devices -->
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
@@ -93,6 +95,17 @@
     <aside class="main-sidebar">
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
+            <div class="profile">
+                <div class="profile_pic">
+                    <img src="<?= $themeUrl ?>/img/user1.jpg" class="img-circle profile_img" alt="User Image"/>
+                    <!-- <img src="<?= $themeUrl ?>/img/avatar5.png" class="user-image" alt="User Image"/>-->
+                </div>
+                <div class="profile_info">
+                        <span class="profile_hello">Bienvenido,</span>
+                        <h2 class="profile_name"><?= ucwords(strtolower(Yii::app()->user->model->username)) ?></h2>
+                
+                </div>
+            </div>
             <?php echo $this->renderPartial('/sites/menu', array('items' => Menu::model()->menuPadres())); ?>
         </section>
         <!-- /.sidebar -->

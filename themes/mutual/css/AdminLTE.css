@@ -1225,6 +1225,8 @@ a:focus {
   border-radius: 0px !important;
   box-shadow: none;
   border-color: #d2d6de;
+  border: 0px;
+  border-bottom: 1px solid #ccc;
 }
 .form-control:focus {
   border-color: #3c8dbc !important;
@@ -4358,5 +4360,9 @@ fieldset[disabled] .btn-vk.active {
   .table-responsive > .table tr th,
   .table-responsive > .table tr td {
     white-space: normal!important;
+  }
+  .profile_pic{
+    width:35%;
+    float: left;
   }
 }

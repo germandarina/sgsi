@@ -24,7 +24,9 @@
     <script src="<?= $themeUrl ?>/js/respond.min.js"></script>
     <![endif]-->
 </head>
+<!--<body style="background:#F7F7F7;">-->
 <body class="login-page">
+ 
 <?php echo $content; ?>
 <!-- jQuery 2.1.4 -->
 <script src="<?= $themeUrl ?>/plugins/jQuery/jQuery-2.1.4.min.js"></script>
