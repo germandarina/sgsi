@@ -11,14 +11,14 @@ tr.filters input[type="text"], tr.filters select {
 .notifyjs-corner{
 	top: 45px !important;
 }
-.dropdown-menu>li>a{
-	background-color: #8F8F8F !important;	
+/*.dropdown-menu>li>a{
+	background-color: #fdfdfd !important;	
 	color: #ffffff !important;
 }
 .dropdown-menu>li>a:hover {
-    background-color: #3c8dbc !important;
+    background-color: ##e1e3e9 !important;
     box-shadow: 4px 4px 5px #999;
-}
+}*/
 .lobibox-notify-wrapper.top {
     top: 50px !important;
 }
