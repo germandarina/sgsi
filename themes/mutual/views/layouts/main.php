@@ -23,6 +23,9 @@
 
     <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl ?>/js/select2/select2/select2.css">
     <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl ?>/js/select2/select2/select2-bootstrap.css">
+    <!--Panel estadistico -->
+    <link href="<?= Yii::app()->request->baseUrl ?>/css/custom.css" rel="stylesheet">
+    <!--Panel estadistico -->
 
     <!-- jQuery 2.1.4 -->
     <script src="<?= $themeUrl ?>/plugins/jQuery/jQuery-2.1.4.min.js"></script>
@@ -122,6 +125,7 @@
 
         <!-- Main content -->
         <section class="content">
+            
             <!-- Default box -->
             <?php echo $content; ?>
             <!-- /.box -->

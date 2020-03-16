@@ -228,7 +228,7 @@ class Menu extends CustomCActiveRecord
                 'class'=>$class
             );
         }
-        $menu[] = array('label' => 'Cerrar Sesion (' . Yii::app()->user->name . ')', 'url' => '/site/logout', 'icon-class' => 'fa-user-times', 'visible' => !Yii::app()->user->isGuest);
+        //$menu[] = array('label' => 'Cerrar Sesion (' . Yii::app()->user->name . ')', 'url' => '/site/logout', 'icon-class' => 'fa-user-times', 'visible' => !Yii::app()->user->isGuest);
         return $menu;
     }
 }
