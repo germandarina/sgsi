@@ -1,8 +1,9 @@
-<div class="box">
- <!--  <div class="box-header">
-        <h3 class="box-title"><?php //echo $this->pageTitle=Yii::app()->name; ?> - Bienvenidos</h3>
-   </div>-->
-<?php  $usuario = User::model()->getUsuarioLogueado();
+<div>
+   <div class="alert alert-info alert-dismissible" role="alert">
+  		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+ 		<strong>BIENVENIDO a ACTIVA SGSI !</strong> &nbsp; donde podrás gestionar la seguridad de los activos dentro de la organización, evalúa los riesgos y aplica controles &nbsp; ¡ Mejor compruebalo !
+	</div>
+	   <?php  $usuario = User::model()->getUsuarioLogueado();
        $proyecto_usuario = ProyectoUsuario::model()->findByAttributes(['usuario_id'=>$usuario->id]);
        if(is_null($proyecto_usuario)){ ?>
             <div class="box-header">
