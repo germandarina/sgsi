@@ -472,3 +472,9 @@ table.tile_info td i {
     width: 18px;
     line-height: 28px
 }
+.summary{
+    padding-left: 10px;
+    padding-top: 3px;
+    margin-left: 3px;
+    color: #717375;
+}

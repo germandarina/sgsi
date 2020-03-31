@@ -108,7 +108,7 @@
                     <!-- <img src="<?= $themeUrl ?>/img/avatar5.png" class="user-image" alt="User Image"/>-->
                 </div>
                 <div class="profile_info">
-                        <span class="profile_hello">Bienvenido,</span>
+                        <span class="profile_hello">Bienvenido,</span><br>
                         <h2 class="profile_name"><?= ucwords(strtolower(Yii::app()->user->model->username)) ?></h2>
                 
                 </div>

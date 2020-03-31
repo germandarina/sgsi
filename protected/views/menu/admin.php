@@ -16,7 +16,7 @@ $('.search-form form').submit(function(){
 <div class="box">
     <div class="box-header with-border">
         <h3 class="box-title">
-            Menues
+          Administración de menú
         </h3>
         <div class="box-tools">
             <div class="btn-group pull-right">

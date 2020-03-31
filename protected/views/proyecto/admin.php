@@ -1,7 +1,7 @@
 <div class="box">
     <div class="box-header with-border">
         <h3 class="box-title">
-            Proyectos
+           Administración de Proyectos
         </h3>
         <div class="box-tools">
             <div class="btn-group pull-right">
@@ -16,6 +16,7 @@
 	'fixedHeader' => false,
 	'headerOffset' => 10,
 	// 40px is the height of the main navigation at bootstrap
+	//'type' => 'striped hover condensed',
 	'type' => 'striped hover condensed',
 	'dataProvider' => $model->search(),
 	'responsiveTable' => true,

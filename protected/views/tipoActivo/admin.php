@@ -4,7 +4,7 @@
 	<div class="box-header">
         <div class="box-header with-border">
             <h3 class="box-title">
-                Tipos de Activos
+                Administración de tipo de activo
             </h3>
             <div class="box-tools">
                 <div class="btn-group pull-right">

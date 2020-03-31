@@ -18,7 +18,7 @@
 <div class="box">
     <div class="box-header with-border">
         <h3 class="box-title">
-            Grupos
+          Administración de grupos de activos
         </h3>
         <div class="box-tools">
             <div class="btn-group pull-right">
