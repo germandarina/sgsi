@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <title><?php echo ucwords(strtoupper(CHtml::encode($this->pageTitle))); ?></title>
     <link href="<?= $themeUrl ?>/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-<!--    <link rel="shortcut icon" href="--><?php //echo Yii::app()->request->baseUrl; ?><!--/images/logo-chico.png" type="image/x-icon" />-->
+    <!--Favicon-->
+    <link rel="shortcut icon" href="<?php echo Yii::app()->request->baseUrl; ?>/images/apple-icon-76x76.png" type="image/x-icon" />
+    
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Font Awesome Icons -->
     <link href="<?= $themeUrl ?>/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"
