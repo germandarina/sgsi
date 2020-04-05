@@ -6,8 +6,9 @@
 	   <?php  $usuario = User::model()->getUsuarioLogueado();
        $proyecto_usuario = ProyectoUsuario::model()->findByAttributes(['usuario_id'=>$usuario->id]);
        if(is_null($proyecto_usuario)){ ?>
-            <div class="box-header">
-                <h3 class="box-title">Ud no tiene ningun proyecto asignado para comenzar a trabajar. Comuniquese con su supervisor.</h3>
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Warning!</strong> No posee ningun proyecto asignado para comenzar a trabajar, Comuniquese con el administrador del proyecto.
             </div>
        <?php } ?>
 </div>
