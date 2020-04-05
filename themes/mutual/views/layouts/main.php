@@ -28,8 +28,8 @@
     <!--Panel estadistico -->
     
     <!-- jQuery 2.1.4 -->
-    <!--<script src="<?= $themeUrl ?>/plugins/jQuery/jQuery-2.1.4.min.js"></script>-->
-    <script src="<?= Yii::app()->request->baseUrl ?>/js/jQuery/jQuery-2.1.4.min.js"></script>
+    <script src="<?= $themeUrl ?>/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <!--<script src="<?php //Yii::app()->request->baseUrl; ?>/js/jQuery/jQuery-2.1.4.min.js"></script>-->
     <!--<script src="<?php //Yii::app()->request->baseUrl; ?>/js/nprogress/nprogress.js"></script>
     <script>
         NProgress.start();
@@ -175,7 +175,7 @@
 <!-- chart js -->
 <script src="<?= Yii::app()->request->baseUrl?>/js/chartjs/chart.min.js" type="text/javascript"></script>
 <script src="<?= Yii::app()->request->baseUrl?>/js/progressbar/bootstrap-progressbar.min.js"></script>
-<!--<script src="<?= Yii::app()->request->baseUrl?>/js/nicescroll/jquery.nicescroll.min.js"></script>-->
+<!--<script src="<?php //Yii::app()->request->baseUrl;?>/js/nicescroll/jquery.nicescroll.min.js"></script>-->
 <script src="<?= Yii::app()->request->baseUrl?>/js/custom/custom.js" type="text/javascript"></script><
 <script src="<?= Yii::app()->request->baseUrl?>/js/lobibox/js/lobibox.js" type="text/javascript"></script>
 
