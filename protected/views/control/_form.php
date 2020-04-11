@@ -83,7 +83,7 @@
 </script>
 
 <div class="box-body">
-    <?php $form=$this->beginWidget('booster.widgets.TbActiveForm',array(
+    <?php $form=$this->beginWidget('customYiiBooster.widgets.CustomTbActiveForm',array(
 	'id'=>'control-form',
         'enableClientValidation'=>true,
         'clientOptions'=>array(

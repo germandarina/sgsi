@@ -19,7 +19,7 @@
 </script>
 
 <div class="box-body">
-    <?php $form = $this->beginWidget('booster.widgets.TbActiveForm', array(
+    <?php $form = $this->beginWidget('customYiiBooster.widgets.CustomTbActiveForm', array(
         'id' => 'user-form',
         'enableClientValidation'=>true,
         'clientOptions'=>array(
@@ -33,11 +33,13 @@
     <?php echo $form->errorSummary($model); ?>
     <div class="row">
         <div class="col-sm-6">
-            <?php echo $form->textFieldGroup($model, 'username', array('class' => 'col-sm-6', 'maxlength' => 50)); ?>
+            <?php echo $form->emailFieldGroup($model, 'username', array('class' => 'col-sm-6', 'maxlength' => 50)); ?>
         </div>
-        <div class="col-sm-6">
-            <?php echo $form->passwordFieldGroup($model, 'password', array('class' => 'col-sm-6', 'maxlength' => 255)); ?>
-        </div>
+        <?php if($model->isNewRecord){ ?>
+            <div class="col-sm-6">
+                <?php echo $form->passwordFieldGroup($model, 'password', array('class' => 'col-sm-6', 'maxlength' => 255)); ?>
+            </div>
+        <?php }?>
     </div>
     <div class="row">
         <div class="col-sm-6">
@@ -80,15 +82,22 @@
             ?>
         </div>
         <div class="col-sm-6">
-            <?php echo $form->labelEx($model, 'estado', array('class' => 'col-sm-3'));
-            echo $form->dropDownList($model,
-                'estado',
-                $model->getTypeOptionsHabilitar(),
-                array('empty' => 'Seleccionar..',
-                    'class' => 'col-sm-9',
-                    //'style' => 'height:35px'
-                    )
-            ); ?>
+            <?php echo $form->select2Group(
+                $model, 'estado',
+                [
+                    'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                    'widgetOptions' => [
+                        'asDropDownList' => true,
+                        'data' => $model->getTypeOptionsHabilitar(),
+                        'options' => [
+                            'minimumResultsForSearch' => 10,
+                            'placeholder' => '--Seleccione--'
+                        ],
+//                        'htmlOptions' => ['onChange'=>'getProcesos()'],
+                    ],
+                ]
+            );
+            ?>
         </div>
     </div>
     <br>

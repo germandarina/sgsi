@@ -66,15 +66,21 @@
     .navbar-nav>.user-menu>.dropdown-menu>li.user-header>p {
         color: #080808;
     }
+    .breadcrumb{
+        margin-bottom: 0px !important;
+    }
 </style>
-
+<script>
+    var baseURL = "<?= Yii::app()->request->requestUri ?>";
+    var urlController = "<?= CController::createUrl('site/index') ?>";
+</script>
 
 <!-- Site wrapper -->
 <div class="wrapper">
 
     <header class="main-header">
         <!-- Logo -->
-        <a href="<?= Yii::app()->getBaseUrl()?>" class="logo">
+        <a href="<?= CController::createUrl('site/index') ?>" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
            <i class="fa fa-shield"></i>
             <span>
@@ -125,7 +131,7 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
-        <section class="content-header">
+        <section class="content-header" style="padding: 0px !important;">
             <?php $this->widget('application.components.Notify'); ?>
         </section>
 
@@ -173,7 +179,6 @@
 <script src="<?php echo Yii::app()->request->baseUrl ?>/js/select2/select2/select2.js" type="text/javascript"></script>
 <!-- gauge js -->
 <script src="<?= Yii::app()->request->baseUrl?>/js/gauge/gauge.min.js" type="text/javascript"></script>
-<script src="<?= Yii::app()->request->baseUrl?>/js/gauge/gauge_demo.js" type="text/javascript"></script>
 <!-- chart js -->
 <script src="<?= Yii::app()->request->baseUrl?>/js/chartjs/chart.min.js" type="text/javascript"></script>
 <script src="<?= Yii::app()->request->baseUrl?>/js/progressbar/bootstrap-progressbar.min.js"></script>
@@ -196,6 +201,7 @@
             }
         });
     }
+
     function toPanel(event) {
         event.preventDefault();
         var proyecto_id = $("#eventos").val();
@@ -216,6 +222,7 @@
             }
         });
     }
+
     var currencyOptions = {
         'alias': 'numeric',
         'groupSeparator': '.',
@@ -345,9 +352,7 @@
                 return new Date(year, month - 1, day).getTime();
             }
         });
-    </script>
-    <!-- dashbord linegraph -->
-    <script>
+
         var doughnutData = [
             {
                 value: 30,
@@ -369,8 +374,14 @@
                 value: 120,
                 color: "#3498DB"
             }
-    ];
-        var myDoughnut = new Chart(document.getElementById("canvas1").getContext("2d")).Doughnut(doughnutData);
+        ];
+        if(baseURL === urlController) {
+            var myDoughnut = new Chart(document.getElementById("canvas1").getContext("2d")).Doughnut(doughnutData);
+        }
+    </script>
+    <!-- dashbord linegraph -->
+    <script>
+
     </script>
     <!-- /dashbord linegraph -->
    <!-- <script>

@@ -8,6 +8,7 @@
 
 Yii::setPathOfAlias('adminlte', 'protected/vendor/almasaeed2010/adminlte');
 Yii::setPathOfAlias('vendor', 'protected/vendor');
+Yii::setPathOfAlias('customYiiBooster', 'protected/modules/customYiiBooster');
 YII::setPathOfAlias('components.gii.bootstrap.BootstrapCode', 'protected/components/gii/bootstrap/BootstrapCode');
 Yii::setPathOfAlias('chartjs', dirname(__FILE__).'/../extensions/yii-chartJs');
 return array(
@@ -25,6 +26,7 @@ return array(
         'application.extensions.*',
         'application.filters.*',
         'application.modules.rbam.models.RBAMBaseModel',
+        'application.modules.customYiiBooster',
     ),
 
     'modules' => array(

@@ -1,14 +1,12 @@
 <div>
    <div class="alert alert-info alert-dismissible" role="alert">
-  		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
  		<strong>BIENVENIDO a ACTIVA SGSI !</strong> &nbsp; donde podrás gestionar la seguridad de los activos dentro de la organización, evalúa los riesgos y aplica controles &nbsp; ¡ Mejor compruebalo !
 	</div>
 	   <?php  $usuario = User::model()->getUsuarioLogueado();
        $proyecto_usuario = ProyectoUsuario::model()->findByAttributes(['usuario_id'=>$usuario->id]);
        if(is_null($proyecto_usuario)){ ?>
             <div class="alert alert-warning alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <strong>Warning!</strong> No posee ningun proyecto asignado para comenzar a trabajar, Comuniquese con el administrador del proyecto.
+                <strong>ALERTA!</strong> No posee ningun proyecto asignado para comenzar a trabajar, Comuniquese con el administrador del proyecto.
             </div>
        <?php } ?>
 </div>
@@ -438,4 +436,10 @@
 <!---->
 <!---->
 <!--</div>-->
-<?php //}?>
+
+<?php
+$cs = Yii::app()->getClientScript();
+$cs->registerScriptFile(Yii::app()->request->baseUrl."/js/gauge/gauge_demo.js",CClientScript::POS_END);
+?>
+
+

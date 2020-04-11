@@ -36,7 +36,7 @@
     }
 </script>
 <div class="box-body">
-    <?php $form=$this->beginWidget('booster.widgets.TbActiveForm',array(
+    <?php $form=$this->beginWidget('customYiiBooster.widgets.CustomTbActiveForm',array(
 	'id'=>'proyecto-form',
         'enableClientValidation'=>true,
         'clientOptions'=>array(
@@ -112,7 +112,7 @@
     </div>
     <div class="row">
         <div class="col-sm-6">
-            <?php echo $form->datepickerGroup($model, 'fecha', [
+            <?php echo $form->datePickerGroup($model, 'fecha', [
                 'widgetOptions' => [
                     'options' => [
                         'format' => 'dd/mm/yyyy',

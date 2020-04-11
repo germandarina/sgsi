@@ -21,7 +21,7 @@
     <?php
     /** @var TbActiveForm $form */
     $form = $this->beginWidget(
-        'booster.widgets.TbActiveForm',
+        'customYiiBooster.widgets.CustomTbActiveForm',
         array(
             'id' => 'verticalForm',
             'enableClientValidation'=>true,

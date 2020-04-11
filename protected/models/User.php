@@ -22,7 +22,7 @@
  * The followings are the available model relations:
  * @property Sucursal $sucursal
  */
-class User extends CActiveRecord
+class User extends CustomCActiveRecord
 {
     const DOMINGO = 0;
     const LUNES = 1;
@@ -63,6 +63,7 @@ class User extends CActiveRecord
             array('ultimo_proyecto_id,diaDesde, diaHasta, ultimoLoginSucursalId', 'numerical', 'integerOnly' => true),
             array('username,password,sucursalId,estado', 'required'),
             array('username', 'unique'),
+            array('username','email'),
             array('username, creaUserStamp, modUserStamp', 'length', 'max' => 50),
             array('password', 'length', 'max' => 255),
             array('creaTimeStamp, modTimeStamp', 'safe'),

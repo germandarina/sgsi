@@ -3,6 +3,25 @@
 		background-image: url(<?= Yii::app()->baseUrl.'/images/fondo.jpg' ?>) !important;
 		background-repeat: round;}
 </style>
+<script>
+
+    function validarEmail() {
+        var email = $("#LoginForm_email").val();
+        if(email === ""){
+            $("#divEmail").removeClass('has-feedback').addClass('has-error');
+            $("#labelEmail").empty().html("Ingrese un correo electrónico").show();
+            return;
+        }
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if(!re.test(String(email).toLowerCase())){
+            $("#divEmail").removeClass('has-feedback').addClass('has-error');
+            $("#labelEmail").empty().html("Ingrese un correo electrónico válido").show();
+            return;
+        }
+        $("#divEmail").removeClass('has-error').addClass('has-success');
+        $("#labelEmail").empty().hide();
+    }
+</script>
 	  	<div class="login-box">
 		<div class="login-logo">
 
@@ -16,9 +35,13 @@
 			</p>
 			<?php
 			$form = $this->beginWidget(
-				'booster.widgets.TbActiveForm',
+				'customYiiBooster.widgets.CustomTbActiveForm',
 				array(
 					'id' => 'form',
+                    'enableClientValidation'=>true,
+                    'clientOptions'=>array(
+                        'validateOnSubmit'=>true,
+                    ),
 					//'htmlOptions' => array('style' => 'margin-top: 200px'), // for inset effect
 				)
 			);
@@ -42,13 +65,14 @@
 						<h5>Por favor logueate para continuar</h5>	
 					</blockquote>-->
 					<span class="text-center"><h3>Login</h3></span>
-					<h5 class="text-center">Por favor logueate para continuar</h5>
+					<h5 class="text-center">Por favor completa tus datos para continuar</h5>
 				</div>
-				<div class="form-group has-feedback <?php if($errors) echo 'has-error' ?>">
+				<div id="divEmail" class="form-group has-feedback <?php if($errors) echo 'has-error' ?>">
 					<?php if($errors && isset($errors['password'])) { ?>
 						<label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i><?= current($errors['password']) ?></label>
 					<?php } ?>
-					<input type="text" class="form-control" name="LoginForm[username]"  placeholder="Correo electrónico o usuario"/>
+                    <label id="labelEmail" style="display: none;" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i></label>
+					<input type="email" class="form-control" name="LoginForm[username]"  placeholder="Correo electrónico" id="LoginForm_email" onblur="validarEmail()" />
 					<span class="glyphicon glyphicon-user form-control-feedback"></span>
 				</div>
 				<div class="form-group has-feedback <?php if($errors) echo 'has-error' ?>">

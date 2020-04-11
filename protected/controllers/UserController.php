@@ -60,8 +60,6 @@ class UserController extends Controller
         $id = Yii::app()->user->model->id;
         $model = $this->loadModel($id);
         $model->setScenario('changePwd');
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
 
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
