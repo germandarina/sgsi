@@ -122,13 +122,15 @@ class ProyectoController extends Controller
                 $usuariosAdministradores = User::model()->getUsuariosAdministradores();
                 if(!empty($usuariosAdministradores)){
                     foreach ($usuariosAdministradores as $admin){
-                        $proyectoUsuarioAdmin = ProyectoUsuario::model()->findByAttributes(['proyecto_id'=>$model->id,'usuario_id'=>$admin->id]);
-                        if(is_null($proyectoUsuarioAdmin)){
-                            $proyectoUsuario = new ProyectoUsuario();
-                            $proyectoUsuario->usuario_id = $admin->id;
-                            $proyectoUsuario->proyecto_id = $model->id;
-                            if(!$proyectoUsuario->save()){
-                                throw new Exception("Error al crear relacion proyecto usuario");
+                        if($admin['id'] != Yii::app()->user->model->id){
+                            $proyectoUsuarioAdmin = ProyectoUsuario::model()->findByAttributes(['proyecto_id'=>$model->id,'usuario_id'=>$admin['id']]);
+                            if(is_null($proyectoUsuarioAdmin)){
+                                $proyectoUsuario = new ProyectoUsuario();
+                                $proyectoUsuario->usuario_id = $admin['id'];
+                                $proyectoUsuario->proyecto_id = $model->id;
+                                if(!$proyectoUsuario->save()){
+                                    throw new Exception("Error al crear relacion proyecto usuario");
+                                }
                             }
                         }
                     }
