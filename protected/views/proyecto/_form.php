@@ -5,7 +5,7 @@
 
     function getAreasPorOrganizacion() {
         var organizacion_id = $("#Proyecto_organizacion_id").val();
-        if(organizacion_id != "" && organizacion_id != null && organizacion_id != undefined){
+        if(organizacion_id != "" && organizacion_id != null && organizacion_id !== undefined){
             $.ajax({
                 type: 'POST',
                 url: "<?php echo CController::createUrl('organizacion/getAreas')?>",
@@ -75,7 +75,7 @@
                     'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
                     'widgetOptions' => [
                         'asDropDownList' => true,
-                        'data' => $model->areas,//CHtml::listData(Area::model()->findAll(), 'id', 'nombre'),
+                        'data' => $model->areas,
                         'options' => [
                             'minimumResultsForSearch' => 10,
                             'placeholder' => '--Seleccione--'

@@ -92,6 +92,13 @@ class ProyectoController extends Controller
                     }
                 }
 
+                $proyectoUsuario = new ProyectoUsuario();
+                $proyectoUsuario->usuario_id = Yii::app()->user->model->id;
+                $proyectoUsuario->proyecto_id = $model->id;
+                if(!$proyectoUsuario->save()){
+                    throw new Exception("Error al crear relacion proyecto usuario logueado");
+                }
+
                 if(isset($_POST['Proyecto']['usuarios']) && !empty($_POST['Proyecto']['usuarios'])){
                     foreach ($_POST['Proyecto']['usuarios'] as $usuarioId){
                         $proyectoUsuario = new ProyectoUsuario();
@@ -107,31 +114,18 @@ class ProyectoController extends Controller
                                 throw new Exception("Error al actualizar usuario, asignacion de proyecto");
                             }
                         }
-
-                        $proyectoUsuarioExiste = ProyectoUsuario::model()->findByAttributes(['proyecto_id'=>$model->id,'usuario_id'=>Yii::app()->user->model->id]);
-                        if(is_null($proyectoUsuarioExiste)){
-                            $proyectoUsuario = new ProyectoUsuario();
-                            $proyectoUsuario->usuario_id = Yii::app()->user->model->id;
-                            $proyectoUsuario->proyecto_id = $model->id;
-                            if(!$proyectoUsuario->save()){
-                                throw new Exception("Error al crear relacion proyecto usuario");
-                            }
-                        }
                     }
                 }
-                $usuariosAdministradores = User::model()->getUsuariosAdministradores();
+                $idsUsuarios = $_POST['Proyecto']['usuarios'];
+                $idsUsuarios[] = Yii::app()->user->model->id;
+                $usuariosAdministradores = User::model()->getUsuariosAdministradores($idsUsuarios);
                 if(!empty($usuariosAdministradores)){
                     foreach ($usuariosAdministradores as $admin){
-                        if($admin['id'] != Yii::app()->user->model->id){
-                            $proyectoUsuarioAdmin = ProyectoUsuario::model()->findByAttributes(['proyecto_id'=>$model->id,'usuario_id'=>$admin['id']]);
-                            if(is_null($proyectoUsuarioAdmin)){
-                                $proyectoUsuario = new ProyectoUsuario();
-                                $proyectoUsuario->usuario_id = $admin['id'];
-                                $proyectoUsuario->proyecto_id = $model->id;
-                                if(!$proyectoUsuario->save()){
-                                    throw new Exception("Error al crear relacion proyecto usuario");
-                                }
-                            }
+                        $proyectoUsuario = new ProyectoUsuario();
+                        $proyectoUsuario->usuario_id = $admin['id'];
+                        $proyectoUsuario->proyecto_id = $model->id;
+                        if(!$proyectoUsuario->save()){
+                            throw new Exception("Error al crear relacion proyecto usuario");
                         }
                     }
                 }
@@ -254,17 +248,16 @@ class ProyectoController extends Controller
                     }
                 }
 
-                $usuariosAdministradores = User::model()->getUsuariosAdministradores();
+                $idsUsuarios = $_POST['Proyecto']['usuarios'];
+                $idsUsuarios[] = Yii::app()->user->model->id;
+                $usuariosAdministradores = User::model()->getUsuariosAdministradores($idsUsuarios);
                 if(!empty($usuariosAdministradores)){
                     foreach ($usuariosAdministradores as $admin){
-                        $proyectoUsuarioAdmin = ProyectoUsuario::model()->findByAttributes(['proyecto_id'=>$model->id,'usuario_id'=>$admin['id']]);
-                        if(is_null($proyectoUsuarioAdmin)){
-                            $proyectoUsuario = new ProyectoUsuario();
-                            $proyectoUsuario->usuario_id = $admin['id'];
-                            $proyectoUsuario->proyecto_id = $model->id;
-                            if(!$proyectoUsuario->save()){
-                                throw new Exception("Error al crear relacion proyecto usuario");
-                            }
+                        $proyectoUsuario = new ProyectoUsuario();
+                        $proyectoUsuario->usuario_id = $admin['id'];
+                        $proyectoUsuario->proyecto_id = $model->id;
+                        if(!$proyectoUsuario->save()){
+                            throw new Exception("Error al crear relacion proyecto usuario");
                         }
                     }
                 }

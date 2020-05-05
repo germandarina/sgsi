@@ -101,13 +101,18 @@ class TipoActivoController extends Controller
     {
         $model = $this->loadModel($id);
 
-// Uncomment the following line if AJAX validation is needed
-// $this->performAjaxValidation($model);
-
         if (isset($_POST['TipoActivo'])) {
             try{
                 $transaction = Yii::app()->db->beginTransaction();
                 $model->attributes = $_POST['TipoActivo'];
+                if(empty($model->confidencialidad) && empty($model->disponibilidad) &&
+                    empty($model->integridad) && empty($model->trazabilidad)){
+                    $model->confidencialidad = null;
+                    $model->integridad= null;
+                    $model->disponibilidad = null;
+                    $model->trazabilidad = null;
+                    throw new Exception("Debe seleccionar al menos una caracteristica para el tipo de activo");
+                }
                 if (!$model->save()) {
                     throw new Exception("Error al actualizar tipo de activo");
                 }

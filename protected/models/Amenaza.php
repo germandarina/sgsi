@@ -53,7 +53,7 @@ class Amenaza extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('tipo_activo_id,nombre, descripcion, confidencialidad, integridad, disponibilidad, trazabilidad', 'required'),
+			array('tipo_activo_id,nombre, descripcion', 'required'),
 			array('confidencialidad, integridad, disponibilidad, trazabilidad', 'numerical', 'integerOnly'=>true),
 			array('nombre, descripcion, creaUserStamp, modUserStamp', 'length', 'max'=>800),
 			array('activo_nombre,grupo_nombre,creaTimeStamp, modTimeStamp', 'safe'),

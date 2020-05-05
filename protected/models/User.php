@@ -341,7 +341,9 @@ class User extends CustomCActiveRecord
           $query = " select u.*
                         from usuario u
                         inner join AuthAssignment aa on aa.userid = u.id
-                        where aa.itemname = 'auditor' or aa.itemname = 'gerencial' ";
+                        where (aa.itemname = 'auditor' or aa.itemname = 'gerencial')
+                        and u.id <> ".Yii::app()->user->model->id."
+                        ";
           $command = Yii::app()->db->createCommand($query);
           $usuarios = $command->queryAll($query);
           return $usuarios;
@@ -364,11 +366,13 @@ class User extends CustomCActiveRecord
         return false;
     }
 
-    public function getUsuariosAdministradores(){
+    public function getUsuariosAdministradores($idsUsuarios){
+        $stringids = implode(',',$idsUsuarios);
         $query = " select u.*
                         from usuario u
                         inner join AuthAssignment aa on aa.userid = u.id
-                        where aa.itemname = 'Administrador' or aa.itemname = 'administrador' ";
+                        where (aa.itemname = 'Administrador' or aa.itemname = 'administrador')
+                        and u.id not in (".$stringids.") ";
         $command = Yii::app()->db->createCommand($query);
         $usuarios = $command->queryAll($query);
         return $usuarios;

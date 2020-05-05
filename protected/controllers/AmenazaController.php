@@ -70,6 +70,15 @@ class AmenazaController extends Controller
             try{
                 $transaction = Yii::app()->db->beginTransaction();
                 $model->attributes = $_POST['Amenaza'];
+                if(empty($model->confidencialidad) && empty($model->disponibilidad) &&
+                    empty($model->integridad) && empty($model->trazabilidad)){
+                    $model->confidencialidad = null;
+                    $model->integridad= null;
+                    $model->disponibilidad = null;
+                    $model->trazabilidad = null;
+                    throw new Exception("Debe seleccionar al menos una caracteristica para la amenaza");
+                }
+
                 if (!$model->save()) {
                     throw new Exception("Error al crear amenaza");
                 }
@@ -96,13 +105,18 @@ class AmenazaController extends Controller
     {
         $model = $this->loadModel($id);
 
-// Uncomment the following line if AJAX validation is needed
-// $this->performAjaxValidation($model);
-
         if (isset($_POST['Amenaza'])) {
             try{
                 $transaction = Yii::app()->db->beginTransaction();
                 $model->attributes = $_POST['Amenaza'];
+                if(empty($model->confidencialidad) && empty($model->disponibilidad) &&
+                    empty($model->integridad) && empty($model->trazabilidad)){
+                    $model->confidencialidad = null;
+                    $model->integridad= null;
+                    $model->disponibilidad = null;
+                    $model->trazabilidad = null;
+                    throw new Exception("Debe seleccionar al menos una caracteristica para la amenaza");
+                }
                 if (!$model->save()) {
                     throw new Exception("Error al actualizar amenaza");
                 }
