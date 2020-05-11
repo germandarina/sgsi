@@ -5,8 +5,7 @@
         </h3>
         <div class="box-tools">
             <div class="btn-group pull-right">
-                <a href="<?= $this->createUrl('create') ?>" class="btn btn-sm btn-success"><i
-                            class="fa fa-plus-circle"></i> Crear</a>
+                <a href="<?= $this->createUrl('create') ?>" class="btn btn-sm btn-success"><i class="fa fa-plus-circle"></i> Crear</a>
             </div>
         </div>
     </div>
@@ -76,6 +75,3 @@
 	),
 	)); ?>
 </div>
-
-
-

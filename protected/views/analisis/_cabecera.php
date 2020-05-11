@@ -1,7 +1,7 @@
 <div class="grid-view">
 	<table class="items table table-striped table-hover table-condensed">
 		<thead>
-			<tr style="background-color: #8cd688;">
+			<tr>
 				<th>Analisis</th>
 				<th>Activo</th>
 				<th>Amenaza</th>

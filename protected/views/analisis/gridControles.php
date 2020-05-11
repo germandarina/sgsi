@@ -1,10 +1,10 @@
 <style>
 	.alert-blue{
-		background-color: #0070a6e8;
-		color: white;
+		background-color: #f9f9f9;
+		color: #222d32;
 	}
     .glyphicon.glyphicon-pencil {
-		color: white !important;
+		color: #222d32 !important;
 	}
 </style>
 <?php

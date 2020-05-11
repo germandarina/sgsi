@@ -112,7 +112,7 @@
         <section class="sidebar">
             <div class="profile">
                 <div class="profile_pic">
-                    <img src="<?= $themeUrl ?>/img/user1.jpg" class="img-circle profile_img" alt="User Image"/>
+                    <img src="<?= $themeUrl ?>/img/user7.jpg" class="img-circle profile_img" alt="User Image"/>
                     <!-- <img src="<?= $themeUrl ?>/img/avatar5.png" class="user-image" alt="User Image"/>-->
                 </div>
                 <div class="profile_info">

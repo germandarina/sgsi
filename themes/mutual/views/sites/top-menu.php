@@ -46,7 +46,7 @@
         ?>
             <li>
              
-                <p class="organization_name"><?= ucwords(strtolower($organizacion->nombre)) ?></p> 
+                <p class="organization_name"><strong><?= ucwords(strtolower($organizacion->nombre)) ?></strong></p> 
              
             </li>
         <li>
@@ -66,7 +66,7 @@
     <!-- original -->
     <li class="dropdown user user-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <img src="<?= $themeUrl ?>/img/user1.jpg" class="user-image" alt="User Image"/>
+            <img src="<?= $themeUrl ?>/img/user7.jpg" class="user-image" alt="User Image"/>
             <span class="hidden-xs"><?= ucwords(strtolower(Yii::app()->user->model->username)) ?></span>
             <span class=" fa fa-angle-down"></span>
         </a>
