@@ -248,8 +248,15 @@ class Analisis extends CustomCActiveRecord
             $filaGrafico['color'] = "rgb(1, 136, 3)";
             $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
             $arrayGraficoIntegridad[] = $filaGrafico;
+            /*Inicio - Agregado por Juan 10/05/20*/
+            $filaGrafico = array();
+            $porcentajeSinValor = 100 - ($porcentajeNoAceptable+$porcentajeAceptableConPrecaucion+$porcentajeAceptable);
 
-
+            $filaGrafico['value'] =  $porcentajeSinValor;
+            $filaGrafico['color'] = "rgb(66, 100, 222)";
+            $filaGrafico['label'] =  'Sin valor ( '.$porcentajeSinValor.' % )';
+            $arrayGraficoIntegridad[] = $filaGrafico;
+            /*Fin - Agregado por Juan*/
             // DISPONIBILIDAD
             $filaGrafico = array();
             $porcentajeNoAceptable = round($arrayValores['disponibilidad']['No Aceptable']*100/ $cantidadTotal,2);
@@ -275,6 +282,15 @@ class Analisis extends CustomCActiveRecord
             $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
             $arrayGraficoDispo[] = $filaGrafico;
 
+            /*Inicio - Agregado por Juan 10/05/20*/
+            $filaGrafico = array();
+            $porcentajeSinValor = 100 - ($porcentajeNoAceptable+$porcentajeAceptableConPrecaucion+$porcentajeAceptable);
+
+            $filaGrafico['value'] =  $porcentajeSinValor;
+            $filaGrafico['color'] = "rgb(66, 100, 222)";
+            $filaGrafico['label'] =  'Sin valor ( '.$porcentajeSinValor.' % )';
+            $arrayGraficoDispo[] = $filaGrafico;
+            /*Fin - Agregado por Juan*/
 
             // CONFIDENCIALIDAD
 
@@ -302,6 +318,15 @@ class Analisis extends CustomCActiveRecord
             $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
             $arrayGraficoConfi[] = $filaGrafico;
 
+            /*Inicio - Agregado por Juan 10/05/20*/
+            $filaGrafico = array();
+            $porcentajeSinValor = 100 - ($porcentajeNoAceptable+$porcentajeAceptableConPrecaucion+$porcentajeAceptable);
+
+            $filaGrafico['value'] =  $porcentajeSinValor;
+            $filaGrafico['color'] = "rgb(66, 100, 222)";
+            $filaGrafico['label'] =  'Sin valor ( '.$porcentajeSinValor.' % )';
+            $arrayGraficoConfi[] = $filaGrafico;
+            /*Fin - Agregado por Juan*/
 
             // TRAZABILIDAD
 
@@ -329,6 +354,15 @@ class Analisis extends CustomCActiveRecord
             $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
             $arrayGraficoTraza[] = $filaGrafico;
 
+            /*Inicio - Agregado por Juan 10/05/20*/
+            $filaGrafico = array();
+            $porcentajeSinValor = 100 - ($porcentajeNoAceptable+$porcentajeAceptableConPrecaucion+$porcentajeAceptable);
+
+            $filaGrafico['value'] =  $porcentajeSinValor;
+            $filaGrafico['color'] = "rgb(66, 100, 222)";
+            $filaGrafico['label'] =  'Sin valor ( '.$porcentajeSinValor.' % )';
+            $arrayGraficoTraza[] = $filaGrafico;
+            /*Fin - Agregado por Juan*/
 
             return compact('arrayGraficoTraza','arrayGraficoConfi','arrayGraficoDispo','arrayGraficoIntegridad');
         }else{
