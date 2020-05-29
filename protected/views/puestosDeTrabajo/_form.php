@@ -1,8 +1,11 @@
 <div class="box-body">
     <?php $form=$this->beginWidget('customYiiBooster.widgets.CustomTbActiveForm',array(
 	'id'=>'puestos-de-trabajo-form',
-	'enableAjaxValidation'=>false,
-	'type' => 'horizontal'
+	'type' => 'horizontal',
+    'enableClientValidation'=>true,
+    'clientOptions'=>array(
+        'validateOnSubmit'=>true,
+    ),
 )); ?>
 
     <p class="help-block">Campos con <span class="required">*</span> son requeridos.</p>

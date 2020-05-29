@@ -68,14 +68,14 @@ class PuestosDeTrabajoController extends Controller
                 $transaction = Yii::app()->db->beginTransaction();
                 $model->attributes = $_POST['PuestosDeTrabajo'];
                 if (!$model->save()) {
-                    throw new Exception("error",'Error al crear puesto de trabajo');
+                    throw new Exception('Error al crear puesto de trabajo');
                 }
                 $transaction->commit();
                 Yii::app()->user->setNotification('success','Puesto de trabajo creado');
                 $this->redirect(array('admin'));
             }catch (Exception $exception){
                 $transaction->rollback();
-                Yii::app()->user->setNotification('success',$exception->getMessage());
+                Yii::app()->user->setNotification('error',$exception->getMessage());
             }
         }
 

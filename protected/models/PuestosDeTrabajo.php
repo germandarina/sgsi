@@ -89,14 +89,21 @@ class PuestosDeTrabajo extends CustomCActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('area_id',$this->area_id);
-		$criteria->compare('nombre',$this->nombre,true);
-		$criteria->compare('creaUserStamp',$this->creaUserStamp,true);
-		$criteria->compare('creaTimeStamp',$this->creaTimeStamp,true);
-		$criteria->compare('modUserStamp',$this->modUserStamp,true);
-		$criteria->compare('modTimeStamp',$this->modTimeStamp,true);
+        $criteria->select = " t.id,t.area_id,t.nombre ";
+        $criteria->join = " inner join area a on a.id = t.area_id
+                            inner join area_proyecto ap on ap.area_id = a.id ";
+        $usuario = User::model()->getUsuarioLogueado();
+        if(is_null($usuario) || is_null($usuario->ultimo_proyecto_id)){
+            throw new Exception("Debe seleccionar un proyecto para empezar a trabajar");
+        }
+		$criteria->compare('ap.proyecto_id',$usuario->ultimo_proyecto_id);
+		$criteria->compare('t.nombre',$this->nombre,true);
+        if($this->area_id != ""){
+            $criteria->together = true;
+            $criteria->with = array('area');
+            $criteria->compare('area.nombre',$this->area_id,true);
+        }
+		$criteria->group = ' t.id ';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

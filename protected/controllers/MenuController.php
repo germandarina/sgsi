@@ -71,59 +71,57 @@ class MenuController extends Controller
         $model->orden = $this->actionGetOrden();
 
         if (isset($_POST['Menu'])) {
-            $model->attributes = $_POST['Menu'];
-            if ($model->padreId == '') {
-                $model->padreId = 0;
-            }
-
-            $connection = Yii::app()->db;
-            $transaction = $connection->beginTransaction();
             try {
-                if ($model->save()) {
-                    //Insertamos como un nuevo item
-
-                    if($_POST['Menu']['perfiles']) {
+                $transaction = Yii::app()->db->beginTransaction();
+                $model->attributes = $_POST['Menu'];
+                if ($model->padreId == '') {
+                    $model->padreId = 0;
+                }
+                $menuExiste = Menu::model()->findByAttributes(['url'=>$model->url]);
+                if($menuExiste){
+                    throw new  Exception("El menu que intenta crear ya existe");
+                }
+                if (!$model->save()) {
+                   throw new  Exception("Error al crear menu");
+                }
+                if($_POST['Menu']['perfiles']) {
+                    $auth_item =  $authManager->getAuthItem($model->label);
+                    $permiso_explode = explode('/',$model->url);
+                    $permiso = ucwords($permiso_explode[1]).':'.ucwords($permiso_explode[2]);
+                    $authItemExiste = null;
+                    if(isset($permiso_explode[1])){
+                        $sqlExiste = " select * from AuthItem where name = :permiso;";
+                        $commandExiste = Yii::app()->db->createCommand($sqlExiste);
+                        $commandExiste->bindValue(":permiso", $permiso);
+                        $authItemExiste = $commandExiste->queryRow($sqlExiste);
+                    }
+                    if(is_null($auth_item) && is_null($authItemExiste)){
                         $authManager->createAuthItem($model->label, '0', $model->titulo);
-                        $permiso_explode = explode('/',$model->url);
-                        $permiso = ucwords($permiso_explode[1]).':'.ucwords($permiso_explode[2]);
-                        if(isset($permiso_explode[1])){
-                            $sqlAuthItem = "INSERT INTO AuthItem(name,description,type,data) VALUES(:permiso,:descripcion,:type,:data);";
-                            $commandAuthItem = Yii::app()->db->createCommand($sqlAuthItem);
-                            $commandAuthItem->bindValue(":permiso", $permiso );
-                            $commandAuthItem->bindValue(":descripcion", $model->label);
-                            $commandAuthItem->bindValue(":type", 0);
-                            $commandAuthItem->bindValue(":data", 'N;');
-                            $commandAuthItem->execute();
-                        }
-                        foreach ($_POST['Menu']['perfiles'] as $perfil) {
-                            $authManager->addItemChild($perfil, $model->label);
-                            if(!empty($model->url) && !is_null($model->url)){
-                                if(isset($permiso_explode[1])){
-                                    $sqlExiste = " select * from AuthItemChild where parent = :parent and child =:child;";
-                                    $commandExiste = Yii::app()->db->createCommand($sqlExiste);
-                                    $commandExiste->bindValue(":parent", $perfil);
-                                    $commandExiste->bindValue(":child", $permiso);
-                                    $authItemExiste = $commandExiste->queryRow($sqlExiste);
-                                    if (!$authItemExiste) {
-                                        $sqlAuthItemChild = "INSERT INTO AuthItemChild(parent,child)  values(:parent,:child);";
-                                        $commandAuthItemChild = Yii::app()->db->createCommand($sqlAuthItemChild);
-                                        $commandAuthItemChild->bindValue(":parent", $perfil);
-                                        $commandAuthItemChild->bindValue(":child", $permiso);
-                                        $commandAuthItemChild->execute();
-                                    }
-                                }
+                    }
+                    foreach ($_POST['Menu']['perfiles'] as $perfil) {
+                        $auth_item_child = $authManager->hasItemChild($perfil,$model->label);
+                        $authItemExiste = null;
+                        if(!empty($model->url) && !is_null($model->url)){
+                            if(isset($permiso_explode[1])){
+                                $sqlExiste = " select * from AuthItemChild where parent = :parent and child =:child;";
+                                $commandExiste = Yii::app()->db->createCommand($sqlExiste);
+                                $commandExiste->bindValue(":parent", $perfil);
+                                $commandExiste->bindValue(":child", $permiso);
+                                $authItemExiste = $commandExiste->queryRow($sqlExiste);
                             }
                         }
+                        if(!($auth_item_child) && is_null($authItemExiste)){
+                            $authManager->addItemChild($perfil, $model->label);
+                        }
                     }
-                    $transaction->commit();
-                    Yii::app()->user->setNotification('success', 'Item creado con Exito');
-                    $this->redirect(array('admin'));
-                } else {
-                    throw new Exception('Error al crear el item');
                 }
+                $transaction->commit();
+                Yii::app()->user->setNotification('success', 'Item creado con Exito');
+                $this->redirect(array('admin'));
             } catch (Exception $e) {
                 $transaction->rollback();
                 Yii::app()->user->setNotification('error', $e->getMessage());
+                $this->redirect('create');
             }
 
         }
@@ -287,8 +285,9 @@ class MenuController extends Controller
     {
         if (Yii::app()->request->isPostRequest) {
             try{
-                $this->loadModel($id)->delete();
-                $data = "Se elimino correctamente el menus";
+                $model = $this->loadModel($id);
+                $model->delete();
+                $data = "Se elimino correctamente el menu";
                 $datos = ['error'=>0,'msj'=>$data];
                 echo CJSON::encode($datos);
             }catch (Exception $exception){
@@ -394,7 +393,6 @@ class MenuController extends Controller
                 if(isset($_POST['Menu']['accionesControllers']) && empty($_POST['Menu']['accionesControllers'])){
                     throw new Exception("Debe seleccionar una accion");
                 }
-
 
                 foreach ($_POST['Menu']['accionesControllers'] as $accion){
                     $controller = $_POST['Menu']['controllers'];

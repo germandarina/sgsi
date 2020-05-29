@@ -23,7 +23,6 @@
 <div class="box-body">
     <?php $form=$this->beginWidget('customYiiBooster.widgets.CustomTbActiveForm',array(
 	'id'=>'activo-form',
-//	'enableAjaxValidation'=>false,
 	'type' => 'horizontal',
     'enableClientValidation'=>true,
 	'clientOptions'=>array(

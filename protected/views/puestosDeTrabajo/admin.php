@@ -3,7 +3,7 @@
 <div class="box">
     <div class="box-header with-border">
         <h3 class="box-title">
-           Administración de puesto de trabajo
+           Administración de Puestos de Trabajo
         </h3>
         <div class="box-tools">
             <div class="btn-group pull-right">
@@ -25,7 +25,6 @@
 	'selectableRows' => 1,
 	'filter' => $model,
 	'columns'=>array(
-			'id',
 		[
 		        'name'=>'area_id',
                 'header'=>'Area',

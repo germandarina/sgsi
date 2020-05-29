@@ -58,7 +58,7 @@ class AnalisisController extends Controller
         $grupo_activo->analisis_id = $model->id;
         $dependencia = new Dependencia();
         $dependencia->analisis_id = $model->id;
-        $dependenciasPadres = Dependencia::model()->findAllByAttributes(array('activo_padre_id'=>NULL,'analisis_id'=>$model->id));
+        $dependenciasPadres = Dependencia::model()->findAllByAttributes(['activo_padre_id'=>NULL,'analisis_id'=>$model->id]);
         $amenaza = new Amenaza();
         if (isset(Yii::app()->session['filtro'])) {
             $amenaza->attributes = Yii::app()->session['filtro'];
