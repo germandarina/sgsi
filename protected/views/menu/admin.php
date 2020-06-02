@@ -40,7 +40,7 @@ $('.search-form form').submit(function(){
             'selectableRows' => 1,
             'filter' => $model,
             'columns' => array(
-                'id',
+
                 array('name' => 'padreId',
                     'header' => 'Padre',
                     'value' => '($data->padreId!=0)?strtoupper(Menu::model()->getPadre($data->padreId)):"ES PADRE"',

@@ -109,19 +109,19 @@ class Menu extends CustomCActiveRecord
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
+//        $criteria->compare('id', $this->id);
         $criteria->compare('padreId', $this->padreId);
         $criteria->compare('label', $this->label, true);
         $criteria->compare('titulo', $this->titulo, true);
         $criteria->compare('url', $this->url, true);
-        $criteria->compare('sucursalId', $this->sucursalId);
-        $criteria->compare('visible', $this->visible);
-        $criteria->compare('orden', $this->orden);
-        $criteria->compare('icono', $this->icono, true);
-        $criteria->compare('creaUserStamp', $this->creaUserStamp, true);
-        $criteria->compare('creaTimeStamp', $this->creaTimeStamp, true);
-        $criteria->compare('modUserStamp', $this->modUserStamp, true);
-        $criteria->compare('modTimeStamp', $this->modTimeStamp, true);
+//        $criteria->compare('sucursalId', $this->sucursalId);
+//        $criteria->compare('visible', $this->visible);
+//        $criteria->compare('orden', $this->orden);
+//        $criteria->compare('icono', $this->icono, true);
+//        $criteria->compare('creaUserStamp', $this->creaUserStamp, true);
+//        $criteria->compare('creaTimeStamp', $this->creaTimeStamp, true);
+//        $criteria->compare('modUserStamp', $this->modUserStamp, true);
+//        $criteria->compare('modTimeStamp', $this->modTimeStamp, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

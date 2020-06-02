@@ -154,7 +154,7 @@ class MenuController extends Controller
          * @var $authManager CDbAuthManager;
          */
         $model = $this->loadModel($id);
-        $nAnterior = $model->label;
+        $labelAnterior = $model->label;
 
         $authManager = Yii::app()->authManager;
 
@@ -180,90 +180,91 @@ class MenuController extends Controller
             $transaction = $connection->beginTransaction();
             try {
 
-                if ($model->save()) {
-                    if ($nAnterior <> $model->label) {
-                        //Realizo un update en las tablas del RBAM
-                        $sql = "UPDATE AuthItem set name=:nombreNuevo , description=:descripcionNueva
-					         where name=:nombreAnterior";
-
-                        $connection = Yii::app()->db;
-                        $command = $connection->createCommand($sql);
-
-                        $nombreNuevo = $model->label;
-                        $descripcionNueva = $model->titulo;
-                        $nombreAnterior = $nAnterior;
-                        $command->bindValue(":nombreNuevo", $nombreNuevo, PDO::PARAM_STR);
-                        $command->bindValue(":descripcionNueva", $descripcionNueva, PDO::PARAM_STR);
-                        $command->bindValue(":nombreAnterior", $nombreAnterior, PDO::PARAM_STR);
-                        $command->execute();
-
-                        $sql1 = "UPDATE AuthItemChild set child=:nombreNuevo
-					         where child=:nombreAnterior";
-                        $connection1 = Yii::app()->db;
-                        $command1 = $connection1->createCommand($sql1);
-
-                        $nombreNuevo = $model->label;
-                        $nombreAnterior = $nAnterior;
-                        $command1->bindValue(":nombreNuevo", $nombreNuevo, PDO::PARAM_STR);
-                        $command1->bindValue(":nombreAnterior", $nombreAnterior, PDO::PARAM_STR);
-                        $command1->execute();
-                    }
-                    if (!empty($_POST['Menu']['perfiles'])) {
-
-                        foreach ($this->getPerfiles() as $perfil) {
-                            if($authManager->hasItemChild($perfil, $model->label)) {
-                                $authManager->removeItemChild($perfil, $model->label);
-                            }
-                        }
-
-                        if(!empty($model->url) && !is_null($model->url)) {
-                            $permiso_explode = explode('/', $model->url);
-                            if (isset($permiso_explode[1])) {
-                                $permiso = ucwords($permiso_explode[1]) . ':' . ucwords($permiso_explode[2]);
-                                $sqlExiste = " select * from AuthItem where name = :nombre;";
-                                $commandExiste = Yii::app()->db->createCommand($sqlExiste);
-                                $commandExiste->bindValue(":nombre", $permiso);
-                                $authItemExiste = $commandExiste->queryRow($sqlExiste);
-                                if (!$authItemExiste) {
-                                    $sqlAuthItem = "INSERT INTO AuthItem(name,description,type,data) VALUES(:permiso,:descripcion,:type,:data);";
-                                    $commandAuthItem = Yii::app()->db->createCommand($sqlAuthItem);
-                                    $commandAuthItem->bindValue(":permiso", $permiso);
-                                    $commandAuthItem->bindValue(":descripcion", $nombreNuevo);
-                                    $commandAuthItem->bindValue(":type", 0);
-                                    $commandAuthItem->bindValue(":data", 'N;');
-                                    $commandAuthItem->execute();
-                                }
-                            }
-                        }
-
-                        foreach ($_POST['Menu']['perfiles'] as $perfil) {
-                            if(!$authManager->getAuthItem($model->label)) {
-                                $authManager->createAuthItem($model->label, 0);
-                            }
-                            $authManager->addItemChild($perfil, $model->label);
-                            if(!empty($model->url) && !is_null($model->url) && isset($permiso_explode[1])) {
-                                $sqlExiste = " select * from AuthItemChild where parent = :parent and child =:child;";
-                                $commandExiste = Yii::app()->db->createCommand($sqlExiste);
-                                $commandExiste->bindValue(":parent", $perfil);
-                                $commandExiste->bindValue(":child", $permiso);
-                                $authItemExiste = $commandExiste->queryRow($sqlExiste);
-                                if (!$authItemExiste) {
-                                    $sqlAuthItemChild = "INSERT INTO AuthItemChild(parent,child)  values(:parent,:child);";
-                                    $commandAuthItemChild = Yii::app()->db->createCommand($sqlAuthItemChild);
-                                    $commandAuthItemChild->bindValue(":parent", $perfil);
-                                    $commandAuthItemChild->bindValue(":child", $permiso);
-                                    $commandAuthItemChild->execute();
-                                }
-                            }
-                        }
-                    }
-
-                    $transaction->commit();
-                    Yii::app()->user->setNotification('success', 'Item Actualizado con Exito');
-                    $this->redirect(array('admin'));
-                } else {
-                    throw new Exception('Error al actualizar item');
+                if (!$model->save()) {
+                    throw new Exception("Error al actualizar menu");
                 }
+                if ($labelAnterior != $model->label) {
+                    //Realizo un update en las tablas del RBAM
+                    $sql = "UPDATE AuthItem set name=:nombreNuevo , description=:descripcionNueva
+                         where name=:nombreAnterior";
+
+                    $connection = Yii::app()->db;
+                    $command = $connection->createCommand($sql);
+
+                    $nombreNuevo = $model->label;
+                    $descripcionNueva = $model->titulo;
+                    $nombreAnterior = $labelAnterior;
+                    $command->bindValue(":nombreNuevo", $nombreNuevo, PDO::PARAM_STR);
+                    $command->bindValue(":descripcionNueva", $descripcionNueva, PDO::PARAM_STR);
+                    $command->bindValue(":nombreAnterior", $nombreAnterior, PDO::PARAM_STR);
+                    $command->execute();
+
+                    $sql1 = "UPDATE AuthItemChild set child=:nombreNuevo
+                         where child=:nombreAnterior";
+                    $connection1 = Yii::app()->db;
+                    $command1 = $connection1->createCommand($sql1);
+
+                    $nombreNuevo = $model->label;
+                    $nombreAnterior = $labelAnterior;
+                    $command1->bindValue(":nombreNuevo", $nombreNuevo, PDO::PARAM_STR);
+                    $command1->bindValue(":nombreAnterior", $nombreAnterior, PDO::PARAM_STR);
+                    $command1->execute();
+                }
+
+                if(!empty($_POST['Menu']['perfiles'])) {
+
+                    foreach ($this->getPerfiles() as $perfil) {
+                        if($authManager->hasItemChild($perfil, $model->label)) {
+                            $authManager->removeItemChild($perfil, $model->label);
+                        }
+                    }
+
+                    if(!empty($model->url) && !is_null($model->url)) {
+                        $permiso_explode = explode('/', $model->url);
+                        if (isset($permiso_explode[1])) {
+                            $permiso = ucwords($permiso_explode[1]) . ':' . ucwords($permiso_explode[2]);
+                            $sqlExiste = " select * from AuthItem where name = :nombre;";
+                            $commandExiste = Yii::app()->db->createCommand($sqlExiste);
+                            $commandExiste->bindValue(":nombre", $permiso);
+                            $authItemExiste = $commandExiste->queryRow($sqlExiste);
+                            if (!$authItemExiste) {
+                                $sqlAuthItem = "INSERT INTO AuthItem(name,description,type,data) VALUES(:permiso,:descripcion,:type,:data);";
+                                $commandAuthItem = Yii::app()->db->createCommand($sqlAuthItem);
+                                $commandAuthItem->bindValue(":permiso", $permiso);
+                                $commandAuthItem->bindValue(":descripcion", $permiso);
+                                $commandAuthItem->bindValue(":type", 0);
+                                $commandAuthItem->bindValue(":data", 'N;');
+                                $commandAuthItem->execute();
+                            }
+                        }
+                    }
+
+                    foreach ($_POST['Menu']['perfiles'] as $perfil) {
+                        if(!$authManager->getAuthItem($model->label)) {
+                            $authManager->createAuthItem($model->label, 0);
+                        }
+                        $authManager->addItemChild($perfil, $model->label);
+                        if(!empty($model->url) && !is_null($model->url) && isset($permiso_explode[1])) {
+                            $sqlExiste = " select * from AuthItemChild where parent = :parent and child =:child;";
+                            $commandExiste = Yii::app()->db->createCommand($sqlExiste);
+                            $commandExiste->bindValue(":parent", $perfil);
+                            $commandExiste->bindValue(":child", $permiso);
+                            $authItemExiste = $commandExiste->queryRow($sqlExiste);
+                            if (!$authItemExiste) {
+                                $sqlAuthItemChild = "INSERT INTO AuthItemChild(parent,child)  values(:parent,:child);";
+                                $commandAuthItemChild = Yii::app()->db->createCommand($sqlAuthItemChild);
+                                $commandAuthItemChild->bindValue(":parent", $perfil);
+                                $commandAuthItemChild->bindValue(":child", $permiso);
+                                $commandAuthItemChild->execute();
+                            }
+                        }
+                    }
+                }
+
+                $transaction->commit();
+                Yii::app()->user->setNotification('success', 'Item Actualizado con Exito');
+                $this->redirect(array('admin'));
+
             } catch (Exception $e) {
                 $transaction->rollback();
                 Yii::app()->user->setNotification('error', $e->getMessage());
