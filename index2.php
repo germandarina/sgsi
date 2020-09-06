@@ -8,7 +8,7 @@ if (!file_exists($config)) {
 }
 
 defined('APPLICATION_ENV')
-|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'development'));
+|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
 
 // remove the following lines when in production mode
@@ -26,4 +26,3 @@ if (APPLICATION_ENV === 'development' or true) {
 
 require_once($yii);
 Yii::createWebApplication($config)->run();
-

@@ -1,0 +1,815 @@
+[33mcommit cf3b3f5b7766334382bb778ac0bcf9a368a4920a[m
+Author: Juan Eduardo Perez Olea <perezoleaj@gmail.com>
+Date:   Sun May 10 22:46:57 2020 -0300
+
+    Corrijo porcentajes en grafico torta para los distintos atributos
+
+[33mcommit b5d9e3b2bf47468b129710a830e5c7272624d5db[m
+Author: Juan Eduardo Perez Olea <perezoleaj@gmail.com>
+Date:   Sun May 10 21:09:54 2020 -0300
+
+    Mejoro diseño en pestana valoracion de amenazas, vulnerabilidades y controles
+
+[33mcommit e599dc207d59f30cd95ed51236bfc1e8cf164281[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Mon May 4 23:07:32 2020 -0300
+
+    correcciones varias, validacion amenaza, crear menu con permisos,etc
+
+[33mcommit de130b26fbd864331980e9de1c3661585dd413a9[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Mon Apr 13 09:28:27 2020 -0300
+
+    correccion al crear proyecto, asignar usuarios administradores
+
+[33mcommit 428a88300c71254a0efa0caa78a39a975c2f5051[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Apr 11 20:23:53 2020 -0300
+
+    cambios para soportar password, redireccion de home, calendario, dashboard
+
+[33mcommit f2874a21c5ef1e56e6613dae1a496553e89a9afe[m
+Author: Juan Eduardo Perez Olea <perezoleaj@gmail.com>
+Date:   Sun Apr 5 19:27:05 2020 -0300
+
+    agrego favicon a la aplicacion
+
+[33mcommit 44bf54797c7597201b266aeb7cfe3e8ad1ecc352[m
+Author: Juan Eduardo Perez Olea <perezoleaj@gmail.com>
+Date:   Sun Apr 5 18:38:24 2020 -0300
+
+    Agrego alerta si no tiene proyecto asignado el usuario
+
+[33mcommit 43ab9fdc074adc450e44d44c6e8b148d3284e75d[m
+Author: Juan Eduardo Perez Olea <perezoleaj@gmail.com>
+Date:   Sun Apr 5 17:56:45 2020 -0300
+
+    Cambio de direccionamiento de Jquery
+
+[33mcommit a928855f4f1082a572298a37363f8c90437895fb[m
+Author: Juan Eduardo Perez Olea <perezoleaj@gmail.com>
+Date:   Tue Mar 31 18:33:37 2020 -0300
+
+    cambio titulos a contenido y cambio de color nombre de columnas
+
+[33mcommit 4fedff985fb2a5ed2d6ab04be1b65318b2a385d8[m
+Author: Juan Eduardo Perez Olea <perezoleaj@gmail.com>
+Date:   Tue Mar 31 13:03:59 2020 -0300
+
+    Agrego mensaje de bienvenida en Inicio
+
+[33mcommit 5138b87eca601a32e17fc76f43935251e7217511[m
+Author: Juan Eduardo Perez Olea <perezoleaj@gmail.com>
+Date:   Tue Mar 24 22:38:56 2020 -0300
+
+    Agrego nuevos paneles a la ventana inicio
+
+[33mcommit 9cbac6c72179c8977596fa45997537b049d0bf70[m
+Author: Juan Eduardo Perez Olea <perezoleaj@gmail.com>
+Date:   Sun Mar 15 23:16:11 2020 -0300
+
+    Saco cierre de sesion de opcion de menu y agrego totalizadores en inicio
+
+[33mcommit c22df6f7e9fed54286a852548b02799fc503ac45[m
+Author: Juan Eduardo Perez Olea <perezoleaj@gmail.com>
+Date:   Sun Mar 15 20:47:43 2020 -0300
+
+    cambios en dropdown del top menu
+
+[33mcommit 0caa7f9d8e999b890cd390f473ce451f4c380e53[m
+Author: Juan Eduardo Perez Olea <perezoleaj@gmail.com>
+Date:   Wed Mar 4 20:41:45 2020 -0300
+
+    cambios en Login y ventana Inicio
+
+[33mcommit b7c785437e056c1ae63b3dc76a43c7514efb20d9[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Sat Feb 22 18:53:26 2020 -0300
+
+    logica de asignar proyecto a los admin
+
+[33mcommit 768f82cdd1ac85fa45abb44788dcc774ab1a6314[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Tue Feb 18 00:08:21 2020 -0300
+
+    sacando campos en los admin, correcion tipo de activo redireccion
+
+[33mcommit abf4b24027345dcdac5312c62873c080d9a36806[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Sun Feb 16 21:29:44 2020 -0300
+
+    trayendo solo los proyectos asignados
+
+[33mcommit 8b93c309d47df9c172955c0d7960f0cd122c7d26[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Sun Feb 16 21:19:25 2020 -0300
+
+    modificando estilos de filtros de gridviews
+
+[33mcommit 8a5095c8490bdca2c2a932deeae98199770c742c[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Sun Feb 16 20:37:16 2020 -0300
+
+    correcciones varias para permisos
+
+[33mcommit efdd69fea25c19acec020ebb5ca4b0f502662585[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Sun Feb 16 19:53:14 2020 -0300
+
+    ultimas correcciones del documento 5
+
+[33mcommit 8045f48000e6955656ae0477a95b6907292af75d[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Thu Feb 13 00:22:38 2020 -0300
+
+    cambios varios,resolviendo algunos problemas
+
+[33mcommit d54f6f3619d40f1804b000d28a253f277e7d6523[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Thu Jan 30 18:58:57 2020 -0300
+
+    otros cambios varios, correcciones para personal solo del proyecto seleccionado
+
+[33mcommit 9699b73f2a8e81d13e54d11086c0e3575935f7cd[m
+Merge: e9ec65e 2c6590f
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Thu Jan 30 15:43:43 2020 -0300
+
+    Merge branch 'master' of bitbucket.org:german89/dime-sgsi
+
+[33mcommit e9ec65efe9e5a3660813665430d49545090f0921[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Thu Jan 30 15:43:24 2020 -0300
+
+    correcciones varias, errores de relacion con amen y vulne, en tipo de activo, proyecto, etc
+
+[33mcommit 2c6590ff4d18a84e68915fefa1af077aef7fbff5[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Jan 14 17:43:22 2020 -0300
+
+    actualizando version de yii, solucionando problema al loguearse
+
+[33mcommit 2bceba699c832e0dc598ce0f2aa31e7fdc89b6fc[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Mon Jan 13 01:55:44 2020 -0300
+
+    funcionalidad para asignar permisos desde sistema
+
+[33mcommit 8c249ca1f12deaa99980b5bc3b7f6945b6d8cb80[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Sun Jan 12 20:02:35 2020 -0300
+
+    modificando redirect en controles cuando model es null
+
+[33mcommit 86e7f8c08e5c160dbad225740582bd7dceec135b[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Sun Jan 12 18:18:58 2020 -0300
+
+    asignando proyecto al crearlo, correccion al crear activo, mostrando el personal del proyecto
+
+[33mcommit 2c1c76bf61235d6651320ba595cf3a3708faac0f[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Tue Jan 7 02:11:10 2020 -0300
+
+    relacion proyecto usuario, modificando logica en crud de proyectos
+
+[33mcommit 7b06174ba07c5ceda24f9111c096c4a5db57e071[m
+Merge: 761f1f1 22c798f
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Mon Jan 6 22:26:00 2020 -0300
+
+    Merge branch 'master' of bitbucket.org:german89/dime-sgsi
+
+[33mcommit 761f1f18fa2dcd1bfd57f1822beb44aa2a9a44e9[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Mon Jan 6 22:25:37 2020 -0300
+
+    no mostrar perfiles de rbam
+
+[33mcommit 22c798f3c4f70ec8e9511d9853e320a002025385[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Thu Dec 19 13:37:13 2019 -0300
+
+    correccion eliminar tipo activo sin tener en cuenta el proyecto
+
+[33mcommit faf5f44d25402766fa00c9f3074f828b8be87b85[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Wed Dec 18 13:54:56 2019 -0300
+
+    mod main.php
+
+[33mcommit 9c2f6c5c8d6fec55ef9f7d88e7eda2ffcb4e0da0[m
+Merge: 425043a 09d9f1d
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Wed Dec 18 13:52:45 2019 -0300
+
+    Merge branch 'master' of bitbucket.org:german89/dime-sgsi
+
+[33mcommit 425043a96fbc4e5727de1f9f3e4d88372740e461[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Wed Dec 18 13:52:02 2019 -0300
+
+    modificando menu, agregando boton home
+
+[33mcommit 09d9f1d4aa62626d0c5d72d679b32401cd29a3c5[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Mon Dec 16 01:09:19 2019 -0300
+
+    agregando modulo de rbam y customyiiboster, correccion para mostrar proyecto en top-menu
+
+[33mcommit e43fe2470d1e3f05147cfdb1051a8632b6fd3fd5[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Sun Dec 15 23:57:04 2019 -0300
+
+    editando nombre de la app
+
+[33mcommit 9556efff954da7a5e21a812cece91668492fc1f2[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Sun Dec 15 23:45:53 2019 -0300
+
+    modificando imagenes y descripcion dime
+
+[33mcommit 8f8f7b43af2df8ebfb4fb38cc91ca59aa16e2edc[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Mon Nov 25 23:55:45 2019 -0300
+
+    eliminando carpeta clevertech, agregando fuentes
+
+[33mcommit 9e1510470a7ef5e47e5e35db10425928d73b96e2[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Mon Nov 25 23:42:04 2019 -0300
+
+    nuevo path para select2 en js
+
+[33mcommit c0cdbb2e7f9336f5ace823af4e4c6f8ca6d5e4e3[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Mon Nov 25 23:23:15 2019 -0300
+
+    correccion path de select2
+
+[33mcommit ab938c3ca39a1127a419dcb2554f111550bfcf9a[m
+Merge: 3843fd3 618115c
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Mon Nov 25 22:57:06 2019 -0300
+
+    Merge branch 'master' of bitbucket.org:german89/dime-sgsi
+
+[33mcommit 3843fd3ae260216ce93f4cf3b506f871fd1d3a0f[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Mon Nov 25 22:56:48 2019 -0300
+
+    cambiando de lugar archivos de select2, de vendor a public
+
+[33mcommit 618115c5f7ce01d2c5d3ec77157268d2d56d64a7[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Thu Nov 21 13:50:51 2019 -0300
+
+    correccion count en model user
+
+[33mcommit f290760aa3c96b28e77657c09d5bbca3ccbf6c1b[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Sep 17 13:42:47 2019 -0300
+
+    modificando admin con boton crear
+
+[33mcommit 6b78487284cc145889542c2266f8624637a469d6[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Tue Sep 17 00:41:32 2019 -0300
+
+    correcciones al ver valoracion,guardado en sesion valores de analisis en view
+
+[33mcommit 2d3d1983f2281ac427a6ada62fbb7c3300234523[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Mon Sep 16 23:27:18 2019 -0300
+
+    correccion en from de control, limpiando y seteando valores al cambiar combos de seleccion
+
+[33mcommit 44474bb0f8a802d531b1002db20739d31b4c73a0[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Fri Sep 13 13:37:45 2019 -0300
+
+    correccion en controles, al traer vulnerabilidad
+
+[33mcommit 437e4bf0a53a6d9efa029a6a37564833e9713cf3[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Sep 3 10:53:14 2019 -0300
+
+    modificando como mostrar mensajes en el eliminar de los admins
+
+[33mcommit 31ec6e00df3d032a6509ee470437fffee8adc052[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Sun Sep 1 21:25:45 2019 -0300
+
+    unificando logica de control de acceso a datos
+
+[33mcommit b5f9523c473fc9b05769d10079cfa355f828df93[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Sun Sep 1 20:05:20 2019 -0300
+
+    agregando controles para ver  datos por proyecto, agregando transacciones, etc
+
+[33mcommit 9b723bc40f4afcb76cd7dafaca9c35589a310dca[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Thu Aug 29 14:05:49 2019 -0300
+
+    agregando controles y correcciones de validaciones por proyecto en area, personal, proceso, nivel de riesgo, grupos
+
+[33mcommit 451f67262a4f3c35b5b4bc4d4b0f2efd4f843c3b[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Wed Aug 28 00:17:11 2019 -0300
+
+    agregando controles sobre el proyecto seleccionado a Proyectos,Areas,Procesos,Personal
+
+[33mcommit 80337beb77dee4640603a84d3bbb3e58119bfbf1[m
+Author: German <german.exequiel.salinas@gmail.com>
+Date:   Sun Aug 25 23:57:16 2019 -0300
+
+    correcciones etapa 3. control de datos por proyecto. correccion al eliminar usuarios, tipos de activos.
+
+[33mcommit 8f69957d176530422cde1d4964a335965b88e466[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Wed Jun 26 21:41:27 2019 -0300
+
+    modificaciones pra seleccionar proyectos
+
+[33mcommit a00f8bfee021801d4b82c2dad56beed6db18ff40[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Sun Jun 23 23:18:22 2019 -0300
+
+    migracion, script y modificacion para guardar tipo de activo y amenaza en controles
+
+[33mcommit 3fa47df0dc7c6b09b0dd2c88f87c021fab0c74f7[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Wed Jun 19 20:39:48 2019 -0300
+
+    modificacion en elarchivo main
+
+[33mcommit a3a1305f040fe6582073e4dc58bb3d7a596a04c0[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Mon Jun 17 01:02:39 2019 -0300
+
+    cambios varios
+
+[33mcommit 846aa0fc56d3d48674c0f641070dafd6606863a9[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Mon Jun 17 00:54:24 2019 -0300
+
+    terminando modificacion de amenaza vulnerabilidad
+
+[33mcommit 23d3f32ef0313d55791d93b5c782687811f06f7f[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Sun Jun 16 23:39:49 2019 -0300
+
+    migracion para amenaza y vulne. con sus cambios en model y controller
+
+[33mcommit 8acef9b389b9786766d7ef2911cb92df2d65f71b[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Sun Jun 16 20:27:45 2019 -0300
+
+    cambios varios
+
+[33mcommit a696d0d83ba63b422fc667944edae408b0276b35[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Tue Jun 11 00:00:12 2019 -0300
+
+    corecccion search vulne 2
+
+[33mcommit ebf58a418f15d1e54426fe05138d6d6079559546[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Mon Jun 10 23:59:14 2019 -0300
+
+    correccion search de vulnerabilidades
+
+[33mcommit 9c05360c482d27d5b74a9f6168d85ee8fc1f7e1e[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Tue Jun 4 21:59:23 2019 -0300
+
+    validaciones desde frontend
+
+[33mcommit 38426761f4aaf4cdad067611549fa5286bb18868[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Sun Jun 2 20:40:15 2019 -0300
+
+    mostrando datos en los admin y en el update de activos, procesos, etc
+
+[33mcommit 8f2871d01cf4307519ca2380c5073ddc1d1892ef[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Sun Jun 2 18:56:05 2019 -0300
+
+    cambios varios, control de analisis, etc
+
+[33mcommit 55f8b8957706472eff654ed836bad5b374c5316c[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Sat May 25 22:11:04 2019 -0300
+
+    cambios en labels, mostrando procesos en update de area, cambios en areas
+
+[33mcommit d58cf6691f5cbecd09cf08cdf5f7d879cc9fa7e8[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Sat May 25 21:06:10 2019 -0300
+
+    control de acceso a otros analisis, otros cambios menores
+
+[33mcommit d7c7ca500d69a3a6d7044462e5cb4af829e09c15[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Sat May 25 20:18:48 2019 -0300
+
+    agregando filtro de tipo_activo y amenaza al crud de control
+
+[33mcommit fe6e4b4f515e1874d088a76970dce472763ee9ac[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Sat May 25 12:27:45 2019 -0300
+
+    agregando filtro a partir de tipo de activos para amenazas en crud de vulnerabilidad
+
+[33mcommit c96c3306aaf44ffa87e1331985c911ee48801790[m
+Author: german <german.exequiel.salinas@gmail.com>
+Date:   Thu May 23 22:01:09 2019 -0300
+
+    mostrando datos en el admin de area, procesos, grupos.
+
+[33mcommit 8ece566133ae8f51271dcad2d6b5abc898dba7fb[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Wed Jul 11 13:54:58 2018 -0300
+
+    correccion logica en asociaciones
+
+[33mcommit 5567efa08240a6cbb26062528d705ce71979304a[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Mon Jun 18 23:46:17 2018 -0300
+
+    correcion al eliminar grupo activo. refrescando dependencias
+
+[33mcommit 2cdf0b40c8f3762d265d35ccedaa679ffbbf5055[m
+Merge: bb525a2 38334da
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Mon Jun 18 00:36:00 2018 -0300
+
+    Merge branch 'master' of bitbucket.org:german89/dime-sgsi
+
+[33mcommit bb525a2e2d8546bbe9e6938b48f2dfb53f436b0f[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Mon Jun 18 00:35:22 2018 -0300
+
+    mod logica de dependencias, multiples padres, eliminando grupo activo.
+
+[33mcommit a69ee9121e0044499d2335bc197e53fe87189532[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sun Jun 10 12:52:09 2018 -0300
+
+    correccion en dependencias, mostrando datos por proyecto
+
+[33mcommit eac413ced827b45bfa81be5a5aaafcc816536086[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sun Jun 10 11:24:54 2018 -0300
+
+    correcion en asociaciones, filtrando por proyecto
+
+[33mcommit 38334da7c8dfdc03838e239de8ab2e4f6e0fba84[m
+Merge: a6ebe3b 21e7d02
+Author: Juan Eduardo Perez Olea <perezoleaj@gmail.com>
+Date:   Thu Apr 12 18:40:33 2018 -0300
+
+    correccion de merge
+
+[33mcommit a6ebe3bad71a4e76df286c871dbc3f3dd8b1aa27[m
+Author: Juan Eduardo Perez Olea <perezoleaj@gmail.com>
+Date:   Thu Apr 12 18:34:30 2018 -0300
+
+    mod logo de inicio
+
+[33mcommit 21e7d028710bda12077b5f6575eeaa257ea7a13d[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Fri Apr 6 20:10:06 2018 -0300
+
+    correciones js ver activos en plan, reporte agregando titulo, validar al eliminar control
+
+[33mcommit 10243e5d287406d8535f248a6b960a59f9d5a931[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sun Mar 25 22:23:41 2018 -0300
+
+    correccion cuando no hay datos en reporte
+
+[33mcommit 47f48829f9349121855b94fcc1cd7a8514d22edc[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sun Mar 25 22:08:13 2018 -0300
+
+    reportes de activos
+
+[33mcommit 48abd063ccf23741731c53ca07467d1f7d67275a[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Mar 24 22:51:09 2018 -0300
+
+    mostrando activos afectados al control
+
+[33mcommit 2a1dd6c25e5c1dc791dfb4e4a489f1b710d34131[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Mar 24 22:15:12 2018 -0300
+
+    agregando titulo a opciones de plan de tratamiento
+
+[33mcommit d24ec01fe332eb07897dc359629aeba9d57b0d80[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Mar 24 22:11:01 2018 -0300
+
+    agregando funcionalidad de plan de tratamiento
+
+[33mcommit 3add1ff562151d400c4a2f6c10aa0a01c0e63031[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Mon Feb 26 19:58:00 2018 -0300
+
+    migracion para actualizar estado a los usuarios 2
+
+[33mcommit 06475de30711d14f21617c5303bdd4a8b4646ddb[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Mon Feb 26 19:56:47 2018 -0300
+
+    migracion para actualizar estado a los usuarios
+
+[33mcommit 81fbb65c0ac1de05c265f4a5e0ae00a09a9239d5[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Feb 13 22:48:10 2018 -0300
+
+    agregando acciones de transferencia, para las actuaciones
+
+[33mcommit 06b1494564ccef392763f1bdd10d5d5f77ff7132[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Feb 13 12:09:17 2018 -0300
+
+    control usuario inactivo/activo, control de areas del proyecto
+
+[33mcommit 8eac785f4d6a45af344a5a637bc31e6fd42d5648[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Feb 13 11:04:27 2018 -0300
+
+    validaciones, extension de caracteres, control al eliminar.
+
+[33mcommit 3b05f2f81ee717e9ac0755f48b23491b287280eb[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Fri Feb 9 20:42:48 2018 -0300
+
+    correcciones varias, create update teniendo en cuenta el proyecto, validaciones
+
+[33mcommit ff9cf57464508e929d81845e1622a3d3756f4fea[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Jan 30 21:37:14 2018 -0300
+
+    exportando a pdf gestion de riesgos
+
+[33mcommit 300b94b2854d1bedb4b3ce72b0334f755e98528c[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Jan 30 21:11:49 2018 -0300
+
+    exportando gestion de riesgos a excel
+
+[33mcommit 0f9962de5105f648c7097fb8ffb4bcd48aaa0500[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Jan 30 20:10:04 2018 -0300
+
+    agregando validaciones al eliminar, y filtros de area, proceso y personal por proyecto
+
+[33mcommit 363b73376aae641be3a56be7fdd00634091f705f[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Jan 27 23:24:08 2018 -0300
+
+    corrigiendo validacion de usuario auditori
+
+[33mcommit e779c1695bc776ecdb0412bfd56eb9fa1cac9f60[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Jan 27 23:21:00 2018 -0300
+
+    filtrando datos por proyecto y perfiles
+
+[33mcommit 4447fccd719b45fe86bfbc4989e247e03b0de1bf[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Jan 27 22:25:58 2018 -0300
+
+    agregando filtros para proyectos
+
+[33mcommit eb8c24bf77bf212bea86fdbc2149d0d67e1de5ac[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Jan 27 21:21:36 2018 -0300
+
+    primera parte de validaciones de perfiles, filtrando datos por proyecto,etc
+
+[33mcommit dcbba6b3069016f3141635d0ec4e04a4baa6ac80[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Thu Jan 25 00:27:21 2018 -0300
+
+    agregando usuario al proyecto, agregando fk a tablas: activo, analisis, cgrupos
+
+[33mcommit 736b29d23d9969de08955d934940bad1cd122b8d[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Wed Jan 24 21:54:16 2018 -0300
+
+    mod grid de gestion de riesgos
+
+[33mcommit 1c5eb2084ec33610ab36c3aa98addd6757a99eaf[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Jan 23 22:41:53 2018 -0300
+
+    agregando el crud de actuacion
+
+[33mcommit 3ee4e93c77ca4f981506eda881688aec9dc40dd2[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Jan 23 21:53:58 2018 -0300
+
+    valoracion del nivel de riesgos de los activos
+
+[33mcommit 98378514fca55e2ddf70903af503658e1de2cf79[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Jan 23 19:28:13 2018 -0300
+
+    adaptando filtros de valores para amenaza, vul ycontroles
+
+[33mcommit 05c22354c09e367b43b2bca2e83517ae6894d4e8[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Jan 23 00:17:00 2018 -0300
+
+    modificando logica de analisis de am, ctrol, y vulne.
+
+[33mcommit 0d38bbd97a812d271c0c2286ddefec9a38a35741[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Jan 20 21:52:20 2018 -0300
+
+    crud de nivel de riesgos,alter table analisisriesgo detalle
+
+[33mcommit 097f9b6a43116e2d10022337aee3b364c7fae98c[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Jan 20 20:16:21 2018 -0300
+
+    1ra parte de gestion de riesgos. cambios en form valoracion
+
+[33mcommit 7a2286423a52ad9e0898e77b3f48dca6de0fc386[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Jan 20 01:25:10 2018 -0300
+
+    correcciones en valoracion de amenazas, control y vuln.
+
+[33mcommit f882cac2dc2f1ad01f257ad19ae2b84be928b156[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Fri Jan 19 21:52:44 2018 -0300
+
+    correcciones en valoracion de amenazas, edit y delete de grupos_activos
+
+[33mcommit 808502c859024c6544613faae5b417f66263cfcf[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Wed Jan 17 00:13:23 2018 -0300
+
+    agregando editar y eliminar de grupo activo
+
+[33mcommit e93a2a1e677130e789ce7d7dc26e1d785eba6fd9[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Jan 16 21:08:32 2018 -0300
+
+    correcciones varias, redireccion, migracion, etc
+
+[33mcommit 4cb419f1a2be461294155c0b0ae4bead9f3a573a[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Jan 13 13:31:16 2018 -0300
+
+    terminando valoracion de amenazas,vulnerabilidad,control
+
+[33mcommit 750faa333cf3e369280d5c97d09307d6980b1e53[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Jan 13 01:47:01 2018 -0300
+
+    funcionalidad de valoracion de controles, vulne y amenazas
+
+[33mcommit 6cdd1f8af73d4c330b223680e17d25b4e10b9ce4[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Fri Jan 12 21:44:50 2018 -0300
+
+    2da parte de valoraciones, falta terminar
+
+[33mcommit 8f4950553882521bbd7de3b2ec398f5289f36534[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Fri Jan 12 00:50:30 2018 -0300
+
+    1ra parte de valoraciones
+
+[33mcommit cab48e3b899bc05d24c65c4c986aa49f5a0f4094[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Thu Jan 11 21:23:26 2018 -0300
+
+    crud de dependencia terminado
+
+[33mcommit 2e40dfa5a28dab09c324f0b13b9ff3c358bd0d4a[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Thu Jan 11 01:27:15 2018 -0300
+
+    funcionalidad de dependenca
+
+[33mcommit 39eb4989f6a24511a3255325f7c46419952fbcd4[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Jan 9 01:24:14 2018 -0300
+
+    terminando asociaciones, 1ra parte de depencias
+
+[33mcommit 0da8796223e6c087a3485695c2d8c1ae642d5f7a[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sun Jan 7 00:15:04 2018 -0300
+
+    agregando crud de analisis, y asociaciones, grupo activo
+
+[33mcommit 01950a36d97f798f813c2f439e822285797aeca8[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Jan 6 16:40:59 2018 -0300
+
+    crud basico de analisis
+
+[33mcommit ee56633cf65bc683bc60ea5031562e39ef38b95f[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Jan 6 15:32:18 2018 -0300
+
+    crud terminado de activo y grupo
+
+[33mcommit 45ff9ee960963a9abc4eaada2e7f9a670d3956b4[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Jan 6 14:00:38 2018 -0300
+
+    migracionez, y crud de activo
+
+[33mcommit b30fda496a50c2967b1c7fe7a77913ab8463da50[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Jan 6 00:39:15 2018 -0300
+
+    funcion de arbol de relaciones para tipos de activos
+
+[33mcommit 8950ff74d3717af4db3b2e3acbae8193cb9e8ba3[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Fri Jan 5 23:07:16 2018 -0300
+
+    correciones varias en vista y controller
+
+[33mcommit f359bd19eaa933f5249a58e2b124c1f02f5ddaca[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Thu Jan 4 13:51:57 2018 -0300
+
+    mod vistas admin
+
+[33mcommit aa8e8bc422f976a2f70d801268796c9a0f04a9b4[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Thu Jan 4 13:40:40 2018 -0300
+
+    reordenando vistas
+
+[33mcommit 5e70b670d02e28a3f97ba0abcfc886dc0c4642b6[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Wed Jan 3 14:38:21 2018 -0300
+
+    correciones imagenes, agregando valor para los controles
+
+[33mcommit 7c6d24422251897dc1b610e083123a555763056d[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Wed Jan 3 00:38:32 2018 -0300
+
+    agregando control valor, sin terminar
+
+[33mcommit 0b3787924472c49ecdba2fb0bf6b5ca878b10eb7[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Mon Jan 1 21:39:21 2018 -0300
+
+    crud de vulnerailidad, control y mod en amenaza
+
+[33mcommit 3810f8654234b7c5523b7cdf4cef17c7999610f8[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Dec 30 21:05:51 2017 -0300
+
+    modificando crud de tipo de activo,crud de amenaza incompleto
+
+[33mcommit 42794a938300b50c354574015c0533fff4d05508[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Sat Dec 30 18:56:06 2017 -0300
+
+    crud de organizaciones terminado, y crud de tipo activos sin terminra
+
+[33mcommit d0c89fae0a3ca0719485fc42d9d15ec0a12af4d6[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Fri Dec 29 01:06:44 2017 -0300
+
+    crud personal terminado con proceso_id
+
+[33mcommit 6fc2791c68125b768534f698914881408f0ff325[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Wed Dec 27 23:31:44 2017 -0300
+
+    crud de personal, area y procesos
+
+[33mcommit 156a0a819a3077643e45fec857b5fc9ca658d0bb[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Wed Dec 27 00:09:56 2017 -0300
+
+    crud basico de personal, area,proceso,proyecto
+
+[33mcommit 14a864be688d83f4c5b590ef567b160d1f106980[m
+Author: German Salinas <german.exequiel.salinas@gmail.com>
+Date:   Tue Dec 26 22:03:46 2017 -0300
+
+    1er commit, esqueleto base
+
+[33mcommit b64ab22d8099e86f3adf9805b6e911b9ed0f0020[m
+Author: german exequiel salinas <german.exequiel.salinas@gmail.com>
+Date:   Wed Dec 27 00:29:19 2017 +0000
+
+    README.md created online with Bitbucket
