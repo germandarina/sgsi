@@ -82,7 +82,7 @@
             </div> 
          <!--Fin Form-->
         </div>
-        </div>
+</div>
         <div class="clearfix"></div>
 <br>
 <?php if(!empty($areas)){ ?>

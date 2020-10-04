@@ -229,7 +229,7 @@ class Analisis extends CustomCActiveRecord
             $porcentajeNoAceptable = round($arrayValores['integridad']['No Aceptable']*100/ $cantidadTotal,2);
 
             $filaGrafico['value'] =  $porcentajeNoAceptable;
-            $filaGrafico['color'] = "rgba(255,0,0)";
+            $filaGrafico['color'] = "rgba(255,77,77,1)"; /*Cambio de color - Juan 6/9/2020*/
             $filaGrafico['label'] =  'No Aceptable ('.$porcentajeNoAceptable.' %)' ;
             $arrayGraficoIntegridad[] = $filaGrafico;
 
@@ -245,7 +245,7 @@ class Analisis extends CustomCActiveRecord
             $porcentajeAceptable = round($arrayValores['integridad']['Aceptable']*100/ $cantidadTotal,2);
 
             $filaGrafico['value'] =  $porcentajeAceptable;
-            $filaGrafico['color'] = "rgb(1, 136, 3)";
+            $filaGrafico['color'] = "rgb(38, 185, 154, 1)"; /*Cambio de color - Juan 6/9/2020*/
             $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
             $arrayGraficoIntegridad[] = $filaGrafico;
             /*Inicio - Agregado por Juan 10/05/20*/
@@ -262,7 +262,7 @@ class Analisis extends CustomCActiveRecord
             $porcentajeNoAceptable = round($arrayValores['disponibilidad']['No Aceptable']*100/ $cantidadTotal,2);
 
             $filaGrafico['value'] =  $porcentajeNoAceptable;
-            $filaGrafico['color'] = "rgba(255,0,0)";
+            $filaGrafico['color'] = "rgba(255,77,77,1)"; /*Cambio de color - Juan 6/9/2020*/
             $filaGrafico['label'] =  'No Aceptable ('.$porcentajeNoAceptable.' %)' ;
             $arrayGraficoDispo[] = $filaGrafico;
 
@@ -278,7 +278,7 @@ class Analisis extends CustomCActiveRecord
             $porcentajeAceptable = round($arrayValores['disponibilidad']['Aceptable']*100/ $cantidadTotal,2);
 
             $filaGrafico['value'] =  $porcentajeAceptable;
-            $filaGrafico['color'] = "rgb(1, 136, 3)";
+            $filaGrafico['color'] = "rgb(38, 185, 154, 1)"; /*Cambio de color - Juan 6/9/2020*/
             $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
             $arrayGraficoDispo[] = $filaGrafico;
 
@@ -298,7 +298,7 @@ class Analisis extends CustomCActiveRecord
             $porcentajeNoAceptable = round($arrayValores['confidencialidad']['No Aceptable']*100/ $cantidadTotal,2);
 
             $filaGrafico['value'] =  $porcentajeNoAceptable;
-            $filaGrafico['color'] = "rgba(255,0,0)";
+            $filaGrafico['color'] = "rgba(255,77,77,1)"; /*Cambio de color - Juan 6/9/2020*/
             $filaGrafico['label'] =  'No Aceptable ('.$porcentajeNoAceptable.' %)' ;
             $arrayGraficoConfi[] = $filaGrafico;
 
@@ -314,7 +314,7 @@ class Analisis extends CustomCActiveRecord
             $porcentajeAceptable = round($arrayValores['confidencialidad']['Aceptable']*100/ $cantidadTotal,2);
 
             $filaGrafico['value'] =  $porcentajeAceptable;
-            $filaGrafico['color'] = "rgb(1, 136, 3)";
+            $filaGrafico['color'] = "rgb(38, 185, 154, 1)"; /*Cambio de color - Juan 6/9/2020*/
             $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
             $arrayGraficoConfi[] = $filaGrafico;
 
@@ -334,7 +334,7 @@ class Analisis extends CustomCActiveRecord
             $porcentajeNoAceptable = round($arrayValores['trazabilidad']['No Aceptable']*100/ $cantidadTotal,2);
 
             $filaGrafico['value'] =  $porcentajeNoAceptable;
-            $filaGrafico['color'] = "rgba(255,0,0)";
+            $filaGrafico['color'] = "rgba(255,77,77,1)"; /*Cambio de color - Juan 6/9/2020*/
             $filaGrafico['label'] =  'No Aceptable ('.$porcentajeNoAceptable.' %)' ;
             $arrayGraficoTraza[] = $filaGrafico;
 
@@ -350,7 +350,7 @@ class Analisis extends CustomCActiveRecord
             $porcentajeAceptable = round($arrayValores['trazabilidad']['Aceptable']*100/ $cantidadTotal,2);
 
             $filaGrafico['value'] =  $porcentajeAceptable;
-            $filaGrafico['color'] = "rgb(1, 136, 3)";
+            $filaGrafico['color'] = "rgb(38, 185, 154, 1)"; /*Cambio de color - Juan 6/9/2020*/
             $filaGrafico['label'] =  'Aceptable ( '.$porcentajeAceptable.' % )';
             $arrayGraficoTraza[] = $filaGrafico;
 

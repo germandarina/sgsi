@@ -30,7 +30,9 @@
     <!--Panel estadistico -->
     
     <!-- jQuery 2.1.4 -->
+    
     <script src="<?= $themeUrl ?>/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+
     <!--<script src="<?php //Yii::app()->request->baseUrl; ?>/js/jQuery/jQuery-2.1.4.min.js"></script>-->
     <!--<script src="<?php //Yii::app()->request->baseUrl; ?>/js/nprogress/nprogress.js"></script>
     <script>
@@ -154,8 +156,10 @@
         <strong>Copyright &copy; <?= Date('Y')?> </strong> Todos los derechos reservados.
     </footer>
 </div>
+
 <!-- ./wrapper -->
 <script src="<?= $themeUrl ?>/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+
 
 <!-- SlimScroll -->
 <script src="<?= $themeUrl ?>/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
@@ -176,17 +180,134 @@
 <script src="<?= Yii::app()->request->baseUrl?>/js/js-kartik/plugins/canvas-to-blob.min.js" type="text/javascript"></script>
 <script src="<?= Yii::app()->request->baseUrl?>/js/js-kartik/fileinput.min.js" type="text/javascript"></script>
 <script src="<?= Yii::app()->request->baseUrl?>/js/js-kartik/fileinput_locale_es.js" type="text/javascript"></script>
-<script src="<?php echo Yii::app()->request->baseUrl ?>/js/select2/select2/select2.js" type="text/javascript"></script>
+
+<script src="<?= Yii::app()->request->baseUrl ?>/js/select2/select2/select2.js" type="text/javascript"></script>
 <!-- gauge js -->
 <script src="<?= Yii::app()->request->baseUrl?>/js/gauge/gauge.min.js" type="text/javascript"></script>
 <!-- chart js -->
 <script src="<?= Yii::app()->request->baseUrl?>/js/chartjs/chart.min.js" type="text/javascript"></script>
 <script src="<?= Yii::app()->request->baseUrl?>/js/progressbar/bootstrap-progressbar.min.js"></script>
-<!--<script src="<?php //Yii::app()->request->baseUrl;?>/js/nicescroll/jquery.nicescroll.min.js"></script>-->
+<script src="<?= Yii::app()->request->baseUrl;?>/js/nicescroll/jquery.nicescroll.min.js"></script>
 <script src="<?= Yii::app()->request->baseUrl?>/js/custom/custom.js" type="text/javascript"></script><
 <script src="<?= Yii::app()->request->baseUrl?>/js/lobibox/js/lobibox.js" type="text/javascript"></script>
+<script src="<?= Yii::app()->request->baseUrl?>/js/icheck/icheck.min.js"></script>
 
 <script>
+ 
+
+    $(document).ready(function () {
+            // [17, 74, 6, 39, 20, 85, 7]
+            //[82, 23, 66, 9, 99, 6, 2]
+            var data1 = [[gd(2012, 1, 1), 17], [gd(2012, 1, 2), 74], [gd(2012, 1, 3), 6], [gd(2012, 1, 4), 39], [gd(2012, 1, 5), 20], [gd(2012, 1, 6), 85], [gd(2012, 1, 7), 7]];
+
+            var data2 = [[gd(2012, 1, 1), 82], [gd(2012, 1, 2), 23], [gd(2012, 1, 3), 66], [gd(2012, 1, 4), 9], [gd(2012, 1, 5), 119], [gd(2012, 1, 6), 6], [gd(2012, 1, 7), 9]];
+            $("#canvas_dahs").length && $.plot($("#canvas_dahs"), [
+                data1, data2
+            ], {
+                series: {
+                    lines: {
+                        show: false,
+                        fill: true
+                    },
+                    splines: {
+                        show: true,
+                        tension: 0.4,
+                        lineWidth: 1,
+                        fill: 0.4
+                    },
+                    points: {
+                        radius: 0,
+                        show: true
+                    },
+                    shadowSize: 2
+                },
+                grid: {
+                    verticalLines: true,
+                    hoverable: true,
+                    clickable: true,
+                    tickColor: "#d5d5d5",
+                    borderWidth: 1,
+                    color: '#fff'
+                },
+                colors: ["rgba(38, 185, 154, 0.38)", "rgba(3, 88, 106, 0.38)"],
+                xaxis: {
+                    tickColor: "rgba(51, 51, 51, 0.06)",
+                    mode: "time",
+                    tickSize: [1, "day"],
+                    //tickLength: 10,
+                    axisLabel: "Date",
+                    axisLabelUseCanvas: true,
+                    axisLabelFontSizePixels: 12,
+                    axisLabelFontFamily: 'Verdana, Arial',
+                    axisLabelPadding: 10
+                        //mode: "time", timeformat: "%m/%d/%y", minTickSize: [1, "day"]
+                },
+                yaxis: {
+                    ticks: 8,
+                    tickColor: "rgba(51, 51, 51, 0.06)",
+                },
+                tooltip: false
+            });
+
+            function gd(year, month, day) {
+                return new Date(year, month - 1, day).getTime();
+            }
+        });
+
+        var doughnutData = [
+            {
+                value: 30,
+                color: "#455C73"
+            },
+            {
+                value: 30,
+                color: "#9B59B6"
+            },
+            {
+                value: 60,
+                color: "#BDC3C7"
+            },
+            {
+                value: 100,
+                color: "#26B99A"
+            },
+            {
+                value: 120,
+                color: "#3498DB"
+            }
+        ];
+        if(baseURL === urlController) {
+            var myDoughnut = new Chart(document.getElementById("canvas1").getContext("2d")).Doughnut(doughnutData);
+        }
+
+        var randomScalingFactor = function () {
+            return Math.round(Math.random() * 100)
+        };
+
+        var barChartData = {
+            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            datasets: [
+                {
+                    fillColor: "#26B99A", //rgba(220,220,220,0.5)
+                    strokeColor: "#26B99A", //rgba(220,220,220,0.8)
+                    highlightFill: "#36CAAB", //rgba(220,220,220,0.75)
+                    highlightStroke: "#36CAAB", //rgba(220,220,220,1)
+                    data: [51, 30, 40, 28, 92, 50, 45]
+            },
+                {
+                    fillColor: "#03586A", //rgba(151,187,205,0.5)
+                    strokeColor: "#03586A", //rgba(151,187,205,0.8)
+                    highlightFill: "#066477", //rgba(151,187,205,0.75)
+                    highlightStroke: "#066477", //rgba(151,187,205,1)
+                    data: [41, 56, 25, 48, 72, 34, 12]
+            }
+        ],
+        }
+</script>
+
+
+<script>
+
     function guardarSesionUrl(hijoId,padreId) {
         $.ajax({
             type: 'POST',
@@ -283,7 +404,9 @@
         return event.keyCode != 13;
     });
 
+
  </script>
+    
     <script type="text/javascript" src="<?= Yii::app()->request->baseUrl?>/js/flot/jquery.flot.js"></script>
     <script type="text/javascript" src="<?= Yii::app()->request->baseUrl?>/js/flot/jquery.flot.pie.js"></script>
     <script type="text/javascript" src="<?= Yii::app()->request->baseUrl?>/js/flot/jquery.flot.orderBars.js"></script>
@@ -293,93 +416,15 @@
     <script type="text/javascript" src="<?= Yii::app()->request->baseUrl?>/js/flot/jquery.flot.stack.js"></script>
     <script type="text/javascript" src="<?= Yii::app()->request->baseUrl?>/js/flot/curvedLines.js"></script>
     <script type="text/javascript" src="<?= Yii::app()->request->baseUrl?>/js/flot/jquery.flot.resize.js"></script>
+
  <script>
-        $(document).ready(function () {
-            // [17, 74, 6, 39, 20, 85, 7]
-            //[82, 23, 66, 9, 99, 6, 2]
-            var data1 = [[gd(2012, 1, 1), 17], [gd(2012, 1, 2), 74], [gd(2012, 1, 3), 6], [gd(2012, 1, 4), 39], [gd(2012, 1, 5), 20], [gd(2012, 1, 6), 85], [gd(2012, 1, 7), 7]];
 
-            var data2 = [[gd(2012, 1, 1), 82], [gd(2012, 1, 2), 23], [gd(2012, 1, 3), 66], [gd(2012, 1, 4), 9], [gd(2012, 1, 5), 119], [gd(2012, 1, 6), 6], [gd(2012, 1, 7), 9]];
-            $("#canvas_dahs").length && $.plot($("#canvas_dahs"), [
-                data1, data2
-            ], {
-                series: {
-                    lines: {
-                        show: false,
-                        fill: true
-                    },
-                    splines: {
-                        show: true,
-                        tension: 0.4,
-                        lineWidth: 1,
-                        fill: 0.4
-                    },
-                    points: {
-                        radius: 0,
-                        show: true
-                    },
-                    shadowSize: 2
-                },
-                grid: {
-                    verticalLines: true,
-                    hoverable: true,
-                    clickable: true,
-                    tickColor: "#d5d5d5",
-                    borderWidth: 1,
-                    color: '#fff'
-                },
-                colors: ["rgba(38, 185, 154, 0.38)", "rgba(3, 88, 106, 0.38)"],
-                xaxis: {
-                    tickColor: "rgba(51, 51, 51, 0.06)",
-                    mode: "time",
-                    tickSize: [1, "day"],
-                    //tickLength: 10,
-                    axisLabel: "Date",
-                    axisLabelUseCanvas: true,
-                    axisLabelFontSizePixels: 12,
-                    axisLabelFontFamily: 'Verdana, Arial',
-                    axisLabelPadding: 10
-                        //mode: "time", timeformat: "%m/%d/%y", minTickSize: [1, "day"]
-                },
-                yaxis: {
-                    ticks: 8,
-                    tickColor: "rgba(51, 51, 51, 0.06)",
-                },
-                tooltip: false
-            });
+        
+    
 
-            function gd(year, month, day) {
-                return new Date(year, month - 1, day).getTime();
-            }
-        });
-
-        var doughnutData = [
-            {
-                value: 30,
-                color: "#455C73"
-            },
-            {
-                value: 30,
-                color: "#9B59B6"
-            },
-            {
-                value: 60,
-                color: "#BDC3C7"
-            },
-            {
-                value: 100,
-                color: "#26B99A"
-            },
-            {
-                value: 120,
-                color: "#3498DB"
-            }
-        ];
-        if(baseURL === urlController) {
-            var myDoughnut = new Chart(document.getElementById("canvas1").getContext("2d")).Doughnut(doughnutData);
-        }
     </script>
     <!-- dashbord linegraph -->
+
     <script>
 
     </script>
@@ -387,5 +432,7 @@
    <!-- <script>
         NProgress.done();
     </script>-->
+
+
  </body>
 </html>

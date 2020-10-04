@@ -441,5 +441,3 @@
 $cs = Yii::app()->getClientScript();
 $cs->registerScriptFile(Yii::app()->request->baseUrl."/js/gauge/gauge_demo.js",CClientScript::POS_END);
 ?>
-
-
