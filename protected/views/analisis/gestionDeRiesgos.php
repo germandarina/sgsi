@@ -365,7 +365,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="cabeceraModal">Actuacion</h4>
+                <h4 class="modal-title" id="cabeceraModal">Actuación</h4>
             </div>
             <div class="modal-body" id="cuerpoDetalleCredito">
                 <div class="box-body">
@@ -397,9 +397,10 @@
                             </div>
                             <div class="col-sm-12">
                                 <?php echo $form->labelEx($actuacion,'descripcion',array('class'=>'col-sm-3')); ?>
-                                <?php echo $form->textArea($actuacion,'descripcion',array('class'=>'col-sm-9','rows'=>6, 'cols'=>75)); ?>
+                                <?php echo $form->textArea($actuacion,'descripcion',array('class'=>'col-sm-9','rows'=>4, 'cols'=>75)); ?>
+
                             </div>
-                            <div class="col-sm-12">
+                            <div class="col-sm-12 ">
                                 <?php echo $form->select2Group(
                                     $actuacion, 'accion',
                                     [

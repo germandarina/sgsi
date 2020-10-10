@@ -160,7 +160,8 @@ class Analisis extends CustomCActiveRecord
     }
 
     public static function getActivosAfectadosPorArea($analisis_id,$area_id){
-        $query =" select ac.nombre as nombre_activo,
+
+	    $query =" select ac.nombre as nombre_activo,
                          ga.valor as valor_activo,
                          pr.nombre as nombre_proceso
                 from analisis a

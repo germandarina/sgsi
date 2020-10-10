@@ -190,4 +190,41 @@ class Control extends CustomCActiveRecord
             return "";
         }
     }
+
+    public static function getControlesEnRiesgo($analisis_riesgo_detalle_id){
+        $analisis_riesgo_detalle = AnalisisRiesgoDetalle::model()->findByPk($analisis_riesgo_detalle_id);
+        $analisis_riesgo = $analisis_riesgo_detalle->analisisRiesgo;
+        $grupo_activo = $analisis_riesgo_detalle->grupoActivo;
+        $analisis_control = AnalisisControl::model()->findAllByAttributes(['analisis_id'=>$analisis_riesgo->analisis_id,'grupo_activo_id'=>$grupo_activo->id]);
+        $arrayControles = [];
+        if(!empty($analisis_control)){
+            foreach ($analisis_control as $ac){
+                if($ac->valor == GrupoActivo::VALOR_ALTO){
+                    $arrayControles[] = $ac;
+                }
+            }
+        }
+
+        return $arrayControles;
+    }
+
+    public static function getControlesEnRiesgoParaReporte($analisis_riesgo_detalle_id){
+        $analisis_riesgo_detalle = AnalisisRiesgoDetalle::model()->findByPk($analisis_riesgo_detalle_id);
+        $analisis_riesgo = $analisis_riesgo_detalle->analisisRiesgo;
+        $grupo_activo = $analisis_riesgo_detalle->grupoActivo;
+        $analisis_control = AnalisisControl::model()->findAllByAttributes(['analisis_id'=>$analisis_riesgo->analisis_id,'grupo_activo_id'=>$grupo_activo->id]);
+        $arrayControles = [];
+        if(!empty($analisis_control)){
+            foreach ($analisis_control as $ac){
+                if($ac->valor == GrupoActivo::VALOR_ALTO){
+                    $control = $ac->control;
+                    if($control){
+                        $arrayControles[] = $control->nombre;
+                    }
+                }
+            }
+        }
+
+        return $arrayControles;
+    }
 }

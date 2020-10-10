@@ -19,5 +19,8 @@
     </div>
 
 <?php } else {?>
-    <h4 style="text-align: center; background-color: rgba(250, 47, 56, 0.69)">ESTE ACTIVO NO POSEE CONTROLES EN RIESGO</h4>
+
+    <div class="alert alert-danger" role="alert">
+        ESTE ACTIVO NO POSEE CONTROLES EN RIESGO
+    </div>
 <?php }?>

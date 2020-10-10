@@ -244,18 +244,9 @@ class ControlController extends Controller
 
     public function actionGetControlesEnRiesgo(){
         if(isset($_POST['analisis_riesgo_detalle_id'])){
-            $analisis_riesgo_detalle = AnalisisRiesgoDetalle::model()->findByPk($_POST['analisis_riesgo_detalle_id']);
-            $analisis_riesgo = $analisis_riesgo_detalle->analisisRiesgo;
-            $grupo_activo = $analisis_riesgo_detalle->grupoActivo;
-            $analisis_control = AnalisisControl::model()->findAllByAttributes(['analisis_id'=>$analisis_riesgo->analisis_id,'grupo_activo_id'=>$grupo_activo->id]);
-            $arrayControles = [];
-            if(!empty($analisis_control)){
-                foreach ($analisis_control as $ac){
-                    if($ac->valor == GrupoActivo::VALOR_ALTO){
-                        $arrayControles[] = $ac;
-                    }
-                }
-            }
+
+            $arrayControles = Control::model()->getControlesEnRiesgo($_POST['analisis_riesgo_detalle_id']);
+
             $html = $this->renderPartial('_controlesEnRiesgo',array('arrayControles'=>$arrayControles),true);
             $datos =['html'=>$html];
             echo CJSON::encode($datos);

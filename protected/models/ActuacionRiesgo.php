@@ -95,6 +95,7 @@ class ActuacionRiesgo extends CustomCActiveRecord
 			'creaTimeStamp' => 'Crea Time Stamp',
 			'modUserStamp' => 'Mod User Stamp',
 			'modTimeStamp' => 'Mod Time Stamp',
+            'accion_transferir' => 'Transferir a',
 		);
 	}
 
