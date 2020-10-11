@@ -44,7 +44,7 @@ class Activo extends CustomCActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('cantidad,areas,nombre, descripcion, tipo_activo_id, personal_id', 'required'),
+			array('cantidad,nombre, descripcion, tipo_activo_id', 'required'),
 			array('proyecto_id,tipo_activo_id, personal_id', 'numerical', 'integerOnly'=>true),
 			array('ubicacion,nombre, creaUserStamp, modUserStamp', 'length', 'max'=>250),
 			array('descripcion', 'length', 'max'=>800),

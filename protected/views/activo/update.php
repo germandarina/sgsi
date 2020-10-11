@@ -25,8 +25,8 @@ $this->widget(
                     'type' => 'tabs', // 'tabs' or 'pills'
                     'htmlOptions' => ['class' => 'nav-tabs-custom'],
                     'tabs' => array(
-                        array('label' => 'Procesos',
-                            'content' => $this->renderPartial('procesos', array('proceso'=>$proceso), true),
+                        array('label' => 'Areas y Procesos',
+                            'content' => $this->renderPartial('procesos', array('activo_area'=>$activo_area,'model'=>$model), true),
                             'active' => true,
                         ),
                     ),

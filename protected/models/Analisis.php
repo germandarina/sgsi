@@ -163,10 +163,12 @@ class Analisis extends CustomCActiveRecord
 
 	    $query =" select ac.nombre as nombre_activo,
                          ga.valor as valor_activo,
-                         pr.nombre as nombre_proceso
+                         pr.nombre as nombre_proceso,
+                         concat(per.apellido,', ',per.nombre) as responsable
                 from analisis a
                 inner join grupo_activo ga on ga.analisis_id = a.id
                 inner join activo ac on ac.id = ga.activo_id
+                inner join personal per on per.id = ac.personal_id
                 inner join activo_area aa on aa.activo_id = ac.id
                 inner join area  ar on ar.id = aa.area_id
                 inner join proceso pr on pr.area_id = ar.id

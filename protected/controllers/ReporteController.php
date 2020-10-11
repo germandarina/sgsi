@@ -48,7 +48,23 @@ class ReporteController extends Controller
         $analisis = new Analisis();
         $areas = [];
         if(isset($_POST['Analisis'])){
+            if(empty($_POST['Analisis']['id'])){
+                Yii::app()->user->setNotification('info','Debe seleccionar un analisis.');
+                return $this->redirect(array('/reporte/activosAfectados'));
+            }
             $aux = Analisis::model()->findByPk($_POST['Analisis']['id']);
+
+            $analisis_riesgo = AnalisisRiesgo::model()->findByAttributes(['analisis_id'=>$aux->id]);
+            if(is_null($analisis_riesgo)){
+                Yii::app()->user->setNotification('info','Debe cargar una gestion de riesgos.');
+                return $this->redirect(array('/reporte/activosAfectados'));
+            }
+            $detalle_analisis = AnalisisRiesgoDetalle::model()->findByAttributes(['analisis_riesgo_id'=>$analisis_riesgo->id]);
+            if(is_null($detalle_analisis)){
+                Yii::app()->user->setNotification('info','Debe cargar una gestion de riesgos.');
+                return $this->redirect(array('/reporte/activosAfectados'));
+            }
+
             $analisis->id = $aux->id;
             $analisis->nombre =$aux->nombre;
             $areas= Analisis::model()->getAreasActivosAfectados($analisis->id);

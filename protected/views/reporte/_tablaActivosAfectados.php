@@ -30,6 +30,7 @@
                                                 <th>Activo</th>
                                                 <th>Valor</th>
                                                 <th>Proceso</th>
+                                                <th>Responsable</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -40,6 +41,7 @@
                                                     <td><?= $resultado['nombre_activo'] ?></td>
                                                     <td><?= GrupoActivo::$arrayValores[$resultado['valor_activo']]?></td>
                                                     <td><?= $resultado['nombre_proceso'] ?></td>
+                                                    <td><?= $resultado['responsable'] ?></td>
                                                 </tr>
                                             <?php }?>
                                         </tbody>

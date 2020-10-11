@@ -55,52 +55,70 @@
                                 'minimumResultsForSearch' => 10,
                                 'placeholder' => '--Seleccione--'
                             ],
-//                        'htmlOptions' => ['onChange'=>'getProcesos()'],
                         ],
                     ]
                 );
                 ?>
             </div>
         </div>
-        <div class="row">
-            <br>
-            <div class="col-sm-6">
-                <?php echo $form->select2Group(
-                    $model, 'areas',
-                    [
-                        'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
-                        'widgetOptions' => [
-                            'asDropDownList' => true,
-                            'data' => CHtml::listData(Area::model()->getAreasDisponiblesPorProyecto(), 'id', 'nombre'),
-                            'options' => [
-                                'minimumResultsForSearch' => 10,
-                                'placeholder' => '--Seleccione--'
-                            ],
-                            'htmlOptions' => ['multiple'=>'multiple','onChange'=>'getPersonal()'],
-                        ],
-                    ]
-                );
-                ?>
-            </div>
-            <div class="col-sm-6">
-                <?php echo $form->select2Group(
-                    $model, 'personal_id',
-                    [
-                        'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
-                        'widgetOptions' => [
-                            'asDropDownList' => true,
-                            'data' => CHtml::listData(Personal::model()->getPersonalDisponiblePorProyecto(), 'id', 'nombre'),
-                            'options' => [
-                                'minimumResultsForSearch' => 10,
-                                'placeholder' => '--Seleccione--'
-                            ],
-//                        'htmlOptions' => ['onChange'=>'getProcesos()'],
-                        ],
-                    ]
-                );
-                ?>
-            </div>
-        </div>
+<!--        <div class="row">-->
+<!--            <br>-->
+<!--            <div class="col-sm-6">-->
+<!--                --><?php //echo $form->select2Group(
+//                    $model, 'areas',
+//                    [
+//                        'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+//                        'widgetOptions' => [
+//                            'asDropDownList' => true,
+//                            'data' => CHtml::listData(Area::model()->getAreasDisponiblesPorProyecto(), 'id', 'nombre'),
+//                            'options' => [
+//                                'minimumResultsForSearch' => 10,
+//                                'placeholder' => '--Seleccione--'
+//                            ],
+//                            'htmlOptions' => ['multiple'=>'multiple','onChange'=>'getPersonal(),getProcesos()'],
+//                        ],
+//                    ]
+//                );
+//                ?>
+<!--            </div>-->
+<!--            <div class="col-sm-6">-->
+<!--                --><?php //echo $form->select2Group(
+//                    $model, 'personal_id',
+//                    [
+//                        'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+//                        'widgetOptions' => [
+//                            'asDropDownList' => true,
+//                            'data' => [],
+//                            'options' => [
+//                                'minimumResultsForSearch' => 10,
+//                                'placeholder' => '--Seleccione--'
+//                            ],
+////                        'htmlOptions' => ['onChange'=>'getProcesos()'],
+//                        ],
+//                    ]
+//                );
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--            <div class="col-sm-6">-->
+<!--                --><?php //echo $form->select2Group(
+//                    $model, 'procesos',
+//                    [
+//                        'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+//                        'widgetOptions' => [
+//                            'asDropDownList' => true,
+//                            'data' => [],
+//                            'options' => [
+//                                'minimumResultsForSearch' => 10,
+//                                'placeholder' => '--Seleccione--'
+//                            ],
+//                        ],
+//                    ]
+//                );
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
         <div class="row">
             <div class="col-sm-6">
                 <?php echo $form->numberFieldGroup($model,'cantidad',array('class'=>'col-sm-5','maxlength'=>50)); ?>

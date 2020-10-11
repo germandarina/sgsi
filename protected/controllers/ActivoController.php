@@ -32,7 +32,7 @@ class ActivoController extends Controller
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update', 'admin','delete','getActivosPorTipo','getPadresEHijos',
-                                    'getPadresMultiples','getProcesosModal'),
+                                    'getPadresMultiples','getProcesosModal','guardarAreaYProcesos'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -109,12 +109,14 @@ class ActivoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->loadModel($id);
-        $activos_areas = ActivoArea::model()->findAllByAttributes(array('activo_id'=>$model->id));
-        foreach ($activos_areas as $relacion){
-            $model->areas[] = $relacion->area_id;
-        }
-        $proceso = new Proceso();
-        $proceso->activo_id = $model->id;
+        $activo_area = new ActivoArea();
+        $activo_area->activo_id = $model->id;
+//        $activos_areas = ActivoArea::model()->findAllByAttributes(array('activo_id'=>$model->id));
+//        foreach ($activos_areas as $relacion){
+//            $model->areas[] = $relacion->area_id;
+//        }
+//        $proceso = new Proceso();
+//        $proceso->activo_id = $model->id;
         if (isset($_POST['Activo'])) {
             try{
                 $transaction = Yii::app()->db->beginTransaction();
@@ -129,22 +131,22 @@ class ActivoController extends Controller
                 if (!$model->save()) {
                     throw new Exception("Error al actualizar activo");
                 }
-                foreach ($activos_areas as $relacion){
-                    if(!$relacion->delete()){
-                        throw new Exception("Error al eliminar relacion vieja");
-                    }
-                }
-
-                if(isset($_POST['Activo']['areas']) && !empty($_POST['Activo']['areas'])){
-                    foreach ($_POST['Activo']['areas'] as $area_id){
-                        $activo_area = new ActivoArea();
-                        $activo_area->activo_id = $model->id;
-                        $activo_area->area_id = $area_id;
-                        if(!$activo_area->save()){
-                            throw new Exception("Error al crear relacion activo area");
-                        }
-                    }
-                }
+//                foreach ($activos_areas as $relacion){
+//                    if(!$relacion->delete()){
+//                        throw new Exception("Error al eliminar relacion vieja");
+//                    }
+//                }
+//
+//                if(isset($_POST['Activo']['areas']) && !empty($_POST['Activo']['areas'])){
+//                    foreach ($_POST['Activo']['areas'] as $area_id){
+//                        $activo_area = new ActivoArea();
+//                        $activo_area->activo_id = $model->id;
+//                        $activo_area->area_id = $area_id;
+//                        if(!$activo_area->save()){
+//                            throw new Exception("Error al crear relacion activo area");
+//                        }
+//                    }
+//                }
                 $transaction->commit();
                 Yii::app()->user->setNotification('success','Activo actualizado con exito');
                 $this->redirect(array('admin'));
@@ -156,7 +158,7 @@ class ActivoController extends Controller
         }
 
         $this->render('update', array(
-            'model' => $model,'proceso'=>$proceso
+            'model' => $model,'activo_area'=>$activo_area
         ));
     }
 
@@ -320,5 +322,9 @@ class ActivoController extends Controller
             echo CJSON::encode(['html'=>$html]);
             die();
         }
+    }
+
+    public function actionGuardarAreaYProcesos(){
+
     }
 }

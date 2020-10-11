@@ -360,10 +360,10 @@ class AnalisisController extends Controller
                     $valor_anterior = 0;
                 }
                 if($nuevogrupo){
-                    $grupo_activo_log = new GrupoActivoLog();
-                    $grupo_activo_log->grupo_activo_id = $grupo_activo->id;
-                    $grupo_activo_log->valor_anterior = $valor_anterior;
-                    $grupo_activo_log->valor_nuevo = $grupo_activo->valor;
+                    $grupo_activo_log                   = new GrupoActivoLog();
+                    $grupo_activo_log->grupo_activo_id  = $grupo_activo->id;
+                    $grupo_activo_log->valor_anterior   = $valor_anterior;
+                    $grupo_activo_log->valor_nuevo      = $grupo_activo->valor;
                     if(!$grupo_activo_log->save()){
                         throw new Exception("Error al guardar log de grupo activo");
                     }
@@ -449,16 +449,16 @@ class AnalisisController extends Controller
                         if((int)$mayor_valor > (int)$fila){
                             // busco si ese activo esta como hijo en otra rama distinta. traigo el valor de esa rama
                             // comparo los valores,si el valor de la rama nueva es mayor, el activo toma ese valor.
-                            $id_dependencias = implode(',',$arrayDependenciasHijas);
-                            $id_dependencias .= ', '.$dependenciaPadre->id;
-                            $id_dependencias = trim($id_dependencias,',');
-                            $otrasDependencias = Analisis::model()->getOtrasDependencias($_POST['analisis_id'],$id_dependencias,$gah->activo_id);
+                            $id_dependencias    = implode(',',$arrayDependenciasHijas);
+                            $id_dependencias    .= ', '.$dependenciaPadre->id;
+                            $id_dependencias    = trim($id_dependencias,',');
+                            $otrasDependencias  = Analisis::model()->getOtrasDependencias($_POST['analisis_id'],$id_dependencias,$gah->activo_id);
                             if(!empty($otrasDependencias)){
                                  $valores = "";
                                  $arrayMayoresValores = [];
                                  foreach ($otrasDependencias as $dep){
                                      $valoresPadres = GrupoActivo::getValoresPadres($_POST['analisis_id'],$dep['activo_padre_id'],$valores);
-                                     $grupo_aux = GrupoActivo::model()->findByAttributes(['activo_id'=>$dep['activo_id'],'analisis_id'=>$_POST['analisis_id']]);
+                                     $grupo_aux     = GrupoActivo::model()->findByAttributes(['activo_id'=>$dep['activo_id'],'analisis_id'=>$_POST['analisis_id']]);
                                      if($valoresPadres == "Es Padre"){
                                          $arrayMayoresValores[] = $grupo_aux->valor;
                                      }else{
@@ -475,25 +475,18 @@ class AnalisisController extends Controller
                                  if(!$gah->save()){
                                      throw new Exception("Error al actualizar valor de activo hijo");
                                  }
-                                 $grupo_activo_log = new GrupoActivoLog();
-                                 $grupo_activo_log->grupo_activo_id = $gah->id;
-                                 $grupo_activo_log->valor_anterior = $fila;
-                                 $grupo_activo_log->valor_nuevo = $mayor_valor;
-                                 if(!$grupo_activo_log->save()){
-                                     throw new Exception("Error al guardar log de grupo activo");
-                                 }
                             }else{
                                 $gah->valor= $mayor_valor;
                                 if(!$gah->save()){
                                     throw new Exception("Error al actualizar valor de activo hijo");
                                 }
-                                $grupo_activo_log = new GrupoActivoLog();
-                                $grupo_activo_log->grupo_activo_id = $gah->id;
-                                $grupo_activo_log->valor_anterior = $fila;
-                                $grupo_activo_log->valor_nuevo = $mayor_valor;
-                                if(!$grupo_activo_log->save()){
-                                    throw new Exception("Error al guardar log de grupo activo");
-                                }
+                            }
+                            $grupo_activo_log                   = new GrupoActivoLog();
+                            $grupo_activo_log->grupo_activo_id  = $gah->id;
+                            $grupo_activo_log->valor_anterior   = $fila;
+                            $grupo_activo_log->valor_nuevo      = $mayor_valor;
+                            if(!$grupo_activo_log->save()){
+                                throw new Exception("Error al guardar log de grupo activo");
                             }
                         }
                     }
@@ -857,43 +850,44 @@ class AnalisisController extends Controller
                                                                                                 'grupo_activo_id'=>$ga->id,
                                                                                                 'activo_id'=>$ga->activo_id ),
                                                                                                 array('order'=>'valor desc'));
+                        if(is_null($analisis_amenaza)){
+                            throw new Exception("Hay amenazas sin valorar. Valore Todas las amenazas para realizar el analisis");
+                        }
+
                         if(!is_null($analisis_amenaza)){
-                            $valor_amenaza = $analisis_amenaza->valor;
-                            $valor_vulnerabilidad = (int) Vulnerabilidad::model()->getMayorValorVulnerabilidad($_POST['analisis_id'],$ga->id);
-
-
-                            $valor_riesgo_activo = $valor_activo * $valor_amenaza * $valor_vulnerabilidad;
-                            $analisis_riesgo_detalle = AnalisisRiesgoDetalle::model()->findByAttributes(array('analisis_riesgo_id'=>$analisis_riesgo->id
+                            $valor_amenaza              = $analisis_amenaza->valor;
+                            $valor_vulnerabilidad       = (int) Vulnerabilidad::model()->getMayorValorVulnerabilidad($_POST['analisis_id'],$ga->id);
+                            $valor_riesgo_activo        = $valor_activo * $valor_amenaza * $valor_vulnerabilidad;
+                            $analisis_riesgo_detalle    = AnalisisRiesgoDetalle::model()->findByAttributes(array('analisis_riesgo_id'=>$analisis_riesgo->id
                                                                                                                 ,'grupo_activo_id'=>$ga->id));
-                            if(!is_null($analisis_riesgo_detalle)){
-                                if($analisis_riesgo_detalle->nivel_riesgo_id != Activo::model()->getNivelDeRiesgo($valor_riesgo_activo,$analisis->proyecto_id)){
-                                    $analisis_riesgo_detalle->valor_activo = $valor_riesgo_activo;
-                                    $analisis_riesgo_detalle->valor_confidencialidad = $ga->confidencialidad * $valor_amenaza * $valor_vulnerabilidad;
-                                    $analisis_riesgo_detalle->valor_disponibilidad = $ga->disponibilidad * $valor_amenaza * $valor_vulnerabilidad;
-                                    $analisis_riesgo_detalle->valor_integridad =$ga->integridad * $valor_amenaza * $valor_vulnerabilidad;
-                                    $analisis_riesgo_detalle->valor_trazabilidad = $ga->trazabilidad * $valor_amenaza * $valor_vulnerabilidad;
-                                    $analisis_riesgo_detalle->nivel_riesgo_id = Activo::model()->getNivelDeRiesgo($valor_riesgo_activo,$analisis->proyecto_id);
-                                    if(!$analisis_riesgo_detalle->save()){
+                            if(!is_null($analisis_riesgo_detalle))
+                            {
+                                if($analisis_riesgo_detalle->nivel_riesgo_id != Activo::model()->getNivelDeRiesgo($valor_riesgo_activo,$analisis->proyecto_id))
+                                {
+                                    $analisis_riesgo_detalle->valor_activo  = $valor_riesgo_activo;
+                                    if(!$analisis_riesgo_detalle->save())
+                                    {
                                         throw new Exception("Error al crear analisis de riesgo detalle");
                                     }
                                 }
-                            }else{
+                            }
+                            else
+                            {
+                                $analisis_riesgo_detalle                            = new AnalisisRiesgoDetalle();
+                                $analisis_riesgo_detalle->analisis_riesgo_id        = $analisis_riesgo->id;
+                                $analisis_riesgo_detalle->grupo_activo_id           = $ga->id;
+                                $analisis_riesgo_detalle->valor_activo              = $valor_riesgo_activo;
+                            }
 
-                                $analisis_riesgo_detalle = new AnalisisRiesgoDetalle();
-                                $analisis_riesgo_detalle->analisis_riesgo_id = $analisis_riesgo->id;
-                                $analisis_riesgo_detalle->grupo_activo_id = $ga->id;
-                                $analisis_riesgo_detalle->valor_activo = $valor_riesgo_activo;
-                                $analisis_riesgo_detalle->valor_confidencialidad = $ga->confidencialidad * $valor_amenaza * $valor_vulnerabilidad;
-                                $analisis_riesgo_detalle->valor_disponibilidad = $ga->disponibilidad * $valor_amenaza * $valor_vulnerabilidad;
-                                $analisis_riesgo_detalle->valor_integridad =$ga->integridad * $valor_amenaza * $valor_vulnerabilidad;
-                                $analisis_riesgo_detalle->valor_trazabilidad = $ga->trazabilidad * $valor_amenaza * $valor_vulnerabilidad;
-                                $analisis_riesgo_detalle->nivel_riesgo_id = Activo::model()->getNivelDeRiesgo($valor_riesgo_activo,$analisis->proyecto_id);
-                                if(!$analisis_riesgo_detalle->save()){
-                                    throw new Exception("Error al crear analisis de riesgo detalle");
-                                }
+                            $analisis_riesgo_detalle->valor_confidencialidad    = $ga->confidencialidad * $valor_amenaza * $valor_vulnerabilidad;
+                            $analisis_riesgo_detalle->valor_disponibilidad      = $ga->disponibilidad * $valor_amenaza * $valor_vulnerabilidad;
+                            $analisis_riesgo_detalle->valor_integridad          = $ga->integridad * $valor_amenaza * $valor_vulnerabilidad;
+                            $analisis_riesgo_detalle->valor_trazabilidad        = $ga->trazabilidad * $valor_amenaza * $valor_vulnerabilidad;
+                            $analisis_riesgo_detalle->nivel_riesgo_id           = Activo::model()->getNivelDeRiesgo($valor_riesgo_activo,$analisis->proyecto_id);
+                            if(!$analisis_riesgo_detalle->save()){
+                                throw new Exception("Error al crear analisis de riesgo detalle");
                             }
                         }
-
                     }
                 }else{
                     throw new Exception("No existen activos cargados para este analisis");
@@ -930,16 +924,19 @@ class AnalisisController extends Controller
         }
     }
 
-    public function actionCrearActualizarActuacion(){
-        if(isset($_POST['analisis_riesgo_detalle_id'])){
+    public function actionCrearActualizarActuacion()
+    {
+        if(isset($_POST['analisis_riesgo_detalle_id']))
+        {
             $actuacion = ActuacionRiesgo::model()->findByAttributes(['analisis_riesgo_detalle_id'=>$_POST['analisis_riesgo_detalle_id']]);
-            if(is_null($actuacion)){
-                $actuacion = new ActuacionRiesgo();
-                $actuacion->analisis_riesgo_detalle_id = $_POST['analisis_riesgo_detalle_id'];
+            if(is_null($actuacion))
+            {
+                $actuacion                              = new ActuacionRiesgo();
+                $actuacion->analisis_riesgo_detalle_id  = $_POST['analisis_riesgo_detalle_id'];
             }
-            $actuacion->fecha = Utilities::MysqlDateFormat($_POST['fecha']);
+            $actuacion->fecha       = Utilities::MysqlDateFormat($_POST['fecha']);
             $actuacion->descripcion = $_POST['descripcion'];
-            $actuacion->accion = $_POST['accion'];
+            $actuacion->accion      = $_POST['accion'];
             if($actuacion->accion == ActuacionRiesgo::ACCION_TRANSFERIR){
                 $actuacion->accion_transferir = $_POST['accion_transferir'];
             }
@@ -954,9 +951,10 @@ class AnalisisController extends Controller
         }
     }
 
-    public function actionExportarGestionDeRiegosExcel(){
-        $analisis_riesgo = AnalisisRiesgo::model()->findByAttributes(array('analisis_id'=>$_GET['analisis_id']));
-        $detalles = AnalisisRiesgoDetalle::model()->findAllByAttributes(['analisis_riesgo_id'=>$analisis_riesgo->id]);
+    public function actionExportarGestionDeRiegosExcel()
+    {
+        $analisis_riesgo    = AnalisisRiesgo::model()->findByAttributes(array('analisis_id'=>$_GET['analisis_id']));
+        $detalles           = AnalisisRiesgoDetalle::model()->findAllByAttributes(['analisis_riesgo_id'=>$analisis_riesgo->id]);
 
         set_time_limit(0);
         ini_set('memory_limit', '20000M');
@@ -972,7 +970,7 @@ class AnalisisController extends Controller
     public function actionExportarGestionDeRiegosPDF(){
         ob_clean();
         $analisis_riesgo = AnalisisRiesgo::model()->findByAttributes(array('analisis_id'=>$_GET['analisis_id']));
-        $detalles = AnalisisRiesgoDetalle::model()->findAllByAttributes(['analisis_riesgo_id'=>$analisis_riesgo->id]);
+        $detalles        = AnalisisRiesgoDetalle::model()->findAllByAttributes(['analisis_riesgo_id'=>$analisis_riesgo->id]);
 
         $pdf = Yii::createComponent('application.extensions.tcpdf.ETcPdf', 'L', 'cm', 'A4', true, 'UTF-8');
         $pdf->SetCreator(PDF_CREATOR);
@@ -993,24 +991,29 @@ class AnalisisController extends Controller
 
     public function actionBuscarPorNombre(){
         if (isset($_GET['q'])) {
-            $data = array();
-            $criteria = new CDbCriteria;
-            if(Yii::app()->user->model->isAuditor()){
+            $data       = [];
+            $criteria   = new CDbCriteria;
+            if(Yii::app()->user->model->isAuditor())
+            {
                 $usuario = User::model()->findByPk(Yii::app()->user->model->id);
                 $criteria->addCondition('t.proyecto_id = '.$usuario->ultimo_proyecto_id);
             }
             $criteria->addCondition('t.nombre LIKE :param ');
             $criteria->params = array(':param' => "%" . $_GET['q'] . "%");
             $analisis = Analisis::model()->findAll($criteria);
-            if (empty($analisis)) {
+            if (empty($analisis))
+            {
                 $datos["existe"] = 0;
-            } else {
-                $data = array();
-                foreach ($analisis as $fila) {
-                    $data[] = array(
-                        'id' => $fila->id,
-                        'text' => $fila->nombre,
-                    );
+            }
+            else
+            {
+                $data = [];
+                foreach ($analisis as $fila)
+                {
+                    $data[] = [
+                        'id'    => $fila->id,
+                        'text'  => $fila->nombre,
+                    ];
                 }
             }
             echo CJSON::encode($data);

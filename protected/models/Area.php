@@ -138,7 +138,10 @@ class Area extends CustomCActiveRecord
                 $area_proyecto = AreaProyecto::model()->findAllByAttributes(['proyecto_id'=>$usuario->ultimo_proyecto_id]);
                 if(!empty($area_proyecto)){
                     foreach ($area_proyecto as $ap){
-                        $arrayAreas[] = $ap->area;
+                        $personal = Personal::model()->findByAttributes(['area_id'=>$ap->area_id]);
+                        if(!is_null($personal)){
+                            $arrayAreas[] = $ap->area;
+                        }
                     }
                 }
             }
