@@ -339,6 +339,10 @@ class ActivoController extends Controller
                 if (isset($_POST['procesos']) && empty($_POST['procesos']))
                     throw new Exception("Debe seleccionar al menos un proceso");
 
+                $activo_area_existe     = ActivoArea::model()->findByAttributes(['area_id'=>$_POST['area_id'],'activo_id'=>$_POST['activo_id']]);
+                if(!is_null($activo_area_existe))
+                    throw new Exception("El area seleccionada ya forma parte del activo");
+
                 $activo_area            = new ActivoArea();
                 $activo_area->area_id   = $_POST['area_id'];
                 $activo_area->activo_id = $_POST['activo_id'];

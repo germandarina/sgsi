@@ -86,5 +86,5 @@
         <div class="clearfix"></div>
 <br>
 <?php if(!empty($areas)){ ?>
-    <?php $this->renderPartial('_tablaActivosAfectados',['areas'=>$areas]);?>
+    <?php $this->renderPartial('_tablaActivosAfectados',['areas'=>$areas,'analisis_id'=>$analisis->id]);?>
 <?php }?>

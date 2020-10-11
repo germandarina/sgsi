@@ -48,10 +48,12 @@ class ReporteController extends Controller
         $analisis = new Analisis();
         $areas = [];
         if(isset($_POST['Analisis'])){
+
             if(empty($_POST['Analisis']['id'])){
                 Yii::app()->user->setNotification('info','Debe seleccionar un analisis.');
                 return $this->redirect(array('/reporte/activosAfectados'));
             }
+
             $aux = Analisis::model()->findByPk($_POST['Analisis']['id']);
 
             $analisis_riesgo = AnalisisRiesgo::model()->findByAttributes(['analisis_id'=>$aux->id]);
@@ -59,6 +61,7 @@ class ReporteController extends Controller
                 Yii::app()->user->setNotification('info','Debe cargar una gestion de riesgos.');
                 return $this->redirect(array('/reporte/activosAfectados'));
             }
+
             $detalle_analisis = AnalisisRiesgoDetalle::model()->findByAttributes(['analisis_riesgo_id'=>$analisis_riesgo->id]);
             if(is_null($detalle_analisis)){
                 Yii::app()->user->setNotification('info','Debe cargar una gestion de riesgos.');
@@ -73,7 +76,7 @@ class ReporteController extends Controller
                 ini_set('memory_limit', '20000M');
                 $content = "<br><h3>Activos Afectados</h3>";
                 $content .= "<h3>Fecha: " . date("d/m/Y") . "</h3>";
-                $content .= $this->renderPartial('_tablaActivosAfectados', array('areas' => $areas), true);
+                $content .= $this->renderPartial('_tablaActivosAfectados', array('areas' => $areas,'analisis_id'=>$analisis->id), true);
                 $nombreArchivo = "Activos Afectados.xls";
                 Yii::app()->request->sendFile($nombreArchivo, $content);
                 Yii::app()->user->setFlash('success', 'El informe fue generado correctamente');

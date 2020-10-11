@@ -141,19 +141,19 @@ class Analisis extends CustomCActiveRecord
     }
 
     public function getAreasActivosAfectados($analisis_id){
-        $query = " select 
-                        a.id as analisis_id,
-                        ar.id as area_id,
-                        ar.nombre as nombre_area
-                from analisis a
-                inner join grupo_activo ga on ga.analisis_id = a.id
-                inner join activo ac on ac.id = ga.activo_id
-                inner join activo_area aa on aa.activo_id = ac.id
-                inner join area ar on ar.id = aa.area_id
-                where a.id = ".$analisis_id."
-                and ga.valor >= ".GrupoActivo::VALOR_MEDIO."
+
+	    $query = "select
+                    ar.id as area_id,
+                    ar.nombre as nombre_area
+                from grupo_activo ga
+                         inner join activo ac on ac.id = ga.activo_id
+                         inner join activo_area aa on aa.activo_id = ac.id
+                         inner join area ar on ar.id = aa.area_id
+                where ga.analisis_id = ".$analisis_id."
+                  and ga.valor >= ".GrupoActivo::VALOR_MEDIO."
                 group by ar.id
-                order by ar.id, ga.valor desc";
+                order by ar.id;";
+
         $command = Yii::app()->db->createCommand($query);
         $resultados = $command->queryAll($query);
         return $resultados;
@@ -170,8 +170,9 @@ class Analisis extends CustomCActiveRecord
                 inner join activo ac on ac.id = ga.activo_id
                 inner join personal per on per.id = ac.personal_id
                 inner join activo_area aa on aa.activo_id = ac.id
-                inner join area  ar on ar.id = aa.area_id
-                inner join proceso pr on pr.area_id = ar.id
+                inner join activo_area_proceso aap on aap.activo_area_id = aa.id
+                inner join proceso pr on pr.id = aap.proceso_id
+                inner join area ar on ar.id = pr.area_id
                 where a.id = ".$analisis_id."
                 and ga.valor >= ".GrupoActivo::VALOR_MEDIO."
                 and ar.id = ".$area_id."
