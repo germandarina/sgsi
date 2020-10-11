@@ -12,7 +12,7 @@
 
     <?php echo $form->errorSummary($model); ?>
 
-    <input type="hidden" name="activo_id" id="analisis_id" value="<?= $model->id ?>">
+    <input type="hidden" name="activo_id" id="activo_id" value="<?= $model->activo_id ?>">
     <div class="row">
         <div class="col-sm-12">
             <?php echo $form->select2Group(

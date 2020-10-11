@@ -81,24 +81,7 @@
 //                );
 //                ?>
 <!--            </div>-->
-<!--            <div class="col-sm-6">-->
-<!--                --><?php //echo $form->select2Group(
-//                    $model, 'personal_id',
-//                    [
-//                        'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
-//                        'widgetOptions' => [
-//                            'asDropDownList' => true,
-//                            'data' => [],
-//                            'options' => [
-//                                'minimumResultsForSearch' => 10,
-//                                'placeholder' => '--Seleccione--'
-//                            ],
-////                        'htmlOptions' => ['onChange'=>'getProcesos()'],
-//                        ],
-//                    ]
-//                );
-//                ?>
-<!--            </div>-->
+
 <!--        </div>-->
 <!--        <div class="row">-->
 <!--            <div class="col-sm-6">-->
@@ -125,6 +108,26 @@
             </div>
             <div class="col-sm-6">
                 <?php echo $form->textFieldGroup($model,'ubicacion',array('class'=>'col-sm-5','maxlength'=>100)); ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <?php echo $form->select2Group(
+                    $model, 'personal_id',
+                    [
+                        'wrapperHtmlOptions' => ['class' => 'col-sm-12 input-group-sm',],
+                        'widgetOptions' => [
+                            'asDropDownList' => true,
+                            'data' => CHtml::listData(Personal::model()->getPersonalDisponiblePorProyecto(),'id','nombre'),
+                            'options' => [
+                                'minimumResultsForSearch' => 10,
+                                'placeholder' => '--Seleccione--'
+                            ],
+//                        'htmlOptions' => ['onChange'=>'getProcesos()'],
+                        ],
+                    ]
+                );
+                ?>
             </div>
         </div>
 

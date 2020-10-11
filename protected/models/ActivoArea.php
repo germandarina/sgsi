@@ -54,8 +54,9 @@ class ActivoArea extends CustomCActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'activo' => array(self::BELONGS_TO, 'Activo', 'activo_id'),
-			'area' => array(self::BELONGS_TO, 'Area', 'area_id'),
+			'activo'    => array(self::BELONGS_TO, 'Activo', 'activo_id'),
+			'area'      => array(self::BELONGS_TO, 'Area', 'area_id'),
+            'area_procesos'  => [self::HAS_MANY,'ActivoAreaProceso','activo_area_id'],
 		);
 	}
 
@@ -116,4 +117,16 @@ class ActivoArea extends CustomCActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	public function getProcesos(){
+	    $area_procesos = $this->area_procesos;
+	    $procesos = "";
+	    if(!empty($area_procesos)){
+	        foreach ($area_procesos as $detalle){
+                $procesos .= $detalle->proceso->nombre.' / ';
+            }
+	        $procesos = trim($procesos,' / ');
+        }
+	    return $procesos;
+    }
 }

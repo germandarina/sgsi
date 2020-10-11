@@ -32,7 +32,7 @@ class ActivoController extends Controller
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update', 'admin','delete','getActivosPorTipo','getPadresEHijos',
-                                    'getPadresMultiples','getProcesosModal','guardarAreaYProcesos'),
+                                    'getPadresMultiples','getProcesosModal','guardarAreaYProcesos','eliminarAreaYProcesos'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -325,6 +325,88 @@ class ActivoController extends Controller
     }
 
     public function actionGuardarAreaYProcesos(){
+        if (isset($_POST['area_id'])) {
+            try {
+                $transaction            = Yii::app()->db->beginTransaction();
 
+                $usuario = User::model()->getUsuarioLogueado();
+                if (is_null($usuario) || is_null($usuario->ultimo_proyecto_id))
+                    throw new Exception("Debe seleccionar un proyecto para empezar a trabajar");
+
+                if (isset($_POST['area_id']) && empty($_POST['area_id']))
+                    throw new Exception("Debe seleccionar un area");
+
+                if (isset($_POST['procesos']) && empty($_POST['procesos']))
+                    throw new Exception("Debe seleccionar al menos un proceso");
+
+                $activo_area            = new ActivoArea();
+                $activo_area->area_id   = $_POST['area_id'];
+                $activo_area->activo_id = $_POST['activo_id'];
+                $activo_area->procesos  = $_POST['procesos'];
+                if (!$activo_area->save()) {
+                    throw new Exception("Error al asignar area al activo");
+                }
+
+                foreach ($activo_area->procesos as $proceso_id) {
+                    $activo_area_prcesos = new ActivoAreaProceso();
+                    $activo_area_prcesos->activo_area_id = $activo_area->id;
+                    $activo_area_prcesos->proceso_id = $proceso_id;
+                    if (!$activo_area_prcesos->save()) {
+                        throw new Exception("Error al crear relacion activo area");
+                    }
+                }
+
+                $transaction->commit();
+                $data = "Area y Procesos guardados";
+                $datos = ['error'=>0,'msj'=>$data];
+                echo CJSON::encode($datos);
+
+            } catch (Exception $exception) {
+                $transaction->rollBack();
+                $data = $exception->getMessage();
+                $datos = ['error'=>1,'msj'=>$data];
+                echo CJSON::encode($datos);
+            }
+        }
+    }
+
+    public function actionEliminarAreaYProcesos()
+    {
+        if(isset($_POST['activo_area_id']))
+        {
+            try{
+                $transaction  = Yii::app()->db->beginTransaction();
+
+                $usuario = User::model()->getUsuarioLogueado();
+                if (is_null($usuario) || is_null($usuario->ultimo_proyecto_id))
+                    throw new Exception("Debe seleccionar un proyecto para empezar a trabajar");
+
+                $activo_area = ActivoArea::model()->findByPk($_POST['activo_area_id']);
+                if(is_null($activo_area))
+                    throw new Exception("Error al eliminar area");
+
+                $area_procesos = $activo_area->area_procesos;
+                if(!empty($area_procesos)){
+                    foreach ($area_procesos as $detalle){
+                        $detalle->delete();
+                    }
+                }
+
+                if(!$activo_area->delete())
+                    throw new Exception("Error al eliminar area");
+
+                $transaction->commit();
+                $data = "Area Eliminada";
+                $datos = ['error'=>0,'msj'=>$data];
+                echo CJSON::encode($datos);
+            }
+            catch (Exception $exception)
+            {
+                $transaction->rollBack();
+                $data = $exception->getMessage();
+                $datos = ['error'=>1,'msj'=>$data];
+                echo CJSON::encode($datos);
+            }
+        }
     }
 }

@@ -162,7 +162,7 @@
         event.preventDefault();
         Lobibox.confirm({
             title:'Confirmar',
-            msg: "Esta seguro de crear esta asociacion?",
+            msg: "Esta seguro de eliminar esta asociacion?",
             callback: function (lobibox, type) {
                 if (type === 'yes') {
                     $.ajax({
